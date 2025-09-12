@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scapia FPL League</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --scapia-orange: #FF6B35;
+            --scapia-dark: #1A1A2E;
+            --scapia-navy: #16213E;
+            --scapia-accent: #0F3460;
+            --scapia-gold: #FFD700;
+            --scapia-silver: #C0C0C0;
+            --scapia-bronze: #CD7F32;
+            --success: #48bb78;
+            --danger: #e53e3e;
+        }
+        
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--scapia-dark) 0%, var(--scapia-navy) 50%, var(--scapia-accent) 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 15px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: drift 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes drift {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .scapia-logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--scapia-orange);
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            animation: subtle-glow 3s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes subtle-glow {
+            0%, 100% { 
+                filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+            }
+            50% { 
+                filter: brightness(1.3) drop-shadow(0 0 20px rgba(255, 107, 53, 0.8));
+            }
+        }
+        
+        .tagline {
+            color: #a0aec0;
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        .gw-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .gw-selector::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .gw-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gw-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 107, 53, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        
+        .gw-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .gw-btn:hover {
+            border-color: var(--scapia-orange);
+            transform: translateY(-2px);
+        }
+        
+        .gw-btn.active {
+            background: var(--scapia-orange);
+            border-color: var(--scapia-orange);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+            animation: pulse-btn 2s infinite;
+        }
+        
+        @keyframes pulse-btn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .gw-btn.upcoming {
+            border-color: var(--scapia-orange);
+            background: rgba(255, 107, 53, 0.1);
+        }
+        
+        .gw-btn .live-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+        
+        .tab-navigation {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .tab-btn.active {
+            background: var(--scapia-orange);
+            color: white;
+            box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3);
+            animation: tabActivate 0.3s ease-out;
+        }
+        
+        @keyframes tabActivate {
+            from { transform: scale(0.95); }
+            to { transform: scale(1); }
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeInUp 0.4s ease-out;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        .prize-pool-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
+            border: 1px solid var(--scapia-orange);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .prize-pool-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--scapia-orange), transparent, var(--scapia-orange));
+            border-radius: 20px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+        }
+        
+        @keyframes borderRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .pool-amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--scapia-orange);
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.6);
+            margin-bottom: 5px;
+            animation: countUp 1s ease-out;
+        }
+        
+        @keyframes countUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .pool-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        
+        .pool-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out backwards;
+        }
+        
+        .pool-stat:nth-child(1) { animation-delay: 0.1s; }
+        .pool-stat:nth-child(2) { animation-delay: 0.2s; }
+        .pool-stat:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pool-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .pool-stat-label {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            margin-top: 2px;
+        }
+        
+        .prize-distribution {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .prize-item {
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .prize-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .prize-emoji {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+            animation: bounce 2s infinite;
+        }
+        
+        .prize-item:nth-child(1) .prize-emoji { animation-delay: 0s; }
+        .prize-item:nth-child(2) .prize-emoji { animation-delay: 0.2s; }
+        .prize-item:nth-child(3) .prize-emoji { animation-delay: 0.4s; }
+        .prize-item:nth-child(4) .prize-emoji { animation-delay: 0.6s; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .prize-value {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            animation: slideInRow 0.5s ease-out backwards;
+        }
+        
+        .leaderboard-row:nth-child(1) { animation-delay: 0.05s; }
+        .leaderboard-row:nth-child(2) { animation-delay: 0.1s; }
+        .leaderboard-row:nth-child(3) { animation-delay: 0.15s; }
+        .leaderboard-row:nth-child(4) { animation-delay: 0.2s; }
+        .leaderboard-row:nth-child(5) { animation-delay: 0.25s; }
+        
+        @keyframes slideInRow {
+            from { 
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .leaderboard-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .rank-badge {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.1rem;
+            margin-right: 12px;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .rank-1 {
+            background: linear-gradient(135deg, var(--scapia-gold), #ffed4e);
+            color: #000;
+            animation: goldPulse 2s infinite, rotate 4s linear infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        @keyframes goldPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            }
+            50% { 
+                transform: scale(1.1);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
+            }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .rank-2 {
+            background: linear-gradient(135deg, var(--scapia-silver), #d7d7d7);
+            color: #000;
+            animation: silverShine 3s infinite;
+        }
+        
+        @keyframes silverShine {
+            0%, 100% { box-shadow: 0 0 10px rgba(192, 192, 192, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(192, 192, 192, 0.8); }
+        }
+        
+        .rank-3 {
+            background: linear-gradient(135deg, var(--scapia-bronze), #e6ac79);
+            color: #000;
+            animation: bronzeGlow 3s infinite;
+        }
+        
+        @keyframes bronzeGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(205, 127, 50, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(205, 127, 50, 0.7); }
+        }
+        
+        .rank-4 {
+            background: rgba(255, 107, 53, 0.3);
+            border: 1px solid var(--scapia-orange);
+        }
+        
+        .player-details {
+            flex: 1;
+        }
+        
+        .player-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        
+        .player-captain {
+            font-size: 0.75rem;
+            color: #a0aec0;
+        }
+        
+        .score-prize {
+            text-align: right;
+        }
+        
+        .score {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .prize {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--success);
+            animation: prizeFlash 1s ease-out;
+        }
+        
+        @keyframes prizeFlash {
+            from { 
+                transform: scale(1.5);
+                color: var(--scapia-orange);
+            }
+            to { 
+                transform: scale(1);
+                color: var(--success);
+            }
+        }
+        
+        /* Overall Standings */
+        .overall-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+        
+        .overall-card:nth-child(1) { animation-delay: 0.05s; }
+        .overall-card:nth-child(2) { animation-delay: 0.1s; }
+        .overall-card:nth-child(3) { animation-delay: 0.15s; }
+        
+        .overall-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px) scale(1.02);
+            border-color: var(--scapia-orange);
+        }
+        
+        .overall-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .overall-player {
+            flex: 1;
+        }
+        
+        .overall-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        
+        .overall-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .overall-earnings {
+            text-align: right;
+        }
+        
+        .net-value {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 2px;
+        }
+        
+        .net-positive { color: var(--success); }
+        .net-negative { color: var(--danger); }
+        .net-neutral { color: #a0aec0; }
+        
+        .gross-value {
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+        
+        .badge-container {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .badge {
+            padding: 3px 8px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid var(--scapia-orange);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            animation: badgePop 0.3s ease-out backwards;
+        }
+        
+        @keyframes badgePop {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        
+        .badge.gold {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 237, 78, 0.2));
+            border-color: var(--scapia-gold);
+            color: var(--scapia-gold);
+        }
+        
+        .badge.silver {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(215, 215, 215, 0.2));
+            border-color: var(--scapia-silver);
+            color: var(--scapia-silver);
+        }
+        
+        .badge.bronze {
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(230, 172, 121, 0.2));
+            border-color: var(--scapia-bronze);
+            color: var(--scapia-bronze);
+        }
+        
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        
+        .stat-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--scapia-orange);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .player-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        
+        .player-stat:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(3px);
+        }
+        
+        .player-stat-name {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .player-stat-value {
+            font-weight: 700;
+            color: var(--scapia-orange);
+            font-size: 1.1rem;
+        }
+        
+        .fun-award {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            transition: all 0.3s;
+            animation: awardSlide 0.5s ease-out backwards;
+        }
+        
+        .fun-award:nth-child(1) { animation-delay: 0.1s; }
+        .fun-award:nth-child(2) { animation-delay: 0.2s; }
+        .fun-award:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes awardSlide {
+            from { 
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .fun-award:hover {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
+        }
+        
+        .fun-award-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .fun-award-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: var(--scapia-orange);
+        }
+        
+        .fun-award-winner {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .fun-award-desc {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            font-style: italic;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 150px;
+            gap: 10px;
+        }
+        
+        .chart-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 40px;
+        }
+        
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, var(--scapia-orange), rgba(255, 107, 53, 0.5));
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+            animation: growBar 1s ease-out backwards;
+            position: relative;
+        }
+        
+        @keyframes growBar {
+            from { height: 0; }
+        }
+        
+        .bar:hover {
+            filter: brightness(1.2);
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--scapia-orange);
+        }
+        
+        .bar-label {
+            margin-top: 5px;
+            font-size: 0.7rem;
+            color: #a0aec0;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .loading-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--scapia-orange);
+            border-radius: 50%;
+            margin: 0 5px;
+            animation: loadingBounce 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes loadingBounce {
+            0%, 80%, 100% { 
+                transform: scale(0);
+            } 40% { 
+                transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="scapia-logo">✈️ SCAPIA FPL</div>
+            </div>
+            <p class="tagline">Where every gameweek is a new journey</p>
+        </div>
+
+        <div class="gw-selector" id="gwSelector">
+            <button class="gw-btn" onclick="showGW(2)">GW 2</button>
+            <button class="gw-btn active" onclick="showGW(3)">GW 3</button>
+            <button class="gw-btn upcoming" onclick="showGW(4)">GW 4 <span class="live-dot"></span></button>
+            <button class="gw-btn" onclick="showGW(5)">GW 5</button>
+            <button class="gw-btn" onclick="showGW(6)">GW 6</button>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="showTab('battle')">⚔️ Battle</button>
+            <button class="tab-btn" onclick="showTab('standings')">🏆 Standings</button>
+            <button class="tab-btn" onclick="showTab('stats')">📊 Stats</button>
+        </div>
+
+        <!-- Battle Tab -->
+        <div id="battle-tab" class="tab-content active">
+            <div class="prize-pool-card">
+                <div class="pool-amount">₹<span id="poolAmount">1400</span></div>
+                <div class="pool-details">
+                    <div class="pool-stat">
+                        <div class="pool-stat-value" id="playerCount">14</div>
+                        <div class="pool-stat-label">Warriors</div>
+                    </div>
+                    <div class="pool-stat">
+                        <div class="pool-stat-value">₹100</div>
+                        <div class="pool-stat-label">Entry</div>
+                    </div>
+                    <div class="pool-stat">
+                        <div class="pool-stat-value" id="gwWeek">GW3</div>
+                        <div class="pool-stat-label">Battle</div>
+                    </div>
+                </div>
+                <div class="prize-distribution" id="prizeDistribution">
+                    <div class="prize-item">
+                        <div class="prize-emoji">🥇</div>
+                        <div class="prize-value">₹700</div>
+                    </div>
+                    <div class="prize-item">
+                        <div class="prize-emoji">🥈</div>
+                        <div class="prize-value">₹400</div>
+                    </div>
+                    <div class="prize-item">
+                        <div class="prize-emoji">🥉</div>
+                        <div class="prize-value">₹200</div>
+                    </div>
+                    <div class="prize-item">
+                        <div class="prize-emoji">🎖️</div>
+                        <div class="prize-value">₹100</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leaderboard" id="leaderboard">
+                <!-- Leaderboard will be populated here -->
+            </div>
+        </div>
+
+        <!-- Standings Tab -->
+        <div id="standings-tab" class="tab-content">
+            <div id="overallStandings">
+                <!-- Overall standings will be populated here -->
+            </div>
+        </div>
+
+        <!-- Stats Tab -->
+        <div id="stats-tab" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-title">👑 Captain Kings</div>
+                    <div id="captainStats">
+                        <!-- Captain stats will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-title">🏆 Hall of Fame Awards</div>
+                    <div id="funStats">
+                        <!-- Fun stats will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-title">📈 Earnings Chart</div>
+                    <div class="chart-container">
+                        <div class="chart-bars" id="earningsChart">
+                            <!-- Chart will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🏝️ Powered by Scapia • Journey continues...</p>
+        </div>
+    </div>
+
+    <script>
+        // Game Data Structure
+        const gameData = {
+            2: {
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'],
+                pool: 1100,
+                prizes: [600, 400, 100],
+                results: [
+                    { name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 },
+                    { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 },
+                    { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 },
+                    { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 },
+                    { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 },
+                    { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 },
+                    { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 },
+                    { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 },
+                    { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 },
+                    { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }
+                ]
+            },
+            3: {
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh'],
+                pool: 1400,
+                prizes: [700, 400, 200, 100],
+                results: [
+                    { name: 'Sandesh', score: 83, captain: 'João Pedro', prize: 700 },
+                    { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 },
+                    { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 },
+                    { name: 'Sarjan', score: 64, captain: 'João Pedro', prize: 150 },
+                    { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 },
+                    { name: 'Bharath', score: 58, captain: 'João Pedro', prize: 0 },
+                    { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 },
+                    { name: 'Neeraj', score: 53, captain: 'João Pedro', prize: 0 },
+                    { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 },
+                    { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 },
+                    { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 },
+                    { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 },
+                    { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 },
+                    { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }
+                ]
+            },
+            4: {
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'],
+                pool: 1500,
+                prizes: [700, 450, 250, 100],
+                results: []
+            }
+        };
+
+        let currentGW = 3;
+
+        function showGW(gw) {
+            currentGW = gw;
+            
+            // Update active button
+            document.querySelectorAll('.gw-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(gw)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            updateDisplay();
+        }
+
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Update data if needed
+            if (tabName === 'standings') {
+                updateOverallStandings();
+            } else if (tabName === 'stats') {
+                updateStats();
+            }
+        }
+
+        function updateDisplay() {
+            const gwData = gameData[currentGW];
+            
+            // Update pool info
+            document.getElementById('poolAmount').textContent = gwData.pool;
+            document.getElementById('playerCount').textContent = gwData.players.length;
+            document.getElementById('gwWeek').textContent = `GW${currentGW}`;
+            
+            // Update prize distribution
+            const prizeHTML = gwData.prizes.map((prize, index) => {
+                const medals = ['🥇', '🥈', '🥉', '🎖️'];
+                return `
+                    <div class="prize-item">
+                        <div class="prize-emoji">${medals[index]}</div>
+                        <div class="prize-value">₹${prize}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('prizeDistribution').innerHTML = prizeHTML;
+            
+            // Update leaderboard
+            updateLeaderboard();
+        }
+
+        function updateLeaderboard() {
+            const gwData = gameData[currentGW];
+            
+            if (gwData.results.length === 0) {
+                document.getElementById('leaderboard').innerHTML = `
+                    <div class="loading">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                    <div style="text-align: center; color: #a0aec0; margin-top: 20px;">
+                        <div>Battle begins soon...</div>
+                        <div style="margin-top: 10px; font-size: 0.9rem;">${gwData.players.length} warriors ready!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            gwData.results.forEach((player, index) => {
+                const rank = index + 1;
+                let rankClass = '';
+                let rankIcon = rank;
+                
+                if (rank === 1) {
+                    rankClass = 'rank-1';
+                    rankIcon = '🥇';
+                } else if (rank === 2) {
+                    rankClass = 'rank-2';
+                    rankIcon = '🥈';
+                } else if (rank === 3) {
+                    rankClass = 'rank-3';
+                    rankIcon = '🥉';
+                } else if (player.prize > 0) {
+                    rankClass = 'rank-4';
+                    rankIcon = '🎖️';
+                } else {
+                    rankIcon = rank;
+                }
+                
+                html += `
+                    <div class="leaderboard-row">
+                        <div class="rank-badge ${rankClass}">${rankIcon}</div>
+                        <div class="player-details">
+                            <div class="player-name">${player.name}</div>
+                            <div class="player-captain">⚡ ${player.captain}</div>
+                        </div>
+                        <div class="score-prize">
+                            <div class="score">${player.score}</div>
+                            ${player.prize > 0 ? `<div class="prize">+₹${player.prize}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('leaderboard').innerHTML = html;
+        }
+
+        function updateOverallStandings() {
+            // Calculate total earnings for each player (OVERALL, not per GW)
+            const earnings = {};
+            
+            // Get all unique players
+            const allPlayers = new Set();
+            Object.values(gameData).forEach(gw => {
+                gw.players.forEach(player => allPlayers.add(player));
+            });
+            
+            // Initialize
+            allPlayers.forEach(player => {
+                earnings[player] = { 
+                    grossWon: 0, 
+                    gamesPlayed: 0,
+                    lockin: 0,
+                    net: 0,
+                    wins: [],
+                    positions: []
+                };
+            });
+            
+            // Calculate earnings and games played
+            Object.entries(gameData).forEach(([gwNum, gwData]) => {
+                if (gwData.results.length > 0) {
+                    gwData.results.forEach((result, index) => {
+                        if (gwData.players.includes(result.name)) {
+                            earnings[result.name].gamesPlayed++;
+                            earnings[result.name].lockin += 100; // Each game costs ₹100
+                            
+                            if (result.prize > 0) {
+                                earnings[result.name].grossWon += result.prize;
+                                const position = index + 1;
+                                earnings[result.name].wins.push({ 
+                                    gw: parseInt(gwNum), 
+                                    position,
+                                    amount: result.prize 
+                                });
+                            }
+                            
+                            earnings[result.name].positions.push({
+                                gw: parseInt(gwNum),
+                                position: index + 1
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // Calculate net earnings
+            Object.keys(earnings).forEach(player => {
+                earnings[player].net = earnings[player].grossWon - earnings[player].lockin;
+            });
+            
+            // Sort by net earnings
+            const sorted = Object.entries(earnings)
+                .filter(([_, data]) => data.gamesPlayed > 0)
+                .sort((a, b) => b[1].net - a[1].net);
+            
+            let html = '';
+            sorted.forEach(([name, data], index) => {
+                const netClass = data.net > 0 ? 'net-positive' : data.net < 0 ? 'net-negative' : 'net-neutral';
+                
+                // Create badges for wins
+                const badges = data.wins.map(w => {
+                    const medals = ['🥇', '🥈', '🥉', '🎖️'];
+                    let badgeClass = '';
+                    if (w.position === 1) badgeClass = 'gold';
+                    else if (w.position === 2) badgeClass = 'silver';
+                    else if (w.position === 3) badgeClass = 'bronze';
+                    
+                    return `<span class="badge ${badgeClass}">GW${w.gw} ${medals[w.position - 1]}</span>`;
+                }).join('');
+                
+                html += `
+                    <div class="overall-card" style="animation-delay: ${index * 0.05}s">
+                        <div class="overall-header">
+                            <div class="overall-player">
+                                <div class="overall-name">${name}</div>
+                                <div class="overall-stats">
+                                    <span class="stat-item">🎮 ${data.gamesPlayed} games</span>
+                                    <span class="stat-item">💰 ₹${data.lockin} locked</span>
+                                </div>
+                            </div>
+                            <div class="overall-earnings">
+                                <div class="net-value ${netClass}">
+                                    ${data.net >= 0 ? '+' : ''}₹${Math.abs(data.net)}
+                                </div>
+                                <div class="gross-value">Won: ₹${data.grossWon}</div>
+                            </div>
+                        </div>
+                        <div class="badge-container">
+                            ${badges || '<span style="color: #718096; font-size: 0.85rem;">No wins yet</span>'}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('overallStandings').innerHTML = html;
+        }
+
+        function updateStats() {
+            // Calculate OVERALL stats across all GWs
+            const playerStats = {};
+            
+            // Initialize all players
+            const allPlayers = new Set();
+            Object.values(gameData).forEach(gw => {
+                gw.players.forEach(player => allPlayers.add(player));
+            });
+            
+            allPlayers.forEach(player => {
+                playerStats[player] = {
+                    captainPoints: 0,
+                    totalScore: 0,
+                    gamesPlayed: 0,
+                    wins: 0,
+                    highestScore: 0,
+                    lowestScore: 999,
+                    avgScore: 0,
+                    netEarnings: 0
+                };
+            });
+            
+            // Calculate stats
+            Object.values(gameData).forEach(gwData => {
+                if (gwData.results.length > 0) {
+                    gwData.results.forEach((result, index) => {
+                        if (gwData.players.includes(result.name)) {
+                            const stats = playerStats[result.name];
+                            stats.gamesPlayed++;
+                            stats.totalScore += result.score;
+                            stats.highestScore = Math.max(stats.highestScore, result.score);
+                            stats.lowestScore = Math.min(stats.lowestScore, result.score);
+                            
+                            // Estimate captain points (assuming captain scored ~30% of total)
+                            stats.captainPoints += Math.round(result.score * 0.3);
+                            
+                            if (result.prize > 0) {
+                                stats.wins++;
+                                stats.netEarnings += result.prize;
+                            }
+                            stats.netEarnings -= 100; // Deduct entry fee
+                        }
+                    });
+                }
+            });
+            
+            // Calculate averages
+            Object.keys(playerStats).forEach(player => {
+                const stats = playerStats[player];
+                if (stats.gamesPlayed > 0) {
+                    stats.avgScore = Math.round(stats.totalScore / stats.gamesPlayed);
+                }
+            });
+            
+            // Top Captain Points
+            const topCaptains = Object.entries(playerStats)
+                .filter(([_, stats]) => stats.gamesPlayed > 0)
+                .sort((a, b) => b[1].captainPoints - a[1].captainPoints)
+                .slice(0, 5);
+            
+            const captainHTML = topCaptains.map(([name, stats]) => `
+                <div class="player-stat">
+                    <div class="player-stat-name">${name}</div>
+                    <div class="player-stat-value">${stats.captainPoints} pts</div>
+                </div>
+            `).join('');
+            document.getElementById('captainStats').innerHTML = captainHTML;
+            
+            // Fun Awards
+            const funAwards = [
+                {
+                    emoji: '👑',
+                    title: 'Money King',
+                    winner: Object.entries(playerStats).sort((a, b) => b[1].netEarnings - a[1].netEarnings)[0],
+                    desc: 'Highest net earnings across all gameweeks'
+                },
+                {
+                    emoji: '🎯',
+                    title: 'Captain Fantastic',
+                    winner: Object.entries(playerStats).sort((a, b) => b[1].captainPoints - a[1].captainPoints)[0],
+                    desc: 'Most points from captain choices'
+                },
+                {
+                    emoji: '🚀',
+                    title: 'Single GW Legend',
+                    winner: Object.entries(playerStats).sort((a, b) => b[1].highestScore - a[1].highestScore)[0],
+                    desc: 'Highest score in any single gameweek'
+                },
+                {
+                    emoji: '😴',
+                    title: 'Sleepy Manager',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.gamesPlayed > 0)
+                        .sort((a, b) => a[1].lowestScore - b[1].lowestScore)[0],
+                    desc: 'Lowest score in any gameweek (still playing)'
+                },
+                {
+                    emoji: '🎢',
+                    title: 'Mr. Consistent',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.gamesPlayed > 0)
+                        .sort((a, b) => b[1].avgScore - a[1].avgScore)[0],
+                    desc: 'Highest average score per gameweek'
+                }
+            ];
+            
+            const funHTML = funAwards.map(award => {
+                if (!award.winner) return '';
+                const [name, stats] = award.winner;
+                let value = '';
+                if (award.title === 'Money King') value = `₹${stats.netEarnings}`;
+                else if (award.title === 'Captain Fantastic') value = `${stats.captainPoints} pts`;
+                else if (award.title === 'Single GW Legend') value = `${stats.highestScore} pts`;
+                else if (award.title === 'Sleepy Manager') value = `${stats.lowestScore} pts`;
+                else if (award.title === 'Mr. Consistent') value = `${stats.avgScore} avg`;
+                
+                return `
+                    <div class="fun-award">
+                        <div class="fun-award-header">
+                            <div class="fun-award-title">
+                                <span>${award.emoji}</span>
+                                <span>${award.title}</span>
+                            </div>
+                            <div class="fun-award-winner">${name}</div>
+                        </div>
+                        <div class="fun-award-desc">${award.desc} - ${value}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('funStats').innerHTML = funHTML;
+            
+            // Earnings Chart
+            const topEarners = Object.entries(playerStats)
+                .filter(([_, stats]) => stats.gamesPlayed > 0)
+                .sort((a, b) => b[1].netEarnings - a[1].netEarnings)
+                .slice(0, 8);
+            
+            const maxEarning = Math.max(...topEarners.map(([_, stats]) => Math.abs(stats.netEarnings)));
+            
+            const chartHTML = topEarners.map(([name, stats], index) => {
+                const height = Math.abs(stats.netEarnings) / maxEarning * 120;
+                const isPositive = stats.netEarnings >= 0;
+                
+                return `
+                    <div class="chart-bar">
+                        <div class="bar" style="
+                            height: ${height}px; 
+                            background: ${isPositive 
+                                ? 'linear-gradient(to top, #48bb78, rgba(72, 187, 120, 0.5))' 
+                                : 'linear-gradient(to top, #e53e3e, rgba(229, 62, 62, 0.5))'};
+                            animation-delay: ${index * 0.1}s;
+                        ">
+                            <div class="bar-value">${stats.netEarnings >= 0 ? '+' : ''}₹${Math.abs(stats.netEarnings)}</div>
+                        </div>
+                        <div class="bar-label">${name.substring(0, 6)}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('earningsChart').innerHTML = chartHTML;
+        }
+
+        // Initialize
+        updateDisplay();
+        
+        // Export function for easy data updates
+        function exportDataTemplate() {
+            console.log(`
+// To update, paste this in console with new data:
+gameData[5] = {
+    players: ['Player1', 'Player2', ...],
+    pool: 1500,
+    prizes: [700, 450, 250, 100],
+    results: [
+        { name: 'Player1', score: 75, captain: 'Haaland', prize: 700 },
+        { name: 'Player2', score: 70, captain: 'Salah', prize: 450 },
+        // ... more results
+    ]
+};
+showGW(5);
+            `);
+        }
+    </script>
+</body>
+</html>
