@@ -526,8 +526,8 @@
         <div class="gw-selector">
             <button class="gw-btn" onclick="showGW(2)">GW 2</button>
             <button class="gw-btn" onclick="showGW(3)">GW 3</button>
-            <button class="gw-btn active" onclick="showGW(4)">GW 4</button>
-            <button class="gw-btn" onclick="showGW(5)">GW 5</button>
+            <button class="gw-btn" onclick="showGW(4)">GW 4</button>
+            <button class="gw-btn active" onclick="showGW(5)">GW 5</button>
             <button class="gw-btn" onclick="showGW(6)">GW 6</button>
         </div>
 
@@ -666,10 +666,26 @@
                 ]
             },
             5: {
-                players: [],
-                pool: 0,
-                prizes: [],
-                results: []
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'],
+                pool: 1500,
+                prizes: [500, 400, 300, 200, 100],
+                results: [
+                    { name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 },
+                    { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 },
+                    { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 },
+                    { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 },
+                    { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 },
+                    { name: 'Venky', score: 51, captain: 'M.Salah', prize: 0 },
+                    { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 },
+                    { name: 'Neeraj', score: 47, captain: 'João Pedro', prize: 0 },
+                    { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 },
+                    { name: 'Shashank', score: 44, captain: 'M.Salah', prize: 0 },
+                    { name: 'Sarjan', score: 44, captain: 'João Pedro', prize: 0 },
+                    { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 },
+                    { name: 'Sandesh', score: 40, captain: 'João Pedro', prize: 0 },
+                    { name: 'Shubs', score: 39, captain: 'M.Salah', prize: 0 },
+                    { name: 'Rounak', score: 38, captain: 'João Pedro', prize: 0 }
+                ]
             },
             6: {
                 players: [],
@@ -679,7 +695,7 @@
             }
         };
 
-        let currentGW = 4;
+        let currentGW = 5;
 
         function showGW(gw) {
             currentGW = gw;
@@ -727,10 +743,10 @@
             document.getElementById('gwNumber').textContent = currentGW;
             
             const prizeHTML = gwData.prizes.map((prize, index) => {
-                const medals = ['🥇', '🥈', '🥉', '🎖️'];
+                const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
                 return `
                     <div class="prize-item">
-                        <div class="prize-emoji">${medals[index]}</div>
+                        <div class="prize-emoji">${medals[index] || '🏅'}</div>
                         <div class="prize-value">₹${prize}</div>
                     </div>
                 `;
@@ -1012,6 +1028,50 @@
                         .sort((a, b) => a[1].maxDrop - b[1].maxDrop)[0],
                     desc: 'Biggest drop',
                     getValue: (stats) => `${stats.maxDrop} pts`
+                },
+                {
+                    emoji: '🎯',
+                    title: 'One Hit Wonder',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.wins === 1 && stats.gamesPlayed >= 3)
+                        .sort((a, b) => a[1].positions[0] - b[1].positions[0])[0],
+                    desc: 'Won once, vanished',
+                    getValue: (stats) => `Won GW${stats.positions.indexOf(1) + 2}`
+                },
+                {
+                    emoji: '🐢',
+                    title: 'Mr. Consistent Bottom',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.positions.length >= 3 && Math.min(...stats.positions) > 10)
+                        .sort((a, b) => b[1].avgPosition - a[1].avgPosition)[0],
+                    desc: 'Consistently at the bottom',
+                    getValue: (stats) => `Avg position: ${stats.avgPosition.toFixed(1)}`
+                },
+                {
+                    emoji: '🏃',
+                    title: 'Late Bloomer',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => {
+                            const lastGames = stats.positions.slice(-2);
+                            const firstGames = stats.positions.slice(0, 2);
+                            return lastGames.length === 2 && firstGames.length === 2 && 
+                                   Math.min(...lastGames) < Math.min(...firstGames);
+                        })
+                        .sort((a, b) => {
+                            const aImprove = Math.min(...a[1].positions.slice(0,2)) - Math.min(...a[1].positions.slice(-2));
+                            const bImprove = Math.min(...b[1].positions.slice(0,2)) - Math.min(...b[1].positions.slice(-2));
+                            return bImprove - aImprove;
+                        })[0],
+                    desc: 'Getting better with time',
+                    getValue: (stats) => `Recent form 📈`
+                },
+                {
+                    emoji: '🎰',
+                    title: 'Break Even Expert',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.netEarnings === 0 && stats.gamesPlayed >= 3)[0],
+                    desc: 'Perfectly balanced',
+                    getValue: (stats) => `Net: ₹0 exactly`
                 }
             ];
             
