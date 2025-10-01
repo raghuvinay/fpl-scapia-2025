@@ -527,8 +527,8 @@
             <button class="gw-btn" onclick="showGW(2)">GW 2</button>
             <button class="gw-btn" onclick="showGW(3)">GW 3</button>
             <button class="gw-btn" onclick="showGW(4)">GW 4</button>
-            <button class="gw-btn active" onclick="showGW(5)">GW 5</button>
-            <button class="gw-btn" onclick="showGW(6)">GW 6</button>
+            <button class="gw-btn" onclick="showGW(5)">GW 5</button>
+            <button class="gw-btn active" onclick="showGW(6)">GW 6</button>
         </div>
 
         <div class="tab-navigation">
@@ -688,14 +688,32 @@
                 ]
             },
             6: {
-                players: [],
-                pool: 0,
-                prizes: [],
-                results: []
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
+                pool: 1700,
+                prizes: [700, 400, 300, 200, 100],
+                results: [
+                    { name: 'Gokul', score: 68, captain: 'Haaland', prize: 700 },
+                    { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 },
+                    { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 },
+                    { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 200 },
+                    { name: 'Rounak', score: 57, captain: 'Haaland', prize: 100 },
+                    { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 },
+                    { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 },
+                    { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 },
+                    { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 46, captain: 'João Pedro', prize: 0 },
+                    { name: 'Shashank', score: 39, captain: 'M.Salah', prize: 0 },
+                    { name: 'Sarjan', score: 29, captain: 'João Pedro', prize: 0 },
+                    { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 },
+                    { name: 'Jalaj', score: 26, captain: 'João Pedro', prize: 0 },
+                    { name: 'Bharath', score: 24, captain: 'João Pedro', prize: 0 },
+                    { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 5;
+        let currentGW = 6;
 
         function showGW(gw) {
             currentGW = gw;
@@ -853,13 +871,13 @@
                 const netClass = data.net > 0 ? 'net-positive' : data.net < 0 ? 'net-negative' : 'net-neutral';
                 
                 const badges = data.wins.map(w => {
-                    const medals = ['🥇', '🥈', '🥉', '🎖️'];
+                    const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
                     let badgeClass = '';
                     if (w.position === 1) badgeClass = 'gold';
                     else if (w.position === 2) badgeClass = 'silver';
                     else if (w.position === 3) badgeClass = 'bronze';
                     
-                    return `<span class="badge ${badgeClass}">GW${w.gw} ${medals[w.position - 1]}</span>`;
+                    return `<span class="badge ${badgeClass}">GW${w.gw} ${medals[w.position - 1] || '🏅'}</span>`;
                 }).join('');
                 
                 html += `
@@ -1075,7 +1093,99 @@
                 }
             ];
             
-            // Display awards
+            // More Fun Awards
+            const moreFunAwards = [
+                {
+                    emoji: '🎭',
+                    title: 'Drama Queen',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.scores.length >= 3)
+                        .map(([name, stats]) => {
+                            const avgScore = stats.scores.reduce((a,b) => a+b, 0) / stats.scores.length;
+                            const variance = stats.scores.map(s => Math.pow(s - avgScore, 2)).reduce((a,b) => a+b, 0) / stats.scores.length;
+                            return [name, {...stats, scoreVariance: variance}];
+                        })
+                        .sort((a, b) => b[1].scoreVariance - a[1].scoreVariance)[0],
+                    desc: 'Most unpredictable scores',
+                    getValue: (stats) => `${Math.max(...stats.scores)} to ${Math.min(...stats.scores)} pts`
+                },
+                {
+                    emoji: '🔥',
+                    title: 'Hot Streak',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => {
+                            const last3 = stats.positions.slice(-3);
+                            return last3.length === 3 && Math.max(...last3) <= 5;
+                        })[0],
+                    desc: 'Top 5 in last 3 games',
+                    getValue: (stats) => `On fire 🔥`
+                },
+                {
+                    emoji: '❄️',
+                    title: 'Ice Cold',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => {
+                            const last3 = stats.positions.slice(-3);
+                            return last3.length === 3 && Math.min(...last3) >= 10;
+                        })[0],
+                    desc: 'Bottom half last 3 games',
+                    getValue: (stats) => `Needs defrosting`
+                },
+                {
+                    emoji: '🎲',
+                    title: 'Lucky Number 7',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.positions.filter(p => p === 7).length >= 2)[0],
+                    desc: 'Finished 7th most often',
+                    getValue: (stats) => `${stats.positions.filter(p => p === 7).length} times at 7th`
+                },
+                {
+                    emoji: '🥶',
+                    title: 'Never Lucky',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.gamesPlayed >= 4 && stats.top4Finishes === 0)[0],
+                    desc: 'Most games without top 4',
+                    getValue: (stats) => `${stats.gamesPlayed} games, 0 money`
+                },
+                {
+                    emoji: '🎪',
+                    title: 'Comeback Kid',
+                    winner: Object.entries(playerStats)
+                        .map(([name, stats]) => {
+                            if (stats.netEarnings <= -200 && stats.wins.length > 0) {
+                                const winGW = stats.wins[stats.wins.length - 1].gw;
+                                return [name, {...stats, comebackGW: winGW}];
+                            }
+                            return null;
+                        })
+                        .filter(x => x)
+                        .sort((a, b) => b[1].comebackGW - a[1].comebackGW)[0],
+                    desc: 'Won after being down bad',
+                    getValue: (stats) => `From -₹300 to winner!`
+                },
+                {
+                    emoji: '🏁',
+                    title: 'Fast Starter',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => stats.positions.length >= 2 && stats.positions[0] <= 3)[0],
+                    desc: 'Started with a podium',
+                    getValue: (stats) => `GW2 position: ${stats.positions[0]}`
+                },
+                {
+                    emoji: '🦥',
+                    title: 'Slow & Steady',
+                    winner: Object.entries(playerStats)
+                        .filter(([_, stats]) => {
+                            if (stats.positions.length < 3) return false;
+                            const range = Math.max(...stats.positions) - Math.min(...stats.positions);
+                            return range <= 5 && stats.gamesPlayed >= 3;
+                        })[0],
+                    desc: 'Most consistent positions',
+                    getValue: (stats) => `Range of ${Math.max(...stats.positions) - Math.min(...stats.positions)} spots`
+                }
+            ];
+            
+            // Display all awards
             const performanceHTML = performanceAwards.map(award => {
                 if (!award.winner) return '';
                 const [name, stats] = award.winner;
@@ -1093,7 +1203,8 @@
                 `;
             }).filter(html => html).join('');
             
-            const funHTML = funAwards.map(award => {
+            const allFunAwards = [...funAwards, ...moreFunAwards];
+            const funHTML = allFunAwards.map(award => {
                 if (!award.winner) return '';
                 const [name, stats] = award.winner;
                 return `
