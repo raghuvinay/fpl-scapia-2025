@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scapia FPL League</title>
+    <title>Scapia FPL Weekly Tracker</title>
     <style>
         * {
             margin: 0;
@@ -24,239 +24,195 @@
         }
         
         body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, var(--scapia-dark) 0%, var(--scapia-navy) 50%, var(--scapia-accent) 100%);
             min-height: 100vh;
             color: #fff;
             padding: 15px;
-            overflow-x: hidden;
         }
         
         .container {
-            max-width: 480px;
+            max-width: 500px;
             margin: 0 auto;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 25px;
-            animation: slideDown 0.5s ease-out;
+            margin-bottom: 30px;
         }
         
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .scapia-logo {
-            font-size: 2.2rem;
+        .logo {
+            font-size: 2.5rem;
             font-weight: 900;
             color: var(--scapia-orange);
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
-            animation: subtle-glow 3s ease-in-out infinite;
-            letter-spacing: 2px;
-        }
-        
-        @keyframes subtle-glow {
-            0%, 100% { filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.5)); }
-            50% { filter: brightness(1.3) drop-shadow(0 0 20px rgba(255, 107, 53, 0.8)); }
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
         }
         
         .tagline {
             color: #a0aec0;
-            font-size: 0.9rem;
             font-style: italic;
             margin-top: 5px;
         }
         
         .gw-selector {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 25px;
             overflow-x: auto;
-            padding: 5px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
-            backdrop-filter: blur(10px);
         }
         
         .gw-btn {
-            padding: 10px 20px;
+            padding: 10px 18px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
             transition: all 0.3s;
             white-space: nowrap;
-            flex-shrink: 0;
         }
         
         .gw-btn:hover {
             background: rgba(255, 107, 53, 0.2);
-            border-color: var(--scapia-orange);
             transform: translateY(-2px);
         }
         
         .gw-btn.active {
             background: var(--scapia-orange);
-            border-color: var(--scapia-orange);
-            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
         }
         
-        .tab-navigation {
+        .tabs {
             display: flex;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             padding: 4px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
+            margin-bottom: 25px;
         }
         
-        .tab-btn {
+        .tab {
             flex: 1;
             padding: 12px;
             background: transparent;
             border: none;
             color: rgba(255, 255, 255, 0.7);
             font-weight: 600;
-            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s;
             border-radius: 8px;
+            transition: all 0.3s;
         }
         
-        .tab-btn.active {
+        .tab.active {
             background: var(--scapia-orange);
             color: white;
-            box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3);
         }
         
-        .tab-content {
+        .content {
             display: none;
         }
         
-        .tab-content.active {
+        .content.active {
             display: block;
-            animation: fadeInUp 0.4s ease-out;
         }
         
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .prize-pool-card {
+        .prize-card {
             background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
             border: 1px solid var(--scapia-orange);
             border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
             text-align: center;
-            backdrop-filter: blur(10px);
         }
         
         .pool-amount {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
             color: var(--scapia-orange);
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.6);
-            margin-bottom: 5px;
+            text-shadow: 0 0 25px rgba(255, 107, 53, 0.5);
         }
         
-        .pool-details {
+        .pool-info {
             display: flex;
             justify-content: space-around;
-            margin-top: 15px;
+            margin: 20px 0;
         }
         
-        .pool-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .pool-stat-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        
-        .pool-stat-label {
-            font-size: 0.75rem;
-            color: #a0aec0;
-            margin-top: 2px;
-        }
-        
-        .prize-distribution {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .prize-item {
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+        .info-item {
             text-align: center;
+        }
+        
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .info-label {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+        
+        .prizes {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .prize {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
         
         .prize-emoji {
             font-size: 1.5rem;
-            margin-bottom: 4px;
         }
         
-        .prize-value {
+        .prize-amount {
             font-weight: 700;
-            font-size: 0.9rem;
+            margin-top: 5px;
         }
         
         .leaderboard {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 15px;
-            padding: 15px;
-            backdrop-filter: blur(10px);
+            padding: 20px;
         }
         
-        .leaderboard-row {
+        .player-row {
             display: flex;
             align-items: center;
-            padding: 12px;
-            margin-bottom: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             transition: all 0.3s;
         }
         
-        .leaderboard-row:hover {
-            background: rgba(255, 255, 255, 0.08);
+        .player-row:hover {
             transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
         }
         
-        .rank-badge {
-            width: 35px;
-            height: 35px;
+        .rank {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 1.1rem;
-            margin-right: 12px;
             border-radius: 50%;
+            font-weight: 900;
+            margin-right: 15px;
         }
         
         .rank-1 {
             background: linear-gradient(135deg, var(--scapia-gold), #ffed4e);
             color: #000;
-            animation: goldPulse 2s infinite;
-        }
-        
-        @keyframes goldPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
         }
         
         .rank-2 {
@@ -269,23 +225,22 @@
             color: #000;
         }
         
-        .rank-4 {
-            background: rgba(255, 107, 53, 0.3);
+        .rank-other {
+            background: rgba(255, 107, 53, 0.2);
             border: 1px solid var(--scapia-orange);
         }
         
-        .player-details {
+        .player-info {
             flex: 1;
         }
         
         .player-name {
             font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 2px;
+            font-size: 1.1rem;
         }
         
         .player-captain {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #a0aec0;
         }
         
@@ -294,77 +249,58 @@
         }
         
         .score {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 2px;
         }
         
-        .prize {
-            font-size: 0.9rem;
-            font-weight: 600;
+        .prize-won {
             color: var(--success);
+            font-weight: 600;
         }
         
-        .overall-card {
+        .standing-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 15px;
+            padding: 18px;
             margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
-        
-        .overall-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-            border-color: var(--scapia-orange);
-        }
-        
-        .overall-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
+            align-items: center;
         }
         
-        .overall-player {
+        .standing-player {
             flex: 1;
         }
         
-        .overall-name {
+        .standing-name {
             font-weight: 700;
             font-size: 1.1rem;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
         
-        .overall-stats {
-            display: flex;
-            gap: 15px;
+        .standing-stats {
             font-size: 0.85rem;
             color: #a0aec0;
         }
         
-        .overall-earnings {
+        .standing-earnings {
             text-align: right;
         }
         
-        .net-value {
-            font-size: 1.3rem;
+        .net-amount {
+            font-size: 1.4rem;
             font-weight: 900;
-            margin-bottom: 2px;
         }
         
-        .net-positive { color: var(--success); }
-        .net-negative { color: var(--danger); }
-        .net-neutral { color: #a0aec0; }
-        
-        .gross-value {
-            font-size: 0.85rem;
-            color: #a0aec0;
+        .positive {
+            color: var(--success);
         }
         
-        .badge-container {
+        .negative {
+            color: var(--danger);
+        }
+        
+        .badge-list {
             display: flex;
             gap: 5px;
             flex-wrap: wrap;
@@ -380,147 +316,59 @@
             font-weight: 600;
         }
         
-        .badge.gold {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 237, 78, 0.2));
-            border-color: var(--scapia-gold);
-            color: var(--scapia-gold);
-        }
-        
-        .badge.silver {
-            background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(215, 215, 215, 0.2));
-            border-color: var(--scapia-silver);
-            color: var(--scapia-silver);
-        }
-        
-        .badge.bronze {
-            background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(230, 172, 121, 0.2));
-            border-color: var(--scapia-bronze);
-            color: var(--scapia-bronze);
-        }
-        
-        .stats-grid {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .stat-card {
+        .stats-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
         }
         
-        .stat-card-title {
-            font-size: 1.1rem;
+        .stat-title {
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 15px;
             color: var(--scapia-orange);
+            margin-bottom: 15px;
         }
         
-        .fun-award {
+        .award {
             padding: 12px;
             background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
             border-radius: 10px;
             margin-bottom: 10px;
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            transition: all 0.3s;
-        }
-        
-        .fun-award:hover {
-            transform: scale(1.02);
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
-        }
-        
-        .fun-award-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
         }
         
-        .fun-award-title {
+        .award-info {
+            flex: 1;
+        }
+        
+        .award-title {
+            font-weight: 700;
+            color: var(--scapia-orange);
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 700;
-            color: var(--scapia-orange);
         }
         
-        .fun-award-winner {
-            font-weight: 600;
-            color: #fff;
-        }
-        
-        .fun-award-desc {
+        .award-desc {
             font-size: 0.85rem;
             color: #a0aec0;
             font-style: italic;
         }
         
-        .chart-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 15px;
-            backdrop-filter: blur(10px);
-            height: 200px;
-        }
-        
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 150px;
-            gap: 10px;
-        }
-        
-        .chart-bar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            max-width: 40px;
-        }
-        
-        .bar {
-            width: 100%;
-            border-radius: 5px 5px 0 0;
-            position: relative;
-        }
-        
-        .bar-value {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--scapia-orange);
-        }
-        
-        .bar-label {
-            margin-top: 5px;
-            font-size: 0.7rem;
-            color: #a0aec0;
-            writing-mode: vertical-lr;
-            text-orientation: mixed;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: #718096;
-            font-size: 0.85rem;
+        .award-winner {
+            font-weight: 600;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="scapia-logo">✈️ SCAPIA FPL</div>
-            <p class="tagline">Where every gameweek is a new journey</p>
+            <div class="logo">✈️ SCAPIA FPL</div>
+            <div class="tagline">Where every gameweek is a new journey</div>
         </div>
 
         <div class="gw-selector">
@@ -528,81 +376,59 @@
             <button class="gw-btn" onclick="showGW(3)">GW 3</button>
             <button class="gw-btn" onclick="showGW(4)">GW 4</button>
             <button class="gw-btn" onclick="showGW(5)">GW 5</button>
-            <button class="gw-btn active" onclick="showGW(6)">GW 6</button>
+            <button class="gw-btn" onclick="showGW(6)">GW 6</button>
+            <button class="gw-btn active" onclick="showGW(7)">GW 7</button>
         </div>
 
-        <div class="tab-navigation">
-            <button class="tab-btn active" onclick="showTab('battle')">⚔️ Battle</button>
-            <button class="tab-btn" onclick="showTab('standings')">🏆 Standings</button>
-            <button class="tab-btn" onclick="showTab('stats')">📊 Stats</button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('battle')">⚔️ Battle</button>
+            <button class="tab" onclick="showTab('standings')">🏆 Standings</button>
+            <button class="tab" onclick="showTab('stats')">📊 Stats</button>
         </div>
 
-        <div id="battle-tab" class="tab-content active">
-            <div class="prize-pool-card">
-                <div class="pool-amount">₹<span id="poolAmount">1500</span></div>
-                <div class="pool-details">
-                    <div class="pool-stat">
-                        <div class="pool-stat-value" id="playerCount">15</div>
-                        <div class="pool-stat-label">Warriors</div>
+        <!-- Battle Tab -->
+        <div id="battle" class="content active">
+            <div class="prize-card">
+                <div class="pool-amount">₹<span id="poolAmount">1700</span></div>
+                <div class="pool-info">
+                    <div class="info-item">
+                        <div class="info-value" id="playerCount">17</div>
+                        <div class="info-label">Warriors</div>
                     </div>
-                    <div class="pool-stat">
-                        <div class="pool-stat-value">₹100</div>
-                        <div class="pool-stat-label">Entry</div>
+                    <div class="info-item">
+                        <div class="info-value">₹100</div>
+                        <div class="info-label">Entry</div>
                     </div>
-                    <div class="pool-stat">
-                        <div class="pool-stat-value">GW<span id="gwNumber">4</span></div>
-                        <div class="pool-stat-label">Battle</div>
+                    <div class="info-item">
+                        <div class="info-value">GW<span id="currentGW">7</span></div>
+                        <div class="info-label">Battle</div>
                     </div>
                 </div>
-                <div class="prize-distribution" id="prizeDistribution">
-                    <!-- Will be populated -->
-                </div>
+                <div class="prizes" id="prizeList"></div>
             </div>
-            <div class="leaderboard" id="leaderboard">
-                <!-- Will be populated -->
-            </div>
+            <div class="leaderboard" id="leaderboard"></div>
         </div>
 
-        <div id="standings-tab" class="tab-content">
-            <div id="overallStandings">
-                <!-- Will be populated -->
-            </div>
+        <!-- Standings Tab -->
+        <div id="standings" class="content">
+            <div id="standingsList"></div>
         </div>
 
-        <div id="stats-tab" class="tab-content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card-title">🏆 Performance Awards</div>
-                    <div id="performanceStats">
-                        <!-- Will be populated -->
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-title">😂 Hall of Fame & Shame</div>
-                    <div id="funStats">
-                        <!-- Will be populated -->
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-card-title">📈 Earnings Chart</div>
-                    <div class="chart-container">
-                        <div class="chart-bars" id="earningsChart">
-                            <!-- Will be populated -->
-                        </div>
-                    </div>
-                </div>
+        <!-- Stats Tab -->
+        <div id="stats" class="content">
+            <div class="stats-section">
+                <div class="stat-title">🏆 Performance Awards</div>
+                <div id="performanceAwards"></div>
             </div>
-        </div>
-
-        <div class="footer">
-            <p>🏝️ Powered by Scapia • Journey continues...</p>
+            <div class="stats-section">
+                <div class="stat-title">😂 Hall of Fame & Shame</div>
+                <div id="funAwards"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Game Data
+        // Complete game data
         const gameData = {
             2: {
                 players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'],
@@ -675,15 +501,15 @@
                     { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 },
                     { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 },
                     { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 },
-                    { name: 'Venky', score: 51, captain: 'M.Salah', prize: 0 },
+                    { name: 'Venky', score: 51, captain: 'Salah', prize: 0 },
                     { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 },
                     { name: 'Neeraj', score: 47, captain: 'João Pedro', prize: 0 },
                     { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 },
-                    { name: 'Shashank', score: 44, captain: 'M.Salah', prize: 0 },
+                    { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 },
                     { name: 'Sarjan', score: 44, captain: 'João Pedro', prize: 0 },
                     { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 },
                     { name: 'Sandesh', score: 40, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shubs', score: 39, captain: 'M.Salah', prize: 0 },
+                    { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 },
                     { name: 'Rounak', score: 38, captain: 'João Pedro', prize: 0 }
                 ]
             },
@@ -703,561 +529,323 @@
                     { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 },
                     { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 },
                     { name: 'Sandesh', score: 46, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shashank', score: 39, captain: 'M.Salah', prize: 0 },
+                    { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 },
                     { name: 'Sarjan', score: 29, captain: 'João Pedro', prize: 0 },
                     { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 },
                     { name: 'Jalaj', score: 26, captain: 'João Pedro', prize: 0 },
                     { name: 'Bharath', score: 24, captain: 'João Pedro', prize: 0 },
                     { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }
                 ]
+            },
+            7: {
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
+                results: [
+                    { name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 },
+                    { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 },
+                    { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 },
+                    { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 250 },
+                    { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 150 },
+                    { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 },
+                    { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 },
+                    { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 },
+                    { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 },
+                    { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 },
+                    { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 },
+                    { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 },
+                    { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 },
+                    { name: 'Jalaj', score: 48, captain: 'João Pedro', prize: 0 },
+                    { name: 'Sandesh', score: 47, captain: 'João Pedro', prize: 0 },
+                    { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 6;
+        let currentGW = 7;
 
         function showGW(gw) {
             currentGW = gw;
             document.querySelectorAll('.gw-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.textContent.includes(gw)) {
-                    btn.classList.add('active');
-                }
             });
-            updateDisplay();
+            event.target.classList.add('active');
+            updateBattle();
         }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
+            document.querySelectorAll('.content').forEach(c => {
+                c.classList.remove('active');
             });
-            document.getElementById(`${tabName}-tab`).classList.add('active');
+            document.getElementById(tab).classList.add('active');
             
-            if (tabName === 'standings') {
-                updateOverallStandings();
-            } else if (tabName === 'stats') {
-                updateStats();
-            }
+            if (tab === 'standings') updateStandings();
+            if (tab === 'stats') updateStats();
         }
 
-        function updateDisplay() {
-            const gwData = gameData[currentGW];
+        function updateBattle() {
+            const data = gameData[currentGW];
             
-            if (!gwData || gwData.players.length === 0) {
-                document.getElementById('poolAmount').textContent = '0';
-                document.getElementById('playerCount').textContent = '0';
-                document.getElementById('gwNumber').textContent = currentGW;
-                document.getElementById('prizeDistribution').innerHTML = '<div style="color: #a0aec0;">Coming soon...</div>';
-                document.getElementById('leaderboard').innerHTML = '<div style="text-align: center; padding: 40px; color: #a0aec0;">Gameweek not started</div>';
-                return;
-            }
+            document.getElementById('poolAmount').textContent = data.pool;
+            document.getElementById('playerCount').textContent = data.players.length;
+            document.getElementById('currentGW').textContent = currentGW;
             
-            document.getElementById('poolAmount').textContent = gwData.pool;
-            document.getElementById('playerCount').textContent = gwData.players.length;
-            document.getElementById('gwNumber').textContent = currentGW;
+            // Update prizes
+            const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
+            const prizeHTML = data.prizes.map((prize, i) => `
+                <div class="prize">
+                    <div class="prize-emoji">${medals[i]}</div>
+                    <div class="prize-amount">₹${prize}</div>
+                </div>
+            `).join('');
+            document.getElementById('prizeList').innerHTML = prizeHTML;
             
-            const prizeHTML = gwData.prizes.map((prize, index) => {
-                const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
+            // Update leaderboard
+            const leaderboardHTML = data.results.map((player, i) => {
+                const rank = i + 1;
+                let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
+                let rankDisplay = rank <= 5 && player.prize > 0 ? medals[rank-1] : rank;
+                
                 return `
-                    <div class="prize-item">
-                        <div class="prize-emoji">${medals[index] || '🏅'}</div>
-                        <div class="prize-value">₹${prize}</div>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('prizeDistribution').innerHTML = prizeHTML;
-            
-            updateLeaderboard();
-        }
-
-        function updateLeaderboard() {
-            const gwData = gameData[currentGW];
-            
-            if (!gwData || gwData.results.length === 0) {
-                document.getElementById('leaderboard').innerHTML = '<div style="text-align: center; padding: 40px; color: #a0aec0;">Awaiting results...</div>';
-                return;
-            }
-            
-            let html = '';
-            gwData.results.forEach((player, index) => {
-                const rank = index + 1;
-                let rankClass = '';
-                let rankIcon = rank;
-                
-                if (rank === 1) {
-                    rankClass = 'rank-1';
-                    rankIcon = '🥇';
-                } else if (rank === 2) {
-                    rankClass = 'rank-2';
-                    rankIcon = '🥈';
-                } else if (rank === 3) {
-                    rankClass = 'rank-3';
-                    rankIcon = '🥉';
-                } else if (player.prize > 0) {
-                    rankClass = 'rank-4';
-                    rankIcon = '🎖️';
-                }
-                
-                html += `
-                    <div class="leaderboard-row">
-                        <div class="rank-badge ${rankClass}">${rankIcon}</div>
-                        <div class="player-details">
+                    <div class="player-row">
+                        <div class="rank ${rankClass}">${rankDisplay}</div>
+                        <div class="player-info">
                             <div class="player-name">${player.name}</div>
                             <div class="player-captain">⚡ ${player.captain}</div>
                         </div>
                         <div class="score-prize">
                             <div class="score">${player.score}</div>
-                            ${player.prize > 0 ? `<div class="prize">+₹${player.prize}</div>` : ''}
+                            ${player.prize > 0 ? `<div class="prize-won">+₹${player.prize}</div>` : ''}
                         </div>
                     </div>
                 `;
-            });
-            
-            document.getElementById('leaderboard').innerHTML = html;
+            }).join('');
+            document.getElementById('leaderboard').innerHTML = leaderboardHTML;
         }
 
-        function updateOverallStandings() {
+        function updateStandings() {
             const earnings = {};
-            const allPlayers = new Set();
             
+            // Calculate net earnings
             Object.values(gameData).forEach(gw => {
-                gw.players.forEach(player => allPlayers.add(player));
-            });
-            
-            allPlayers.forEach(player => {
-                earnings[player] = { 
-                    grossWon: 0, 
-                    gamesPlayed: 0,
-                    lockin: 0,
-                    net: 0,
-                    wins: []
-                };
-            });
-            
-            Object.entries(gameData).forEach(([gwNum, gwData]) => {
-                if (gwData.results.length > 0) {
-                    gwData.results.forEach((result, index) => {
-                        if (gwData.players.includes(result.name)) {
-                            earnings[result.name].gamesPlayed++;
-                            earnings[result.name].lockin += 100;
-                            
-                            if (result.prize > 0) {
-                                earnings[result.name].grossWon += result.prize;
-                                earnings[result.name].wins.push({ 
-                                    gw: parseInt(gwNum), 
-                                    position: index + 1,
-                                    amount: result.prize 
-                                });
-                            }
+                gw.results.forEach(result => {
+                    if (gw.players.includes(result.name)) {
+                        if (!earnings[result.name]) {
+                            earnings[result.name] = { won: 0, played: 0, wins: [] };
                         }
-                    });
-                }
+                        earnings[result.name].played++;
+                        if (result.prize > 0) {
+                            earnings[result.name].won += result.prize;
+                            earnings[result.name].wins.push(gw);
+                        }
+                    }
+                });
             });
             
-            Object.keys(earnings).forEach(player => {
-                earnings[player].net = earnings[player].grossWon - earnings[player].lockin;
-            });
+            // Calculate net and sort
+            const standings = Object.entries(earnings).map(([name, data]) => ({
+                name,
+                net: data.won - (data.played * 100),
+                won: data.won,
+                played: data.played,
+                wins: data.wins
+            })).sort((a, b) => b.net - a.net);
             
-            const sorted = Object.entries(earnings)
-                .filter(([_, data]) => data.gamesPlayed > 0)
-                .sort((a, b) => b[1].net - a[1].net);
-            
-            let html = '';
-            sorted.forEach(([name, data]) => {
-                const netClass = data.net > 0 ? 'net-positive' : data.net < 0 ? 'net-negative' : 'net-neutral';
-                
-                const badges = data.wins.map(w => {
-                    const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
-                    let badgeClass = '';
-                    if (w.position === 1) badgeClass = 'gold';
-                    else if (w.position === 2) badgeClass = 'silver';
-                    else if (w.position === 3) badgeClass = 'bronze';
-                    
-                    return `<span class="badge ${badgeClass}">GW${w.gw} ${medals[w.position - 1] || '🏅'}</span>`;
-                }).join('');
-                
-                html += `
-                    <div class="overall-card">
-                        <div class="overall-header">
-                            <div class="overall-player">
-                                <div class="overall-name">${name}</div>
-                                <div class="overall-stats">
-                                    <span>🎮 ${data.gamesPlayed} games</span>
-                                    <span>💰 ₹${data.lockin} locked</span>
-                                </div>
-                            </div>
-                            <div class="overall-earnings">
-                                <div class="net-value ${netClass}">
-                                    ${data.net >= 0 ? '+' : ''}₹${Math.abs(data.net)}
-                                </div>
-                                <div class="gross-value">Won: ₹${data.grossWon}</div>
-                            </div>
-                        </div>
-                        <div class="badge-container">
-                            ${badges || '<span style="color: #718096; font-size: 0.85rem;">No wins yet</span>'}
+            const standingsHTML = standings.map(player => `
+                <div class="standing-card">
+                    <div class="standing-player">
+                        <div class="standing-name">${player.name}</div>
+                        <div class="standing-stats">
+                            🎮 ${player.played} games | 💰 ₹${player.played * 100} locked | Won: ₹${player.won}
                         </div>
                     </div>
-                `;
-            });
-            
-            document.getElementById('overallStandings').innerHTML = html;
+                    <div class="standing-earnings">
+                        <div class="net-amount ${player.net >= 0 ? 'positive' : 'negative'}">
+                            ${player.net >= 0 ? '+' : ''}₹${Math.abs(player.net)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('standingsList').innerHTML = standingsHTML;
         }
 
         function updateStats() {
+            // Calculate comprehensive stats
             const playerStats = {};
-            const allPlayers = new Set();
-            
             Object.values(gameData).forEach(gw => {
-                gw.players.forEach(player => allPlayers.add(player));
-            });
-            
-            allPlayers.forEach(player => {
-                playerStats[player] = {
-                    gamesPlayed: 0,
-                    wins: 0,
-                    podiums: 0,
-                    top4Finishes: 0,
-                    positions: [],
-                    scores: [],
-                    netEarnings: 0,
-                    grossWon: 0,
-                    improvements: []
-                };
-            });
-            
-            Object.entries(gameData).forEach(([gwNum, gwData]) => {
-                if (gwData.results.length > 0) {
-                    gwData.results.forEach((result, index) => {
-                        if (gwData.players.includes(result.name)) {
-                            const stats = playerStats[result.name];
-                            const position = index + 1;
-                            
-                            stats.gamesPlayed++;
-                            stats.scores.push(result.score);
-                            stats.positions.push(position);
-                            
-                            if (position === 1) stats.wins++;
-                            if (position <= 3) stats.podiums++;
-                            if (position <= 4) stats.top4Finishes++;
-                            
-                            if (result.prize > 0) {
-                                stats.grossWon += result.prize;
-                            }
-                            stats.netEarnings = stats.grossWon - (stats.gamesPlayed * 100);
-                            
-                            if (stats.scores.length > 1) {
-                                const improvement = result.score - stats.scores[stats.scores.length - 2];
-                                stats.improvements.push(improvement);
-                            }
+                gw.results.forEach((result, index) => {
+                    if (gw.players.includes(result.name)) {
+                        if (!playerStats[result.name]) {
+                            playerStats[result.name] = { 
+                                games: 0, wins: 0, podiums: 0, scores: [], positions: [], earnings: 0 
+                            };
                         }
-                    });
-                }
+                        playerStats[result.name].games++;
+                        playerStats[result.name].scores.push(result.score);
+                        playerStats[result.name].positions.push(index + 1);
+                        if (index === 0) playerStats[result.name].wins++;
+                        if (index < 3) playerStats[result.name].podiums++;
+                        if (result.prize > 0) playerStats[result.name].earnings += result.prize;
+                    }
+                });
             });
             
-            Object.keys(playerStats).forEach(player => {
-                const stats = playerStats[player];
-                if (stats.gamesPlayed > 0) {
-                    stats.avgPosition = stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length;
-                    stats.winRate = (stats.wins / stats.gamesPlayed * 100).toFixed(1);
-                    stats.variance = stats.positions.length > 0 ? Math.max(...stats.positions) - Math.min(...stats.positions) : 0;
-                    stats.maxImprovement = stats.improvements.length > 0 ? Math.max(...stats.improvements) : 0;
-                    stats.maxDrop = stats.improvements.length > 0 ? Math.min(...stats.improvements) : 0;
-                }
-            });
-            
+            // Calculate trends and movements
+            const calculateTrend = (positions) => {
+                if (positions.length < 3) return 0;
+                const recent3 = positions.slice(-3);
+                const earlier3 = positions.slice(-6, -3);
+                if (earlier3.length === 0) return 0;
+                const recentAvg = recent3.reduce((a,b) => a+b, 0) / recent3.length;
+                const earlierAvg = earlier3.reduce((a,b) => a+b, 0) / earlier3.length;
+                return earlierAvg - recentAvg; // Positive = improving
+            };
+
             // Performance Awards
             const performanceAwards = [
                 {
-                    emoji: '🎯',
+                    title: 'Money Machine',
+                    emoji: '💰',
+                    desc: 'Highest net earnings',
+                    winner: Object.entries(playerStats).sort((a, b) => 
+                        (b[1].earnings - b[1].games * 100) - (a[1].earnings - a[1].games * 100)
+                    )[0]
+                },
+                {
+                    title: 'The Climber',
+                    emoji: '📈',
+                    desc: 'Best improvement trend (last 3 GWs)',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
+                        const trend = calculateTrend(stats.positions);
+                        return [name, {...stats, trend}];
+                    }).sort((a, b) => b[1].trend - a[1].trend)[0]
+                },
+                {
                     title: 'Mr. Reliable',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.gamesPlayed >= 2)
-                        .sort((a, b) => a[1].avgPosition - b[1].avgPosition)[0],
-                    desc: 'Best average position',
-                    getValue: (stats) => `${stats.avgPosition.toFixed(1)} avg`
+                    emoji: '🎯',
+                    desc: 'Most consistent (low position variance)',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                        const avg = stats.positions.reduce((a,b) => a+b, 0) / stats.positions.length;
+                        const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length;
+                        return [name, {...stats, variance}];
+                    }).sort((a, b) => a[1].variance - b[1].variance)[0]
                 },
                 {
-                    emoji: '🚀',
-                    title: 'Phoenix Award',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.maxImprovement > 0)
-                        .sort((a, b) => b[1].maxImprovement - a[1].maxImprovement)[0],
-                    desc: 'Biggest improvement',
-                    getValue: (stats) => `+${stats.maxImprovement} pts`
+                    title: 'Prize Hunter',
+                    emoji: '🎖️',
+                    desc: 'Highest prize finish rate',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                        const prizeCount = stats.positions.filter(p => p <= 5).length;
+                        const prizeRate = prizeCount / stats.games;
+                        return [name, {...stats, prizeRate}];
+                    }).sort((a, b) => b[1].prizeRate - a[1].prizeRate)[0]
                 },
                 {
-                    emoji: '🏅',
-                    title: 'Podium Addict',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.top4Finishes > 0)
-                        .sort((a, b) => b[1].top4Finishes - a[1].top4Finishes)[0],
-                    desc: 'Most top-4 finishes',
-                    getValue: (stats) => `${stats.top4Finishes} times`
-                },
-                {
-                    emoji: '👑',
-                    title: 'Win Rate Warrior',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.wins > 0)
-                        .sort((a, b) => parseFloat(b[1].winRate) - parseFloat(a[1].winRate))[0],
-                    desc: 'Best win percentage',
-                    getValue: (stats) => `${stats.winRate}%`
+                    title: 'Hot Streak',
+                    emoji: '🔥',
+                    desc: 'Best recent form (last 3 GWs avg)',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 3).map(([name, stats]) => {
+                        const recent3 = stats.positions.slice(-3);
+                        const avgRecent = recent3.reduce((a,b) => a+b, 0) / recent3.length;
+                        return [name, {...stats, avgRecent}];
+                    }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0]
                 }
             ];
             
-            // Fun Awards
+            // Fun Awards - GW7 Special Edition
             const funAwards = [
                 {
-                    emoji: '😭',
-                    title: 'Always the Bridesmaid',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.podiums > stats.wins && stats.wins === 0)
-                        .sort((a, b) => b[1].podiums - a[1].podiums)[0],
-                    desc: 'Podiums without a win',
-                    getValue: (stats) => `${stats.podiums} podiums, 0 wins`
+                    title: 'Haaland Cult Leader',
+                    emoji: '🐑',
+                    desc: '14 sheep followed the Norwegian',
+                    winner: ['Gokul', playerStats['Gokul']]
                 },
                 {
-                    emoji: '🎢',
-                    title: 'Roller Coaster',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.variance > 0)
-                        .sort((a, b) => b[1].variance - a[1].variance)[0],
-                    desc: 'Wildest position swings',
-                    getValue: (stats) => `${Math.min(...stats.positions)} to ${Math.max(...stats.positions)}`
-                },
-                {
-                    emoji: '💸',
-                    title: 'Generous Donor',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.netEarnings < 0)
-                        .sort((a, b) => a[1].netEarnings - b[1].netEarnings)[0],
-                    desc: 'Funding everyone else',
-                    getValue: (stats) => `-₹${Math.abs(stats.netEarnings)}`
-                },
-                {
-                    emoji: '📉',
-                    title: 'Icarus Award',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.maxDrop < 0)
-                        .sort((a, b) => a[1].maxDrop - b[1].maxDrop)[0],
-                    desc: 'Biggest drop',
-                    getValue: (stats) => `${stats.maxDrop} pts`
-                },
-                {
-                    emoji: '🎯',
-                    title: 'One Hit Wonder',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.wins === 1 && stats.gamesPlayed >= 3)
-                        .sort((a, b) => a[1].positions[0] - b[1].positions[0])[0],
-                    desc: 'Won once, vanished',
-                    getValue: (stats) => `Won GW${stats.positions.indexOf(1) + 2}`
-                },
-                {
-                    emoji: '🐢',
-                    title: 'Mr. Consistent Bottom',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.positions.length >= 3 && Math.min(...stats.positions) > 10)
-                        .sort((a, b) => b[1].avgPosition - a[1].avgPosition)[0],
-                    desc: 'Consistently at the bottom',
-                    getValue: (stats) => `Avg position: ${stats.avgPosition.toFixed(1)}`
-                },
-                {
-                    emoji: '🏃',
-                    title: 'Late Bloomer',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => {
-                            const lastGames = stats.positions.slice(-2);
-                            const firstGames = stats.positions.slice(0, 2);
-                            return lastGames.length === 2 && firstGames.length === 2 && 
-                                   Math.min(...lastGames) < Math.min(...firstGames);
-                        })
-                        .sort((a, b) => {
-                            const aImprove = Math.min(...a[1].positions.slice(0,2)) - Math.min(...a[1].positions.slice(-2));
-                            const bImprove = Math.min(...b[1].positions.slice(0,2)) - Math.min(...b[1].positions.slice(-2));
-                            return bImprove - aImprove;
-                        })[0],
-                    desc: 'Getting better with time',
-                    getValue: (stats) => `Recent form 📈`
-                },
-                {
-                    emoji: '🎰',
-                    title: 'Break Even Expert',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.netEarnings === 0 && stats.gamesPlayed >= 3)[0],
-                    desc: 'Perfectly balanced',
-                    getValue: (stats) => `Net: ₹0 exactly`
-                }
-            ];
-            
-            // More Fun Awards
-            const moreFunAwards = [
-                {
-                    emoji: '🎭',
-                    title: 'Drama Queen',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.scores.length >= 3)
-                        .map(([name, stats]) => {
-                            const avgScore = stats.scores.reduce((a,b) => a+b, 0) / stats.scores.length;
-                            const variance = stats.scores.map(s => Math.pow(s - avgScore, 2)).reduce((a,b) => a+b, 0) / stats.scores.length;
-                            return [name, {...stats, scoreVariance: variance}];
-                        })
-                        .sort((a, b) => b[1].scoreVariance - a[1].scoreVariance)[0],
-                    desc: 'Most unpredictable scores',
-                    getValue: (stats) => `${Math.max(...stats.scores)} to ${Math.min(...stats.scores)} pts`
-                },
-                {
+                    title: 'Phoenix Rising',
                     emoji: '🔥',
-                    title: 'Hot Streak',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => {
-                            const last3 = stats.positions.slice(-3);
-                            return last3.length === 3 && Math.max(...last3) <= 5;
-                        })[0],
-                    desc: 'Top 5 in last 3 games',
-                    getValue: (stats) => `On fire 🔥`
+                    desc: 'From 24pts (last) to 83pts (2nd)!',
+                    winner: ['Bharath', playerStats['Bharath']]
                 },
                 {
-                    emoji: '❄️',
-                    title: 'Ice Cold',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => {
-                            const last3 = stats.positions.slice(-3);
-                            return last3.length === 3 && Math.min(...last3) >= 10;
-                        })[0],
-                    desc: 'Bottom half last 3 games',
-                    getValue: (stats) => `Needs defrosting`
+                    title: 'The Maverick',
+                    emoji: '🦄',
+                    desc: 'Only Mbeumo captainer - paid off!',
+                    winner: ['Shashank', playerStats['Shashank']]
                 },
                 {
-                    emoji: '🎲',
-                    title: 'Lucky Number 7',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.positions.filter(p => p === 7).length >= 2)[0],
-                    desc: 'Finished 7th most often',
-                    getValue: (stats) => `${stats.positions.filter(p => p === 7).length} times at 7th`
+                    title: 'Loyalty Penalty',
+                    emoji: '💔',
+                    desc: 'João Pedro captainers in bottom 3',
+                    winner: ['Sarjan', playerStats['Sarjan']]
                 },
                 {
-                    emoji: '🥶',
-                    title: 'Never Lucky',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.gamesPlayed >= 4 && stats.top4Finishes === 0)[0],
-                    desc: 'Most games without top 4',
-                    getValue: (stats) => `${stats.gamesPlayed} games, 0 money`
+                    title: 'Form is Temporary',
+                    emoji: '📉',
+                    desc: 'Raghu crashes from top to 14th',
+                    winner: ['Raghu', playerStats['Raghu']]
                 },
                 {
-                    emoji: '🎪',
-                    title: 'Comeback Kid',
-                    winner: Object.entries(playerStats)
-                        .map(([name, stats]) => {
-                            if (stats.netEarnings <= -200 && stats.wins.length > 0) {
-                                const winGW = stats.wins[stats.wins.length - 1].gw;
-                                return [name, {...stats, comebackGW: winGW}];
-                            }
-                            return null;
-                        })
-                        .filter(x => x)
-                        .sort((a, b) => b[1].comebackGW - a[1].comebackGW)[0],
-                    desc: 'Won after being down bad',
-                    getValue: (stats) => `From -₹300 to winner!`
+                    title: 'Century Boy',
+                    emoji: '💯',
+                    desc: 'Gokul smashes 95 points!',
+                    winner: ['Gokul', playerStats['Gokul']]
                 },
                 {
-                    emoji: '🏁',
-                    title: 'Fast Starter',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => stats.positions.length >= 2 && stats.positions[0] <= 3)[0],
-                    desc: 'Started with a podium',
-                    getValue: (stats) => `GW2 position: ${stats.positions[0]}`
+                    title: 'Donation King',
+                    emoji: '💸',
+                    desc: 'Funding everyone else\'s wins',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.earnings === 0 && s.games >= 4)
+                        .sort((a, b) => b[1].games - a[1].games)[0]
                 },
                 {
-                    emoji: '🦥',
-                    title: 'Slow & Steady',
-                    winner: Object.entries(playerStats)
-                        .filter(([_, stats]) => {
-                            if (stats.positions.length < 3) return false;
-                            const range = Math.max(...stats.positions) - Math.min(...stats.positions);
-                            return range <= 5 && stats.gamesPlayed >= 3;
-                        })[0],
-                    desc: 'Most consistent positions',
-                    getValue: (stats) => `Range of ${Math.max(...stats.positions) - Math.min(...stats.positions)} spots`
+                    title: 'Basement Dweller',
+                    emoji: '🏚️',
+                    desc: 'Bottom 3 specialist',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                        const bottom3 = stats.positions.filter(p => p > stats.games * 0.8).length;
+                        return [name, {...stats, bottom3}];
+                    }).sort((a, b) => b[1].bottom3 - a[1].bottom3)[0]
                 }
             ];
             
-            // Display all awards
-            const performanceHTML = performanceAwards.map(award => {
-                if (!award.winner) return '';
-                const [name, stats] = award.winner;
+            const performanceHTML = performanceAwards.filter(a => a.winner).map(award => {
+                const [name] = award.winner;
                 return `
-                    <div class="fun-award">
-                        <div class="fun-award-header">
-                            <div class="fun-award-title">
-                                <span>${award.emoji}</span>
-                                <span>${award.title}</span>
-                            </div>
-                            <div class="fun-award-winner">${name}</div>
+                    <div class="award">
+                        <div class="award-info">
+                            <div class="award-title">${award.emoji} ${award.title}</div>
+                            <div class="award-desc">${award.desc}</div>
                         </div>
-                        <div class="fun-award-desc">${award.desc} - ${award.getValue(stats)}</div>
+                        <div class="award-winner">${name}</div>
                     </div>
                 `;
-            }).filter(html => html).join('');
+            }).join('');
             
-            const allFunAwards = [...funAwards, ...moreFunAwards];
-            const funHTML = allFunAwards.map(award => {
-                if (!award.winner) return '';
-                const [name, stats] = award.winner;
+            const funHTML = funAwards.filter(a => a.winner).map(award => {
+                const [name] = award.winner;
                 return `
-                    <div class="fun-award">
-                        <div class="fun-award-header">
-                            <div class="fun-award-title">
-                                <span>${award.emoji}</span>
-                                <span>${award.title}</span>
-                            </div>
-                            <div class="fun-award-winner">${name}</div>
+                    <div class="award">
+                        <div class="award-info">
+                            <div class="award-title">${award.emoji} ${award.title}</div>
+                            <div class="award-desc">${award.desc}</div>
                         </div>
-                        <div class="fun-award-desc">${award.desc} - ${award.getValue(stats)}</div>
+                        <div class="award-winner">${name}</div>
                     </div>
                 `;
-            }).filter(html => html).join('');
+            }).join('');
             
-            document.getElementById('performanceStats').innerHTML = performanceHTML || '<div style="text-align: center; color: #a0aec0;">Loading...</div>';
-            document.getElementById('funStats').innerHTML = funHTML || '<div style="text-align: center; color: #a0aec0;">Loading...</div>';
-            
-            // Earnings Chart
-            const topEarners = Object.entries(playerStats)
-                .filter(([_, stats]) => stats.gamesPlayed > 0)
-                .sort((a, b) => b[1].netEarnings - a[1].netEarnings)
-                .slice(0, 8);
-            
-            const maxEarning = Math.max(...topEarners.map(([_, stats]) => Math.abs(stats.netEarnings)));
-            
-            if (maxEarning > 0) {
-                const chartHTML = topEarners.map(([name, stats]) => {
-                    const height = Math.abs(stats.netEarnings) / maxEarning * 120;
-                    const isPositive = stats.netEarnings >= 0;
-                    
-                    return `
-                        <div class="chart-bar">
-                            <div class="bar" style="
-                                height: ${height}px; 
-                                background: ${isPositive 
-                                    ? 'linear-gradient(to top, #48bb78, rgba(72, 187, 120, 0.5))' 
-                                    : 'linear-gradient(to top, #e53e3e, rgba(229, 62, 62, 0.5))'};
-                            ">
-                                <div class="bar-value">${stats.netEarnings >= 0 ? '+' : ''}₹${Math.abs(stats.netEarnings)}</div>
-                            </div>
-                            <div class="bar-label">${name.substring(0, 6)}</div>
-                        </div>
-                    `;
-                }).join('');
-                
-                document.getElementById('earningsChart').innerHTML = chartHTML;
-            }
+            document.getElementById('performanceAwards').innerHTML = performanceHTML;
+            document.getElementById('funAwards').innerHTML = funHTML;
         }
 
         // Initialize
-        updateDisplay();
+        updateBattle();
     </script>
 </body>
 </html>
