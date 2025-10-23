@@ -377,7 +377,8 @@
             <button class="gw-btn" onclick="showGW(4)">GW 4</button>
             <button class="gw-btn" onclick="showGW(5)">GW 5</button>
             <button class="gw-btn" onclick="showGW(6)">GW 6</button>
-            <button class="gw-btn active" onclick="showGW(7)">GW 7</button>
+            <button class="gw-btn" onclick="showGW(7)">GW 7</button>
+            <button class="gw-btn active" onclick="showGW(8)">GW 8</button>
         </div>
 
         <div class="tabs">
@@ -400,7 +401,7 @@
                         <div class="info-label">Entry</div>
                     </div>
                     <div class="info-item">
-                        <div class="info-value">GW<span id="currentGW">7</span></div>
+                        <div class="info-value">GW<span id="currentGW">8</span></div>
                         <div class="info-label">Battle</div>
                     </div>
                 </div>
@@ -560,10 +561,34 @@
                     { name: 'Sandesh', score: 47, captain: 'João Pedro', prize: 0 },
                     { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 0 }
                 ]
+            },
+            8: {
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
+                results: [
+                    { name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 },
+                    { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 },
+                    { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 },
+                    { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 },
+                    { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 },
+                    { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 },
+                    { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 68, captain: 'João Pedro (FH)', prize: 0 },
+                    { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 },
+                    { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 },
+                    { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 },
+                    { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 },
+                    { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 },
+                    { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 },
+                    { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 },
+                    { name: 'Jalaj', score: 37, captain: 'João Pedro', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 7;
+        let currentGW = 8;
 
         function showGW(gw) {
             currentGW = gw;
@@ -707,49 +732,68 @@
                 return earlierAvg - recentAvg; // Positive = improving
             };
 
+            // Find best resurrection story
+            const findResurrection = () => {
+                const candidates = Object.entries(playerStats).filter(([_, s]) => s.games >= 6).map(([name, stats]) => {
+                    const worst = Math.max(...stats.positions);
+                    const worstIndex = stats.positions.lastIndexOf(worst);
+                    if (worstIndex >= stats.positions.length - 2) return [name, {...stats, score: 0}];
+                    const afterWorst = stats.positions.slice(worstIndex + 1);
+                    const improvement = worst - (afterWorst.reduce((a,b) => a+b, 0) / afterWorst.length);
+                    return [name, {...stats, score: improvement, worst, afterWorst: afterWorst.length}];
+                });
+                return candidates.sort((a, b) => b[1].score - a[1].score)[0];
+            };
+
+            // Find peak performance
+            const peakPerformance = Object.entries(playerStats).map(([name, stats]) => {
+                const maxScore = Math.max(...stats.scores);
+                return [name, {...stats, maxScore}];
+            }).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
+
             // Performance Awards
             const performanceAwards = [
                 {
-                    title: 'Money Machine',
-                    emoji: '💰',
-                    desc: 'Highest net earnings',
-                    winner: Object.entries(playerStats).sort((a, b) => 
-                        (b[1].earnings - b[1].games * 100) - (a[1].earnings - a[1].games * 100)
-                    )[0]
+                    title: 'King of the League',
+                    emoji: '👑',
+                    desc: 'Most victories - the champion',
+                    winner: Object.entries(playerStats).sort((a, b) => b[1].wins - a[1].wins)[0]
                 },
                 {
-                    title: 'The Climber',
-                    emoji: '📈',
-                    desc: 'Best improvement trend (last 3 GWs)',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
-                        const trend = calculateTrend(stats.positions);
-                        return [name, {...stats, trend}];
-                    }).sort((a, b) => b[1].trend - a[1].trend)[0]
+                    title: 'Resurrection Master',
+                    emoji: '🔥',
+                    desc: 'Ultimate comeback from disaster',
+                    winner: findResurrection()
+                },
+                {
+                    title: 'Peak Performance',
+                    emoji: '⛰️',
+                    desc: 'Highest single GW score',
+                    winner: peakPerformance
                 },
                 {
                     title: 'Mr. Reliable',
                     emoji: '🎯',
-                    desc: 'Most consistent (low position variance)',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                    desc: 'Most consistent positions',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
                         const avg = stats.positions.reduce((a,b) => a+b, 0) / stats.positions.length;
                         const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length;
                         return [name, {...stats, variance}];
                     }).sort((a, b) => a[1].variance - b[1].variance)[0]
                 },
                 {
-                    title: 'Prize Hunter',
+                    title: 'Prize Magnet',
                     emoji: '🎖️',
-                    desc: 'Highest prize finish rate',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                    desc: 'Most top-5 finishes',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
                         const prizeCount = stats.positions.filter(p => p <= 5).length;
-                        const prizeRate = prizeCount / stats.games;
-                        return [name, {...stats, prizeRate}];
-                    }).sort((a, b) => b[1].prizeRate - a[1].prizeRate)[0]
+                        return [name, {...stats, prizeCount}];
+                    }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0]
                 },
                 {
-                    title: 'Hot Streak',
-                    emoji: '🔥',
-                    desc: 'Best recent form (last 3 GWs avg)',
+                    title: 'Form Horse',
+                    emoji: '🐎',
+                    desc: 'On fire right now (L3 avg)',
                     winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 3).map(([name, stats]) => {
                         const recent3 = stats.positions.slice(-3);
                         const avgRecent = recent3.reduce((a,b) => a+b, 0) / recent3.length;
@@ -761,22 +805,22 @@
             // Fun Awards - Story-driven badges
             const funAwards = [
                 {
-                    title: 'From Zero to Hero',
-                    emoji: '🚀',
-                    desc: 'Best comeback from bottom half',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
-                        const firstHalf = stats.positions.slice(0, Math.floor(stats.games/2));
-                        const secondHalf = stats.positions.slice(Math.floor(stats.games/2));
-                        const improvement = (firstHalf.reduce((a,b) => a+b, 0) / firstHalf.length) - 
-                                           (secondHalf.reduce((a,b) => a+b, 0) / secondHalf.length);
-                        return [name, {...stats, improvement}];
-                    }).sort((a, b) => b[1].improvement - a[1].improvement)[0]
+                    title: 'Phoenix Rising',
+                    emoji: '🔥',
+                    desc: 'From ashes to glory - epic turnaround',
+                    winner: ['Bharath', playerStats['Bharath']]
+                },
+                {
+                    title: 'Differential Genius',
+                    emoji: '🧠',
+                    desc: 'Brave captains against the template',
+                    winner: ['Shashank', playerStats['Shashank']]
                 },
                 {
                     title: 'The Fader',
                     emoji: '📉',
-                    desc: 'Started strong, lost momentum',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                    desc: 'Started strong, momentum fading',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
                         const firstHalf = stats.positions.slice(0, Math.floor(stats.games/2));
                         const secondHalf = stats.positions.slice(Math.floor(stats.games/2));
                         const decline = (secondHalf.reduce((a,b) => a+b, 0) / secondHalf.length) - 
@@ -785,16 +829,10 @@
                     }).sort((a, b) => b[1].decline - a[1].decline)[0]
                 },
                 {
-                    title: 'Differential Genius',
-                    emoji: '🧠',
-                    desc: 'Bold captain picks that paid off',
-                    winner: ['Shashank', playerStats['Shashank']]
-                },
-                {
-                    title: 'Almost There',
+                    title: 'So Close Yet So Far',
                     emoji: '😫',
-                    desc: 'Most top-6 finishes without a win',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.wins === 0 && s.games >= 4).map(([name, stats]) => {
+                    desc: 'Multiple top-6 without winning',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.wins === 0 && s.games >= 5).map(([name, stats]) => {
                         const nearMisses = stats.positions.filter(p => p <= 6).length;
                         return [name, {...stats, nearMisses}];
                     }).sort((a, b) => b[1].nearMisses - a[1].nearMisses)[0]
@@ -802,8 +840,8 @@
                 {
                     title: 'Wildcard Warrior',
                     emoji: '🎰',
-                    desc: 'Biggest position swings',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                    desc: 'Most unpredictable week-to-week',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
                         const swings = [];
                         for (let i = 1; i < stats.positions.length; i++) {
                             swings.push(Math.abs(stats.positions[i] - stats.positions[i-1]));
@@ -813,10 +851,10 @@
                     }).sort((a, b) => b[1].avgSwing - a[1].avgSwing)[0]
                 },
                 {
-                    title: 'One Hit Wonder',
+                    title: 'Early Peak Syndrome',
                     emoji: '💫',
-                    desc: 'Peaked early, chasing that high',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
+                    desc: 'Chasing that first high',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
                         const bestPos = Math.min(...stats.positions);
                         const bestIndex = stats.positions.indexOf(bestPos);
                         if (bestIndex >= stats.positions.length - 2) return [name, {...stats, score: 0}];
@@ -826,35 +864,42 @@
                     }).sort((a, b) => b[1].score - a[1].score)[0]
                 },
                 {
-                    title: 'Sleeping Giant',
-                    emoji: '😴',
-                    desc: 'Started slow, now awakening',
-                    winner: ['Rounak', playerStats['Rounak']]
+                    title: 'Late Bloomer',
+                    emoji: '🌱',
+                    desc: 'Getting better with time',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
+                        const firstHalf = stats.positions.slice(0, Math.floor(stats.games/2));
+                        const secondHalf = stats.positions.slice(Math.floor(stats.games/2));
+                        const improvement = (firstHalf.reduce((a,b) => a+b, 0) / firstHalf.length) - 
+                                           (secondHalf.reduce((a,b) => a+b, 0) / secondHalf.length);
+                        return [name, {...stats, improvement}];
+                    }).sort((a, b) => b[1].improvement - a[1].improvement)[0]
                 },
                 {
-                    title: 'Template Victim',
+                    title: 'Template Prisoner',
                     emoji: '🐑',
-                    desc: 'Following the herd off a cliff',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4 && s.wins === 0).map(([name, stats]) => {
+                    desc: 'Following the crowd to nowhere',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5 && s.wins === 0).map(([name, stats]) => {
                         const bottom = stats.positions.filter(p => p > 10).length;
                         return [name, {...stats, bottom}];
                     }).sort((a, b) => b[1].bottom - a[1].bottom)[0]
                 },
                 {
-                    title: 'The Grinder',
+                    title: 'Mid-Table Merchant',
                     emoji: '⚙️',
-                    desc: 'Always mid-table, never spectacular',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 4).map(([name, stats]) => {
-                        const midTable = stats.positions.filter(p => p >= 6 && p <= 10).length;
+                    desc: 'Safely average, never spectacular',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
+                        const midTable = stats.positions.filter(p => p >= 6 && p <= 11).length;
                         const rate = midTable / stats.games;
-                        return [name, {...stats, rate}];
+                        return [name, {...stats, rate, midTable}];
                     }).sort((a, b) => b[1].rate - a[1].rate)[0]
                 },
                 {
-                    title: 'Captain Chaos',
-                    emoji: '🎲',
-                    desc: 'Most unconventional captain picks',
-                    winner: ['Neeraj', playerStats['Neeraj']]
+                    title: 'Generous Donor',
+                    emoji: '💸',
+                    desc: 'Funding everyone else\'s success',
+                    winner: Object.entries(playerStats).filter(([_, s]) => s.earnings === 0 && s.games >= 5)
+                        .sort((a, b) => b[1].games - a[1].games)[0]
                 }
             ].filter(award => award.winner && award.winner[1]);
             
