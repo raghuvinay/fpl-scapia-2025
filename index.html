@@ -126,6 +126,65 @@
             padding: 25px;
             margin-bottom: 25px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .prize-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .spotlight-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
+            border: 2px solid var(--scapia-orange);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spotlight-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--scapia-orange);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .spotlight-emoji {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .spotlight-story {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .highlight {
+            color: var(--scapia-orange);
+            font-weight: 700;
         }
         
         .pool-amount {
@@ -192,12 +251,34 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             transition: all 0.3s;
+            position: relative;
         }
         
         .player-row:hover {
             transform: translateX(5px);
             background: rgba(255, 255, 255, 0.08);
         }
+        
+        .player-row.winner {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.1));
+            border-left: 3px solid var(--scapia-gold);
+            animation: glow 2s infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        }
+        
+        .trend-indicator {
+            margin-left: 8px;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+        .trend-same { color: #a0aec0; }
         
         .rank {
             width: 40px;
@@ -338,6 +419,48 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .award:hover {
+            transform: translateX(5px);
+            border-left-color: var(--scapia-orange);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
+        }
+        
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #000;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .stat-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--scapia-orange), var(--scapia-gold));
+            border-radius: 10px;
+            transition: width 1s ease;
         }
         
         .award-info {
@@ -355,6 +478,45 @@
         .award-desc {
             font-size: 0.85rem;
             color: #a0aec0;
+            font-style: italic;
+        }
+        
+        .player-story-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(15, 52, 96, 0.2));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .player-story-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--scapia-orange);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.2);
+        }
+        
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .story-player {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--scapia-orange);
+        }
+        
+        .story-emoji {
+            font-size: 1.5rem;
+        }
+        
+        .story-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e0e0e0;
             font-style: italic;
         }
         
@@ -378,7 +540,8 @@
             <button class="gw-btn" onclick="showGW(5)">GW 5</button>
             <button class="gw-btn" onclick="showGW(6)">GW 6</button>
             <button class="gw-btn" onclick="showGW(7)">GW 7</button>
-            <button class="gw-btn active" onclick="showGW(8)">GW 8</button>
+            <button class="gw-btn" onclick="showGW(8)">GW 8</button>
+            <button class="gw-btn active" onclick="showGW(9)">GW 9</button>
         </div>
 
         <div class="tabs">
@@ -389,6 +552,8 @@
 
         <!-- Battle Tab -->
         <div id="battle" class="content active">
+            <div id="spotlight"></div>
+            
             <div class="prize-card">
                 <div class="pool-amount">₹<span id="poolAmount">1700</span></div>
                 <div class="pool-info">
@@ -401,7 +566,7 @@
                         <div class="info-label">Entry</div>
                     </div>
                     <div class="info-item">
-                        <div class="info-value">GW<span id="currentGW">8</span></div>
+                        <div class="info-value">GW<span id="currentGW">9</span></div>
                         <div class="info-label">Battle</div>
                     </div>
                 </div>
@@ -417,6 +582,10 @@
 
         <!-- Stats Tab -->
         <div id="stats" class="content">
+            <div class="stats-section">
+                <div class="stat-title">📖 Player Stories</div>
+                <div id="playerStories"></div>
+            </div>
             <div class="stats-section">
                 <div class="stat-title">🏆 Performance Awards</div>
                 <div id="performanceAwards"></div>
@@ -585,10 +754,34 @@
                     { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 },
                     { name: 'Jalaj', score: 37, captain: 'João Pedro', prize: 0 }
                 ]
+            },
+            9: {
+                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
+                results: [
+                    { name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 },
+                    { name: 'Bharath', score: 68, captain: 'João Pedro', prize: 400 },
+                    { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 },
+                    { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 },
+                    { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 },
+                    { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 },
+                    { name: 'Jalaj', score: 57, captain: 'João Pedro', prize: 50 },
+                    { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 },
+                    { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 },
+                    { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 44, captain: 'João Pedro', prize: 0 },
+                    { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 },
+                    { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 },
+                    { name: 'Sarjan', score: 37, captain: 'João Pedro', prize: 0 },
+                    { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 },
+                    { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 },
+                    { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 8;
+        let currentGW = 9;
 
         function showGW(gw) {
             currentGW = gw;
@@ -617,6 +810,10 @@
         function updateBattle() {
             const data = gameData[currentGW];
             
+            // Generate spotlight story
+            const spotlight = generateSpotlight(currentGW);
+            document.getElementById('spotlight').innerHTML = spotlight;
+            
             document.getElementById('poolAmount').textContent = data.pool;
             document.getElementById('playerCount').textContent = data.players.length;
             document.getElementById('currentGW').textContent = currentGW;
@@ -631,17 +828,41 @@
             `).join('');
             document.getElementById('prizeList').innerHTML = prizeHTML;
             
+            // Get previous GW positions for trend arrows
+            const prevGW = gameData[currentGW - 1];
+            const prevPositions = {};
+            if (prevGW) {
+                prevGW.results.forEach((player, idx) => {
+                    prevPositions[player.name] = idx + 1;
+                });
+            }
+            
             // Update leaderboard
             const leaderboardHTML = data.results.map((player, i) => {
                 const rank = i + 1;
                 let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
                 let rankDisplay = rank <= 5 && player.prize > 0 ? medals[rank-1] : rank;
                 
+                // Calculate trend
+                let trendArrow = '';
+                if (prevPositions[player.name]) {
+                    const prevRank = prevPositions[player.name];
+                    if (prevRank > rank) {
+                        trendArrow = '<span class="trend-indicator trend-up">📈</span>';
+                    } else if (prevRank < rank) {
+                        trendArrow = '<span class="trend-indicator trend-down">📉</span>';
+                    } else {
+                        trendArrow = '<span class="trend-indicator trend-same">➡️</span>';
+                    }
+                }
+                
+                const winnerClass = player.prize > 0 ? 'winner' : '';
+                
                 return `
-                    <div class="player-row">
+                    <div class="player-row ${winnerClass}">
                         <div class="rank ${rankClass}">${rankDisplay}</div>
                         <div class="player-info">
-                            <div class="player-name">${player.name}</div>
+                            <div class="player-name">${player.name}${trendArrow}</div>
                             <div class="player-captain">⚡ ${player.captain}</div>
                         </div>
                         <div class="score-prize">
@@ -653,21 +874,83 @@
             }).join('');
             document.getElementById('leaderboard').innerHTML = leaderboardHTML;
         }
+        
+        function generateSpotlight(gw) {
+            const stories = {
+                9: {
+                    emoji: '🦄',
+                    title: 'The Differential King Strikes!',
+                    story: '<span class="highlight">Shashank</span> finally gets his vindication! After weeks of brave differential captains (Semenyo, Mbeumo), the <span class="highlight">Mbeumo pick delivers a VICTORY</span> with 69 points. Meanwhile, <span class="highlight">Bharath\'s on fire</span> with three consecutive top-2 finishes (1st→1st→2nd), and <span class="highlight">Gokul crashes from 95 to 31 points</span> in just 2 gameweeks! 💥'
+                },
+                8: {
+                    emoji: '🔥',
+                    title: 'Bharath\'s Back-to-Back Domination!',
+                    story: '<span class="highlight">Bharath wins again</span> with a massive 90 points, making it consecutive victories! <span class="highlight">Mayank uses Triple Captain</span> and secures 3rd place with 80 points. Three-way tie for 3rd splits the prize pool as the <span class="highlight">Haaland template dominates</span> once more.'
+                },
+                7: {
+                    emoji: '👑',
+                    title: 'Gokul Goes Nuclear!',
+                    story: '<span class="highlight">Gokul smashes 95 points</span> in an absolute masterclass performance! <span class="highlight">Bharath resurrects</span> from dead last (24 pts in GW6) to 2nd place with 83 points. <span class="highlight">14 out of 17</span> captained Haaland in the biggest template week yet!'
+                },
+                6: {
+                    emoji: '🎯',
+                    title: 'Gokul Rises to the Top!',
+                    story: '<span class="highlight">Gokul wins with 68 points</span> as Haaland captainers dominate the top. <span class="highlight">Bharath bombs to last</span> with just 24 points, while the prize money gets spread across 5 winners for the first time!'
+                },
+                5: {
+                    emoji: '💰',
+                    title: 'Five-Way Prize Split!',
+                    story: '<span class="highlight">Mayank takes the crown</span> with 63 points as five players share the prize pool. <span class="highlight">Most balanced week yet</span> with money distributed across multiple winners!'
+                },
+                4: {
+                    emoji: '🚀',
+                    title: 'Venky\'s Salah Masterclass!',
+                    story: '<span class="highlight">Venky wins big</span> with 77 points as the Salah captain differential pays off! Four prize winners emerge as competition heats up.'
+                },
+                3: {
+                    emoji: '🌊',
+                    title: 'Sandesh\'s Massive Haul!',
+                    story: '<span class="highlight">Sandesh crushes it</span> with 83 points and a João Pedro captain! First 4-prize week as the pool expands to 14 warriors.'
+                },
+                2: {
+                    emoji: '⚡',
+                    title: 'Neeraj Wins the Opener!',
+                    story: '<span class="highlight">Neeraj claims first blood</span> with 61 points and a Salah captain! The journey begins with 11 brave warriors entering the arena.'
+                }
+            };
+            
+            const story = stories[gw] || { emoji: '🎮', title: 'The Battle Continues!', story: 'Another exciting gameweek in the books!' };
+            
+            return `
+                <div class="spotlight-card">
+                    <div class="spotlight-title">
+                        <span class="spotlight-emoji">${story.emoji}</span>
+                        ${story.title}
+                    </div>
+                    <div class="spotlight-story">${story.story}</div>
+                </div>
+            `;
+        }
 
         function updateStandings() {
             const earnings = {};
             
-            // Calculate net earnings
-            Object.values(gameData).forEach(gw => {
-                gw.results.forEach(result => {
+            // Calculate net earnings and streaks
+            Object.keys(gameData).forEach(gwNum => {
+                const gw = gameData[gwNum];
+                gw.results.forEach((result, idx) => {
                     if (gw.players.includes(result.name)) {
                         if (!earnings[result.name]) {
-                            earnings[result.name] = { won: 0, played: 0, wins: [] };
+                            earnings[result.name] = { won: 0, played: 0, wins: [], topStreak: 0, currentStreak: 0 };
                         }
                         earnings[result.name].played++;
                         if (result.prize > 0) {
                             earnings[result.name].won += result.prize;
-                            earnings[result.name].wins.push(gw);
+                            earnings[result.name].wins.push(gwNum);
+                            earnings[result.name].currentStreak++;
+                            earnings[result.name].topStreak = Math.max(earnings[result.name].topStreak, earnings[result.name].currentStreak);
+                        } else {
+                            earnings[result.name].currentStreak = 0;
                         }
                     }
                 });
@@ -679,13 +962,18 @@
                 net: data.won - (data.played * 100),
                 won: data.won,
                 played: data.played,
-                wins: data.wins
+                wins: data.wins,
+                streak: data.currentStreak,
+                topStreak: data.topStreak
             })).sort((a, b) => b.net - a.net);
             
-            const standingsHTML = standings.map(player => `
+            const standingsHTML = standings.map(player => {
+                const streakBadge = player.streak >= 2 ? `<span class="streak-badge">🔥 ${player.streak}x Streak</span>` : '';
+                
+                return `
                 <div class="standing-card">
                     <div class="standing-player">
-                        <div class="standing-name">${player.name}</div>
+                        <div class="standing-name">${player.name}${streakBadge}</div>
                         <div class="standing-stats">
                             🎮 ${player.played} games | 💰 ₹${player.played * 100} locked | Won: ₹${player.won}
                         </div>
@@ -696,7 +984,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
             document.getElementById('standingsList').innerHTML = standingsHTML;
         }
 
@@ -720,6 +1008,94 @@
                     }
                 });
             });
+            
+            // Generate Player Stories
+            const playerStories = {
+                'Bharath': {
+                    emoji: '🔥',
+                    story: 'From zero to hero! Dead last in GW6 with 24 points, then BOOM - back-to-back victories with 83 and 90 points! Now on a ridiculous 3-game podium streak (1st→1st→2nd). The ultimate phoenix rising from the ashes. Everyone else is playing checkers, Bharath is playing 4D chess.'
+                },
+                'Gokul': {
+                    emoji: '🎢',
+                    story: 'The definition of volatility. Dropped a nuclear 95-point bomb in GW7, then crashed to 31 points in GW9. That\'s a 64-point swing! Won the league early with 2 victories, but lately it\'s been more rollercoaster than rocket ship. Still up ₹750 though, so who\'s complaining?'
+                },
+                'Shashank': {
+                    emoji: '🦄',
+                    story: 'The differential king finally got his crown! While everyone was captaining Haaland like sheep, this maverick picked Mbeumo and won GW9. Also tried Semenyo multiple times. Playing FPL on hard mode and making it look good. Patience pays off, differential gang rise up!'
+                },
+                'Sukhpal': {
+                    emoji: '🎯',
+                    story: 'Mr. Consistent strikes again. Never wins, never bombs. Just quietly grinds into the top 4 almost every week. 2nd in GW8, 4th in GW9, multiple top-5 finishes. Not flashy, just effective. The tortoise in a race of hares, and currently ahead in the standings!'
+                },
+                'Raghu': {
+                    emoji: '💔',
+                    story: 'Started as a top-3 machine in early GWs, but the wheels fell off dramatically. Hit wildcard in GW8 and got 63 points (meh), then redeemed himself with 3rd place in GW9. The comeback trail is real. Can the early-season Raghu return?'
+                },
+                'Neeraj': {
+                    emoji: '⚡',
+                    story: 'Won the very first GW and thought "this is easy!" Narrator: It was not easy. Since that GW2 victory, been wandering in the middle of the pack. Sometimes top-5, sometimes bottom-5. The ultimate enigma wrapped in a mystery. Will lightning strike twice?'
+                },
+                'Aniruddh': {
+                    emoji: '🎖️',
+                    story: 'The prize hunter! Doesn\'t win often, but always seems to finish in the money. Multiple top-5 finishes keeping the net positive. The definition of "playing it safe" - rarely at the top, rarely at the bottom, just banking prizes week after week.'
+                },
+                'Rounak': {
+                    emoji: '📈',
+                    story: 'The late bloomer! Started at 14th in GW3 and everyone wrote him off. Now look at him - 3rd place in GW7, 7th and 10th in recent weeks. Slowly but surely climbing the ladder. Give this man another month and he might just take over the league!'
+                },
+                'Mayank': {
+                    emoji: '🃏',
+                    story: 'Triple Captain in GW8, got 80 points and 3rd place. Respectable! Won GW5 as well. But consistency? Never heard of her. Goes from top-3 to bottom-5 and back again. Living on the edge, one gameweek at a time. The wildcard of the league, literally and figuratively.'
+                },
+                'Sandesh': {
+                    emoji: '🌊',
+                    story: 'Peaked early with a MASSIVE 83-point GW3 victory and been chasing that high ever since. Used Free Hit in GW8 and... got 7th place. Sometimes the best strategy is overthinking. Still, that early win bankroll is keeping him afloat!'
+                },
+                'Puneet': {
+                    emoji: '💼',
+                    story: 'The solid performer who never quite gets over the hump. Won GW2, and since then? Always close, never quite there. Multiple top-6 finishes but the W is elusive. The definition of "so close yet so far." One day, Puneet, one day...'
+                },
+                'Venky': {
+                    emoji: '🎭',
+                    story: 'Won GW4 with a beautiful Salah differential, then proceeded to forget how he did it. Up and down, but mostly down recently. Still managed to split 5th place in GW9, so the comeback might be brewing. The early-season hero looking for redemption!'
+                },
+                'Shubs': {
+                    emoji: '💸',
+                    story: 'The league\'s most generous donor. Played every single gameweek, won exactly zero rupees. Used wildcard in GW9 and finished 15th. Pain. Pure pain. But hey, someone has to fund everyone else\'s winnings, and Shubs is taking one for the team like a champ!'
+                },
+                'Sagar': {
+                    emoji: '🎲',
+                    story: 'Started in GW6, immediately thought "I got this!" Narrator: He did not have this. Been hovering around mid-to-bottom positions. Split 5th place in GW9 though, so maybe the tide is turning? The new guy trying to prove he belongs. Keep grinding!'
+                },
+                'Jalaj': {
+                    emoji: '🎣',
+                    story: 'The João Pedro loyalist! Everyone else is chasing Haaland, Jalaj is out here backing João Pedro like it\'s a religion. Finally split 5th place in GW9! Sometimes loyalty pays off... just not consistently. But when it hits, it feels so good.'
+                },
+                'Sarjan': {
+                    emoji: '😅',
+                    story: 'Another João Pedro faithful, but the results have been... let\'s say "character building." Bottom-3 finishes are becoming a habit. But there\'s always next week! Sometimes you\'re the hammer, sometimes you\'re the nail. Sarjan is definitely the nail right now.'
+                },
+                'Arindam': {
+                    emoji: '🌱',
+                    story: 'Joined in GW4 and has been on a journey of self-discovery. Some highs, many lows, but always learning. Currently down ₹500 but hey, you can\'t put a price on the FPL experience! The eternal optimist who believes next week will be different.'
+                }
+            };
+            
+            // Generate Player Stories HTML
+            const storiesHTML = Object.entries(playerStories)
+                .filter(([name]) => playerStats[name] && playerStats[name].games >= 5)
+                .sort((a, b) => (playerStats[b[0]].earnings - playerStats[b[0]].games * 100) - (playerStats[a[0]].earnings - playerStats[a[0]].games * 100))
+                .map(([name, story]) => `
+                    <div class="player-story-card">
+                        <div class="story-header">
+                            <div class="story-player">${name}</div>
+                            <div class="story-emoji">${story.emoji}</div>
+                        </div>
+                        <div class="story-text">${story.story}</div>
+                    </div>
+                `).join('');
+            
+            document.getElementById('playerStories').innerHTML = storiesHTML;
             
             // Calculate trends and movements
             const calculateTrend = (positions) => {
@@ -904,12 +1280,22 @@
             ].filter(award => award.winner && award.winner[1]);
             
             const performanceHTML = performanceAwards.filter(a => a.winner).map(award => {
-                const [name] = award.winner;
+                const [name, stats] = award.winner;
+                let statDetail = '';
+                
+                // Add stat details based on award type
+                if (award.title === 'King of the League') {
+                    statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.wins / stats.games * 100)}%"></div></div>`;
+                } else if (award.title === 'Prize Magnet') {
+                    statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.prizeCount / stats.games * 100)}%"></div></div>`;
+                }
+                
                 return `
                     <div class="award">
                         <div class="award-info">
                             <div class="award-title">${award.emoji} ${award.title}</div>
                             <div class="award-desc">${award.desc}</div>
+                            ${statDetail}
                         </div>
                         <div class="award-winner">${name}</div>
                     </div>
