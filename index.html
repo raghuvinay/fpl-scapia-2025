@@ -241,6 +241,7 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 15px;
             padding: 20px;
+            margin-bottom: 15px;
         }
         
         .player-row {
@@ -338,6 +339,30 @@
             color: var(--success);
             font-weight: 600;
         }
+
+        /* Banter section */
+        .banter-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .banter-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.3));
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+        }
+        .banter-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .banter-roast .banter-title {
+            color: var(--danger);
+        }
+        .banter-compliment .banter-title {
+            color: var(--success);
+        }
         
         .standing-card {
             background: rgba(255, 255, 255, 0.05);
@@ -355,13 +380,26 @@
         
         .standing-name {
             font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .manager-nick {
+            font-size: 0.85rem;
+            color: var(--scapia-orange);
+            font-style: italic;
+            margin-left: 4px;
+        }
+
+        .manager-tagline {
+            font-size: 0.8rem;
+            color: #cbd5e0;
         }
         
         .standing-stats {
             font-size: 0.85rem;
             color: #a0aec0;
+            margin-top: 4px;
         }
         
         .standing-earnings {
@@ -484,17 +522,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         
         .story-player {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--scapia-orange);
         }
         
         .story-emoji {
             font-size: 1.5rem;
+        }
+
+        .story-tagline {
+            font-size: 0.8rem;
+            color: #cbd5e0;
+            font-style: italic;
+            margin-bottom: 8px;
         }
         
         .story-text {
@@ -507,6 +552,27 @@
         .award-winner {
             font-weight: 600;
             font-size: 1.1rem;
+        }
+
+        /* Rivalries */
+        .rivalry-card {
+            padding: 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .rivalry-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .rivalry-line {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+        }
+        .rivalry-sub {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -558,7 +624,9 @@
                 </div>
                 <div class="prizes" id="prizeList"></div>
             </div>
+
             <div class="leaderboard" id="leaderboard"></div>
+            <div id="banter"></div>
         </div>
 
         <!-- Standings Tab -->
@@ -573,6 +641,10 @@
                 <div id="playerStories"></div>
             </div>
             <div class="stats-section">
+                <div class="stat-title">🤺 Rivalries & Beef</div>
+                <div id="rivalries"></div>
+            </div>
+            <div class="stats-section">
                 <div class="stat-title">🏆 Performance Awards</div>
                 <div id="performanceAwards"></div>
             </div>
@@ -584,6 +656,78 @@
     </div>
 
     <script>
+        // Manager nicknames & taglines (used only in stories)
+        const managerMeta = {
+            'Bharath': {
+                nick: 'Heat Check Merchant',
+                tagline: 'Either 24 points or Ballon d’Or form, nothing in between.'
+            },
+            'Gokul': {
+                nick: 'Volatility FC',
+                tagline: 'If there’s a 60-point swing to be found, he’ll take it.'
+            },
+            'Raghu': {
+                nick: 'Narrative Merchant',
+                tagline: 'Lives for long arcs: early highs, mid-season pain, redemption incoming.'
+            },
+            'Venky': {
+                nick: 'Salah Syndicate',
+                tagline: 'Differential captain choices powered by pure gut and espresso.'
+            },
+            'Shashank': {
+                nick: 'Differential Ultras',
+                tagline: 'If EO is above 50%, he’s not interested in captaining it.'
+            },
+            'Shubs': {
+                nick: 'Ex-Sponsor of the Pot',
+                tagline: 'Used to fund the pool, now occasionally withdraws from it.'
+            },
+            'Sukhpal': {
+                nick: 'Steady Assassin',
+                tagline: 'Looks calm, but that 93-point punch came out of nowhere.'
+            },
+            'Neeraj': {
+                nick: 'Lightning Starter',
+                tagline: 'Won the opener and keeps threatening another thunderbolt.'
+            },
+            'Puneet': {
+                nick: 'Always There Thereabouts',
+                tagline: 'Perennial “so close” merchant, always lurking around the podium.'
+            },
+            'Mayank': {
+                nick: 'Chip Gambler',
+                tagline: 'Triple captains, weird punts, somehow walks away with cash.'
+            },
+            'Rounak': {
+                nick: 'Late Bloomer',
+                tagline: 'Started at the bottom, graphs now trending only one way.'
+            },
+            'Sandesh': {
+                nick: 'Peak GW3',
+                tagline: 'Dropped an 83 early, has been chasing that wave ever since.'
+            },
+            'Sarjan': {
+                nick: 'Painful Pedro Enjoyer',
+                tagline: 'If João Pedro blanks, he probably captained him.'
+            },
+            'Sagar': {
+                nick: 'Chip Enthusiast',
+                tagline: 'Treats FH and chips like festival fireworks—use first, explain later.'
+            },
+            'Jalaj': {
+                nick: 'Loyal Pedro Holder',
+                tagline: 'Sticks with João Pedro long enough for the points to eventually arrive.'
+            },
+            'Arindam': {
+                nick: 'Project Long Game',
+                tagline: 'Learning the league’s rhythm, picking up scars and small wins.'
+            },
+            'Aniruddh': {
+                nick: 'Prize Magnet',
+                tagline: 'Quietly collects payouts, now with a gritty GW11 win in the bag.'
+            }
+        };
+
         // Game data GW2–GW11
         const gameData = {
             2: {
@@ -819,8 +963,7 @@
 
         function showGW(gw) {
             currentGW = gw;
-            const buttons = document.querySelectorAll('.gw-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.gw-btn').forEach(btn => btn.classList.remove('active'));
             if (event && event.target) {
                 event.target.classList.add('active');
             }
@@ -837,7 +980,10 @@
             document.getElementById(tab).classList.add('active');
             
             if (tab === 'standings') updateStandings();
-            if (tab === 'stats') updateStats();
+            if (tab === 'stats') {
+                updateStats();
+                updateRivalries();
+            }
         }
 
         function updateBattle() {
@@ -870,7 +1016,7 @@
             const leaderboardHTML = data.results.map((player, i) => {
                 const rank = i + 1;
                 let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
-                let rankDisplay = rank <= 5 && player.prize > 0 ? medals[rank-1] || rank : rank;
+                let rankDisplay = rank <= 5 && player.prize > 0 ? (medals[rank-1] || rank) : rank;
                 
                 let trendArrow = '';
                 if (prevPositions[player.name]) {
@@ -901,6 +1047,8 @@
                 `;
             }).join('');
             document.getElementById('leaderboard').innerHTML = leaderboardHTML;
+
+            updateBanter(currentGW);
         }
         
         function generateSpotlight(gw) {
@@ -970,6 +1118,46 @@
             `;
         }
 
+        // Roast & Compliment of the week
+        function updateBanter(gw) {
+            const data = gameData[gw];
+            if (!data) return;
+
+            const results = data.results;
+            const lowest = results[results.length - 1];
+            const nonPrize = results.filter(p => p.prize === 0);
+            let bestNonPrize = null;
+            if (nonPrize.length > 0) {
+                bestNonPrize = nonPrize.reduce((best, cur) => (cur.score > best.score ? cur : best), nonPrize[0]);
+            }
+
+            let roastText = '';
+            let complimentText = '';
+
+            if (lowest) {
+                const meta = managerMeta[lowest.name] || {};
+                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} hit rock bottom this week with ${lowest.score} points and a <b>${lowest.captain}</b> captain. Analytics department has opened an internal review.`;
+            }
+
+            if (bestNonPrize) {
+                const meta = managerMeta[bestNonPrize.name] || {};
+                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} dropped ${bestNonPrize.score} points but still walked away with <b>₹0</b>. Spirit award winner, wallet loser.`;
+            }
+
+            document.getElementById('banter').innerHTML = `
+                <div class="banter-section">
+                    <div class="banter-card banter-roast">
+                        <div class="banter-title">🔥 Roast of the Week</div>
+                        <div class="banter-text">${roastText}</div>
+                    </div>
+                    <div class="banter-card banter-compliment">
+                        <div class="banter-title">💚 Clutch with No Cash</div>
+                        <div class="banter-text">${complimentText}</div>
+                    </div>
+                </div>
+            `;
+        }
+
         function updateStandings() {
             const earnings = {};
             
@@ -1012,7 +1200,10 @@
                 return `
                     <div class="standing-card">
                         <div class="standing-player">
-                            <div class="standing-name">${player.name}${streakBadge}</div>
+                            <div class="standing-name">
+                                ${player.name}
+                                ${streakBadge}
+                            </div>
                             <div class="standing-stats">
                                 🎮 ${player.played} games | 💰 ₹${player.played * 100} entry | Winnings: ₹${player.won}
                             </div>
@@ -1132,151 +1323,147 @@
                     const netB = playerStats[b[0]].earnings - playerStats[b[0]].games * 100;
                     return netB - netA;
                 })
-                .map(([name, story]) => `
-                    <div class="player-story-card">
-                        <div class="story-header">
-                            <div class="story-player">${name}</div>
-                            <div class="story-emoji">${story.emoji}</div>
+                .map(([name, story]) => {
+                    const meta = managerMeta[name] || {};
+                    return `
+                        <div class="player-story-card">
+                            <div class="story-header">
+                                <div class="story-player">
+                                    ${name}
+                                    ${meta.nick ? `<span class="manager-nick">“${meta.nick}”</span>` : ''}
+                                </div>
+                                <div class="story-emoji">${story.emoji}</div>
+                            </div>
+                            ${meta.tagline ? `<div class="story-tagline">${meta.tagline}</div>` : ''}
+                            <div class="story-text">${story.story}</div>
                         </div>
-                        <div class="story-text">${story.story}</div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             
             document.getElementById('playerStories').innerHTML = storiesHTML;
             
-            const performanceAwards = (() => {
-                const entries = Object.entries(playerStats);
-                if (!entries.length) return [];
-                
-                const mostWins = [...entries].sort((a, b) => b[1].wins - a[1].wins)[0];
-                const peakPerformance = [...entries].map(([name, stats]) => {
-                    return [name, { ...stats, maxScore: Math.max(...stats.scores) }];
-                }).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
-                const mostConsistent = [...entries]
-                    .filter(([_, s]) => s.games >= 5)
-                    .map(([name, stats]) => {
-                        const avg = stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length;
-                        const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length;
-                        return [name, { ...stats, variance }];
-                    }).sort((a, b) => a[1].variance - b[1].variance)[0];
-                const prizeMagnet = [...entries]
-                    .filter(([_, s]) => s.games >= 5)
-                    .map(([name, stats]) => {
-                        const prizeCount = stats.positions.filter(p => p <= 5).length;
-                        return [name, { ...stats, prizeCount }];
-                    }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0];
-                const formHorse = [...entries]
-                    .filter(([_, s]) => s.games >= 3)
-                    .map(([name, stats]) => {
-                        const recent3 = stats.positions.slice(-3);
-                        const avgRecent = recent3.reduce((a, b) => a + b, 0) / recent3.length;
-                        return [name, { ...stats, avgRecent }];
-                    }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0];
-                
-                return [
-                    {
-                        title: 'King of the League',
-                        emoji: '👑',
-                        desc: 'Most gameweek wins so far.',
-                        winner: mostWins
-                    },
-                    {
-                        title: 'Peak Performance',
-                        emoji: '⛰️',
-                        desc: 'Highest single-gameweek score.',
-                        winner: peakPerformance
-                    },
-                    {
-                        title: 'Mr. Reliable',
-                        emoji: '🎯',
-                        desc: 'Most consistent positions across the season.',
-                        winner: mostConsistent
-                    },
-                    {
-                        title: 'Prize Magnet',
-                        emoji: '🎖️',
-                        desc: 'Most frequent appearances in the payout spots.',
-                        winner: prizeMagnet
-                    },
-                    {
-                        title: 'Form Horse',
-                        emoji: '🐎',
-                        desc: 'Best average rank over the last three entries.',
-                        winner: formHorse
-                    }
-                ];
-            })();
+            const entries = Object.entries(playerStats);
+            if (!entries.length) return;
             
-            const funAwards = (() => {
-                const entries = Object.entries(playerStats);
-                if (!entries.length) return [];
-                
-                const resurrection = [...entries]
-                    .filter(([_, s]) => s.games >= 6)
-                    .map(([name, stats]) => {
-                        const worst = Math.max(...stats.positions);
-                        const worstIndex = stats.positions.lastIndexOf(worst);
-                        if (worstIndex >= stats.positions.length - 2) {
-                            return [name, { ...stats, score: 0 }];
-                        }
-                        const afterWorst = stats.positions.slice(worstIndex + 1);
-                        const improvement = worst - (afterWorst.reduce((a, b) => a + b, 0) / afterWorst.length);
-                        return [name, { ...stats, score: improvement }];
-                    }).sort((a, b) => b[1].score - a[1].score)[0];
-                
-                const earlyPeak = [...entries]
-                    .filter(([_, s]) => s.games >= 5)
-                    .map(([name, stats]) => {
-                        const bestPos = Math.min(...stats.positions);
-                        const bestIndex = stats.positions.indexOf(bestPos);
-                        if (bestIndex >= stats.positions.length - 2) {
-                            return [name, { ...stats, score: 0 }];
-                        }
-                        const afterBest = stats.positions.slice(bestIndex + 1);
-                        const decline = afterBest.reduce((a, b) => a + b, 0) / afterBest.length - bestPos;
-                        return [name, { ...stats, score: decline }];
-                    }).sort((a, b) => b[1].score - a[1].score)[0];
-                
-                const lateBloomer = [...entries]
-                    .filter(([_, s]) => s.games >= 5)
-                    .map(([name, stats]) => {
-                        const firstHalf = stats.positions.slice(0, Math.floor(stats.games / 2));
-                        const secondHalf = stats.positions.slice(Math.floor(stats.games / 2));
-                        const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) -
-                                            (secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length);
-                        return [name, { ...stats, improvement }];
-                    }).sort((a, b) => b[1].improvement - a[1].improvement)[0];
-                
-                const generousDonor = [...entries]
-                    .filter(([_, s]) => s.earnings === 0 && s.games >= 5)
-                    .sort((a, b) => b[1].games - a[1].games)[0];
-                
-                const wildcardWarrior = [...entries]
-                    .filter(([_, s]) => s.games >= 5)
-                    .map(([name, stats]) => {
-                        const swings = [];
-                        for (let i = 1; i < stats.positions.length; i++) {
-                            swings.push(Math.abs(stats.positions[i] - stats.positions[i - 1]));
-                        }
-                        const avgSwing = swings.reduce((a, b) => a + b, 0) / swings.length;
-                        return [name, { ...stats, avgSwing }];
-                    }).sort((a, b) => b[1].avgSwing - a[1].avgSwing)[0];
-                
-                return [
-                    { title: 'Phoenix Rising', emoji: '🔥', desc: 'Biggest comeback after a disaster week.', winner: resurrection },
-                    { title: 'Early Peak Syndrome', emoji: '💫', desc: 'Massive high followed by a long comedown.', winner: earlyPeak },
-                    { title: 'Late Bloomer', emoji: '🌱', desc: 'Started slow, heating up over time.', winner: lateBloomer },
-                    { title: 'Generous Donor', emoji: '💸', desc: 'Most entries with zero winnings so far.', winner: generousDonor },
-                    { title: 'Wildcard Warrior', emoji: '🎰', desc: 'Most dramatic week-to-week rank swings.', winner: wildcardWarrior }
-                ];
-            })();
+            const mostWins = [...entries].sort((a, b) => b[1].wins - a[1].wins)[0];
+            const peakPerformance = [...entries].map(([name, stats]) => {
+                return [name, { ...stats, maxScore: Math.max(...stats.scores) }];
+            }).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
+            const mostConsistent = [...entries]
+                .filter(([_, s]) => s.games >= 5)
+                .map(([name, stats]) => {
+                    const avg = stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length;
+                    const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length;
+                    return [name, { ...stats, variance }];
+                }).sort((a, b) => a[1].variance - b[1].variance)[0];
+            const prizeMagnet = [...entries]
+                .filter(([_, s]) => s.games >= 5)
+                .map(([name, stats]) => {
+                    const prizeCount = stats.positions.filter(p => p <= 5).length;
+                    return [name, { ...stats, prizeCount }];
+                }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0];
+            const formHorse = [...entries]
+                .filter(([_, s]) => s.games >= 3)
+                .map(([name, stats]) => {
+                    const recent3 = stats.positions.slice(-3);
+                    const avgRecent = recent3.reduce((a, b) => a + b, 0) / recent3.length;
+                    return [name, { ...stats, avgRecent }];
+                }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0];
+            
+            const performanceAwards = [
+                {
+                    title: 'Season Win Leader',
+                    emoji: '🏅',
+                    desc: 'Most individual gameweek wins so far.',
+                    winner: mostWins
+                },
+                {
+                    title: 'Peak Performance',
+                    emoji: '⛰️',
+                    desc: 'Highest single-gameweek score in the league.',
+                    winner: peakPerformance
+                },
+                {
+                    title: 'Mr. Reliable',
+                    emoji: '🎯',
+                    desc: 'Most consistent positions across all entries.',
+                    winner: mostConsistent
+                },
+                {
+                    title: 'Prize Magnet',
+                    emoji: '🎖️',
+                    desc: 'Most frequent top-5 appearances.',
+                    winner: prizeMagnet
+                },
+                {
+                    title: 'Form Horse',
+                    emoji: '🐎',
+                    desc: 'Best average rank over the last three entries.',
+                    winner: formHorse
+                }
+            ];
+            
+            const generousDonor = [...entries]
+                .filter(([_, s]) => s.earnings === 0 && s.games >= 5)
+                .sort((a, b) => b[1].games - a[1].games)[0];
+            const wildcardWarrior = [...entries]
+                .filter(([_, s]) => s.games >= 5)
+                .map(([name, stats]) => {
+                    const swings = [];
+                    for (let i = 1; i < stats.positions.length; i++) {
+                        swings.push(Math.abs(stats.positions[i] - stats.positions[i - 1]));
+                    }
+                    const avgSwing = swings.reduce((a, b) => a + b, 0) / swings.length;
+                    return [name, { ...stats, avgSwing }];
+                }).sort((a, b) => b[1].avgSwing - a[1].avgSwing)[0];
+            const resurrection = [...entries]
+                .filter(([_, s]) => s.games >= 6)
+                .map(([name, stats]) => {
+                    const worst = Math.max(...stats.positions);
+                    const worstIndex = stats.positions.lastIndexOf(worst);
+                    if (worstIndex >= stats.positions.length - 2) {
+                        return [name, { ...stats, score: 0 }];
+                    }
+                    const afterWorst = stats.positions.slice(worstIndex + 1);
+                    const improvement = worst - (afterWorst.reduce((a, b) => a + b, 0) / afterWorst.length);
+                    return [name, { ...stats, score: improvement }];
+                }).sort((a, b) => b[1].score - a[1].score)[0];
+            const earlyPeak = [...entries]
+                .filter(([_, s]) => s.games >= 5)
+                .map(([name, stats]) => {
+                    const bestPos = Math.min(...stats.positions);
+                    const bestIndex = stats.positions.indexOf(bestPos);
+                    if (bestIndex >= stats.positions.length - 2) {
+                        return [name, { ...stats, score: 0 }];
+                    }
+                    const afterBest = stats.positions.slice(bestIndex + 1);
+                    const decline = afterBest.reduce((a, b) => a + b, 0) / afterBest.length - bestPos;
+                    return [name, { ...stats, score: decline }];
+                }).sort((a, b) => b[1].score - a[1].score)[0];
+            const lateBloomer = [...entries]
+                .filter(([_, s]) => s.games >= 5)
+                .map(([name, stats]) => {
+                    const firstHalf = stats.positions.slice(0, Math.floor(stats.games / 2));
+                    const secondHalf = stats.positions.slice(Math.floor(stats.games / 2));
+                    const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) -
+                                        (secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length);
+                    return [name, { ...stats, improvement }];
+                }).sort((a, b) => b[1].improvement - a[1].improvement)[0];
+            
+            const funAwards = [
+                { title: 'Phoenix Rising', emoji: '🔥', desc: 'Biggest comeback after a disaster week.', winner: resurrection },
+                { title: 'Early Peak Syndrome', emoji: '💫', desc: 'Massive early high followed by a long comedown.', winner: earlyPeak },
+                { title: 'Late Bloomer', emoji: '🌱', desc: 'Started slow, heating up over time.', winner: lateBloomer },
+                { title: 'Generous Donor', emoji: '💸', desc: 'Most entries with no winnings so far.', winner: generousDonor },
+                { title: 'Wildcard Warrior', emoji: '🎰', desc: 'Most dramatic week-to-week rank swings.', winner: wildcardWarrior }
+            ];
             
             const performanceHTML = performanceAwards
                 .filter(a => a.winner && a.winner[1])
                 .map(award => {
                     const [name, stats] = award.winner;
                     let statDetail = '';
-                    if (award.title === 'King of the League') {
+                    if (award.title === 'Season Win Leader') {
                         statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.wins / stats.games) * 100}%"></div></div>`;
                     }
                     if (award.title === 'Prize Magnet') {
@@ -1311,6 +1498,72 @@
             
             document.getElementById('performanceAwards').innerHTML = performanceHTML;
             document.getElementById('funAwards').innerHTML = funHTML;
+        }
+
+        function updateRivalries() {
+            // Head-to-head helper
+            function h2h(a, b) {
+                let aWins = 0, bWins = 0, ties = 0, meetings = 0;
+                Object.values(gameData).forEach(gw => {
+                    if (!gw.players.includes(a) || !gw.players.includes(b)) return;
+                    const positions = {};
+                    gw.results.forEach((res, idx) => positions[res.name] = idx + 1);
+                    if (positions[a] && positions[b]) {
+                        meetings++;
+                        if (positions[a] < positions[b]) aWins++;
+                        else if (positions[b] < positions[a]) bWins++;
+                        else ties++;
+                    }
+                });
+                return { aWins, bWins, ties, meetings };
+            }
+
+            const rv1 = h2h('Raghu', 'Venky');
+            const rv2 = h2h('Bharath', 'Gokul');
+
+            // Shubs vs prize pool: games vs winnings
+            let shubsGames = 0, shubsWinnings = 0;
+            Object.values(gameData).forEach(gw => {
+                if (!gw.players.includes('Shubs')) return;
+                const entry = gw.results.find(r => r.name === 'Shubs');
+                if (entry) {
+                    shubsGames++;
+                    shubsWinnings += entry.prize;
+                }
+            });
+
+            const rivalryHTML = `
+                <div class="rivalry-card">
+                    <div class="rivalry-title">Founders Derby: Raghu vs Venky</div>
+                    <div class="rivalry-line">
+                        In ${rv1.meetings} gameweeks together, Raghu has finished above Venky <b>${rv1.aWins}</b> times,
+                        Venky has finished above Raghu <b>${rv1.bWins}</b> times, with <b>${rv1.ties}</b> draws.
+                    </div>
+                    <div class="rivalry-sub">
+                        Dressing-room narrative: whoever loses this week “has to run the next marketing experiment.”
+                    </div>
+                </div>
+                <div class="rivalry-card">
+                    <div class="rivalry-title">Chaos Classico: Bharath vs Gokul</div>
+                    <div class="rivalry-line">
+                        When both play, Bharath has beaten Gokul <b>${rv2.aWins}</b> times, 
+                        Gokul has beaten Bharath <b>${rv2.bWins}</b> times, with <b>${rv2.ties}</b> ties.
+                    </div>
+                    <div class="rivalry-sub">
+                        This fixture is responsible for half the 90+ scores and half the 30-or-less disasters in the league.
+                    </div>
+                </div>
+                <div class="rivalry-card">
+                    <div class="rivalry-title">Shubs vs The Prize Pool</div>
+                    <div class="rivalry-line">
+                        Shubs has entered <b>${shubsGames}</b> battles and withdrawn a total of <b>₹${shubsWinnings}</b>.
+                    </div>
+                    <div class="rivalry-sub">
+                        The pool still leads on aggregate, but GW10 showed this rivalry is finally becoming competitive.
+                    </div>
+                </div>
+            `;
+            document.getElementById('rivalries').innerHTML = rivalryHTML;
         }
 
         // Initialize
