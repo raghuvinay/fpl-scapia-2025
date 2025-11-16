@@ -381,22 +381,6 @@
             color: var(--danger);
         }
         
-        .badge-list {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        
-        .badge {
-            padding: 3px 8px;
-            background: rgba(255, 107, 53, 0.2);
-            border: 1px solid var(--scapia-orange);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
         .stats-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
@@ -541,7 +525,9 @@
             <button class="gw-btn" onclick="showGW(6)">GW 6</button>
             <button class="gw-btn" onclick="showGW(7)">GW 7</button>
             <button class="gw-btn" onclick="showGW(8)">GW 8</button>
-            <button class="gw-btn active" onclick="showGW(9)">GW 9</button>
+            <button class="gw-btn" onclick="showGW(9)">GW 9</button>
+            <button class="gw-btn" onclick="showGW(10)">GW 10</button>
+            <button class="gw-btn active" onclick="showGW(11)">GW 11</button>
         </div>
 
         <div class="tabs">
@@ -566,7 +552,7 @@
                         <div class="info-label">Entry</div>
                     </div>
                     <div class="info-item">
-                        <div class="info-value">GW<span id="currentGW">9</span></div>
+                        <div class="info-value">GW<span id="currentGW">11</span></div>
                         <div class="info-label">Battle</div>
                     </div>
                 </div>
@@ -598,7 +584,7 @@
     </div>
 
     <script>
-        // Complete game data
+        // Game data GW2–GW11
         const gameData = {
             2: {
                 players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'],
@@ -778,29 +764,76 @@
                     { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 },
                     { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }
                 ]
+            },
+            10: {
+                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
+                results: [
+                    { name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 },
+                    { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 },
+                    { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 },
+                    { name: 'Bharath', score: 82, captain: 'Haaland (BB1)', prize: 250 },
+                    { name: 'Sagar', score: 81, captain: 'Haaland (FH1)', prize: 150 },
+                    { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 },
+                    { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 },
+                    { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 },
+                    { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 },
+                    { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 },
+                    { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 },
+                    { name: 'Jalaj', score: 64, captain: 'João Pedro', prize: 0 },
+                    { name: 'Sandesh', score: 62, captain: 'João Pedro', prize: 0 },
+                    { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 },
+                    { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 },
+                    { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 },
+                    { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }
+                ]
+            },
+            11: {
+                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
+                results: [
+                    { name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 },
+                    { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 },
+                    { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 },
+                    { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 },
+                    { name: 'Jalaj', score: 43, captain: 'João Pedro', prize: 50 },
+                    { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 },
+                    { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 50 },
+                    { name: 'Sandesh', score: 42, captain: 'João Pedro', prize: 0 },
+                    { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 },
+                    { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 },
+                    { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 },
+                    { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 },
+                    { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 },
+                    { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 },
+                    { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 },
+                    { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 },
+                    { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 9;
+        let currentGW = 11;
 
         function showGW(gw) {
             currentGW = gw;
-            document.querySelectorAll('.gw-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+            const buttons = document.querySelectorAll('.gw-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
             updateBattle();
         }
 
         function showTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => {
-                t.classList.remove('active');
-            });
-            event.target.classList.add('active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
             
-            document.querySelectorAll('.content').forEach(c => {
-                c.classList.remove('active');
-            });
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
             
             if (tab === 'standings') updateStandings();
@@ -810,7 +843,6 @@
         function updateBattle() {
             const data = gameData[currentGW];
             
-            // Generate spotlight story
             const spotlight = generateSpotlight(currentGW);
             document.getElementById('spotlight').innerHTML = spotlight;
             
@@ -818,7 +850,6 @@
             document.getElementById('playerCount').textContent = data.players.length;
             document.getElementById('currentGW').textContent = currentGW;
             
-            // Update prizes
             const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
             const prizeHTML = data.prizes.map((prize, i) => `
                 <div class="prize">
@@ -828,7 +859,6 @@
             `).join('');
             document.getElementById('prizeList').innerHTML = prizeHTML;
             
-            // Get previous GW positions for trend arrows
             const prevGW = gameData[currentGW - 1];
             const prevPositions = {};
             if (prevGW) {
@@ -837,13 +867,11 @@
                 });
             }
             
-            // Update leaderboard
             const leaderboardHTML = data.results.map((player, i) => {
                 const rank = i + 1;
                 let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
-                let rankDisplay = rank <= 5 && player.prize > 0 ? medals[rank-1] : rank;
+                let rankDisplay = rank <= 5 && player.prize > 0 ? medals[rank-1] || rank : rank;
                 
-                // Calculate trend
                 let trendArrow = '';
                 if (prevPositions[player.name]) {
                     const prevRank = prevPositions[player.name];
@@ -877,49 +905,59 @@
         
         function generateSpotlight(gw) {
             const stories = {
-                9: {
-                    emoji: '🦄',
-                    title: 'The Differential King Strikes!',
-                    story: '<span class="highlight">Shashank</span> finally gets his vindication! After weeks of brave differential captains (Semenyo, Mbeumo), the <span class="highlight">Mbeumo pick delivers a VICTORY</span> with 69 points. Meanwhile, <span class="highlight">Bharath\'s on fire</span> with three consecutive top-2 finishes (1st→1st→2nd), and <span class="highlight">Gokul crashes from 95 to 31 points</span> in just 2 gameweeks! 💥'
-                },
-                8: {
-                    emoji: '🔥',
-                    title: 'Bharath\'s Back-to-Back Domination!',
-                    story: '<span class="highlight">Bharath wins again</span> with a massive 90 points, making it consecutive victories! <span class="highlight">Mayank uses Triple Captain</span> and secures 3rd place with 80 points. Three-way tie for 3rd splits the prize pool as the <span class="highlight">Haaland template dominates</span> once more.'
-                },
-                7: {
-                    emoji: '👑',
-                    title: 'Gokul Goes Nuclear!',
-                    story: '<span class="highlight">Gokul smashes 95 points</span> in an absolute masterclass performance! <span class="highlight">Bharath resurrects</span> from dead last (24 pts in GW6) to 2nd place with 83 points. <span class="highlight">14 out of 17</span> captained Haaland in the biggest template week yet!'
-                },
-                6: {
-                    emoji: '🎯',
-                    title: 'Gokul Rises to the Top!',
-                    story: '<span class="highlight">Gokul wins with 68 points</span> as Haaland captainers dominate the top. <span class="highlight">Bharath bombs to last</span> with just 24 points, while the prize money gets spread across 5 winners for the first time!'
-                },
-                5: {
-                    emoji: '💰',
-                    title: 'Five-Way Prize Split!',
-                    story: '<span class="highlight">Mayank takes the crown</span> with 63 points as five players share the prize pool. <span class="highlight">Most balanced week yet</span> with money distributed across multiple winners!'
-                },
-                4: {
-                    emoji: '🚀',
-                    title: 'Venky\'s Salah Masterclass!',
-                    story: '<span class="highlight">Venky wins big</span> with 77 points as the Salah captain differential pays off! Four prize winners emerge as competition heats up.'
+                2: {
+                    emoji: '⚡',
+                    title: 'Neeraj Wins the Opener!',
+                    story: '<span class="highlight">Neeraj</span> claims first blood with 61 points and a Salah captain as the Scapia mini-league battle begins.'
                 },
                 3: {
                     emoji: '🌊',
                     title: 'Sandesh\'s Massive Haul!',
-                    story: '<span class="highlight">Sandesh crushes it</span> with 83 points and a João Pedro captain! First 4-prize week as the pool expands to 14 warriors.'
+                    story: '<span class="highlight">Sandesh</span> explodes for 83 with a João Pedro captain. First week with 4 prizes as more warriors join the arena.'
                 },
-                2: {
-                    emoji: '⚡',
-                    title: 'Neeraj Wins the Opener!',
-                    story: '<span class="highlight">Neeraj claims first blood</span> with 61 points and a Salah captain! The journey begins with 11 brave warriors entering the arena.'
+                4: {
+                    emoji: '🚀',
+                    title: 'Venky\'s Salah Masterclass!',
+                    story: '<span class="highlight">Venky</span> banks a big win with 77 thanks to the Salah differential while four managers share the spoils.'
+                },
+                5: {
+                    emoji: '💰',
+                    title: 'Five-Way Prize Split!',
+                    story: '<span class="highlight">Mayank</span> tops the week, but five different managers walk away with cash. Most balanced battle so far.'
+                },
+                6: {
+                    emoji: '🎯',
+                    title: 'Gokul Rises to the Top!',
+                    story: '<span class="highlight">Gokul</span> takes his first win with 68 as the Haaland captaincy continues to dominate the payout zone.'
+                },
+                7: {
+                    emoji: '👑',
+                    title: 'Gokul Goes Nuclear!',
+                    story: '<span class="highlight">Gokul</span> detonates a 95-pointer. <span class="highlight">Bharath</span> rebounds from a 24-pointer to finish 2nd and kick-start a hot streak.'
+                },
+                8: {
+                    emoji: '🔥',
+                    title: 'Bharath\'s Back-to-Back Domination!',
+                    story: '<span class="highlight">Bharath</span> follows up his surge with a huge 90 and another win. Triple-captain <span class="highlight">Mayank</span> and <span class="highlight">Gokul</span> share 3rd as Haaland farms everyone coins.'
+                },
+                9: {
+                    emoji: '🦄',
+                    title: 'The Differential King Strikes!',
+                    story: '<span class="highlight">Shashank</span> finally cashes in with Mbeumo captain and takes the week. <span class="highlight">Bharath</span> completes a crazy 1st→1st→2nd run while several Haaland captainers share 5th.'
+                },
+                10: {
+                    emoji: '🚨',
+                    title: 'Sukhpal Drops a Monster!',
+                    story: '<span class="highlight">Sukhpal</span> smashes 93 with Haaland to take a statement win. <span class="highlight">Neeraj</span> and <span class="highlight">Shubs</span> round off the podium, while <span class="highlight">Bharath\'s</span> Bench Boost and <span class="highlight">Sagar\'s</span> Free Hit both land in the money.'
+                },
+                11: {
+                    emoji: '🧊',
+                    title: 'Low-Scoring Chaos Week!',
+                    story: '<span class="highlight">Aniruddh</span> grinds out a 49-point win in a cold, low-scoring gameweek. <span class="highlight">Gokul</span> and <span class="highlight">Venky</span> join him on the podium, while a three-way tie at 43 sees <span class="highlight">Jalaj</span>, <span class="highlight">Arindam</span> and <span class="highlight">Sarjan</span> split the last prize.'
                 }
             };
             
-            const story = stories[gw] || { emoji: '🎮', title: 'The Battle Continues!', story: 'Another exciting gameweek in the books!' };
+            const story = stories[gw] || { emoji: '🎮', title: 'The Battle Continues!', story: 'Another spicy gameweek in the books.' };
             
             return `
                 <div class="spotlight-card">
@@ -935,20 +973,21 @@
         function updateStandings() {
             const earnings = {};
             
-            // Calculate net earnings and streaks
             Object.keys(gameData).forEach(gwNum => {
                 const gw = gameData[gwNum];
-                gw.results.forEach((result, idx) => {
+                gw.results.forEach(result => {
                     if (gw.players.includes(result.name)) {
                         if (!earnings[result.name]) {
-                            earnings[result.name] = { won: 0, played: 0, wins: [], topStreak: 0, currentStreak: 0 };
+                            earnings[result.name] = { won: 0, played: 0, currentStreak: 0, topStreak: 0 };
                         }
                         earnings[result.name].played++;
                         if (result.prize > 0) {
                             earnings[result.name].won += result.prize;
-                            earnings[result.name].wins.push(gwNum);
                             earnings[result.name].currentStreak++;
-                            earnings[result.name].topStreak = Math.max(earnings[result.name].topStreak, earnings[result.name].currentStreak);
+                            earnings[result.name].topStreak = Math.max(
+                                earnings[result.name].topStreak,
+                                earnings[result.name].currentStreak
+                            );
                         } else {
                             earnings[result.name].currentStreak = 0;
                         }
@@ -956,135 +995,143 @@
                 });
             });
             
-            // Calculate net and sort
             const standings = Object.entries(earnings).map(([name, data]) => ({
                 name,
-                net: data.won - (data.played * 100),
+                net: data.won - data.played * 100,
                 won: data.won,
                 played: data.played,
-                wins: data.wins,
                 streak: data.currentStreak,
                 topStreak: data.topStreak
             })).sort((a, b) => b.net - a.net);
             
             const standingsHTML = standings.map(player => {
-                const streakBadge = player.streak >= 2 ? `<span class="streak-badge">🔥 ${player.streak}x Streak</span>` : '';
+                const streakBadge = player.streak >= 2
+                    ? `<span class="streak-badge">🔥 ${player.streak}x streak</span>`
+                    : '';
                 
                 return `
-                <div class="standing-card">
-                    <div class="standing-player">
-                        <div class="standing-name">${player.name}${streakBadge}</div>
-                        <div class="standing-stats">
-                            🎮 ${player.played} games | 💰 ₹${player.played * 100} locked | Won: ₹${player.won}
+                    <div class="standing-card">
+                        <div class="standing-player">
+                            <div class="standing-name">${player.name}${streakBadge}</div>
+                            <div class="standing-stats">
+                                🎮 ${player.played} games | 💰 ₹${player.played * 100} entry | Winnings: ₹${player.won}
+                            </div>
+                        </div>
+                        <div class="standing-earnings">
+                            <div class="net-amount ${player.net >= 0 ? 'positive' : 'negative'}">
+                                ${player.net >= 0 ? '+' : '-'}₹${Math.abs(player.net)}
+                            </div>
                         </div>
                     </div>
-                    <div class="standing-earnings">
-                        <div class="net-amount ${player.net >= 0 ? 'positive' : 'negative'}">
-                            ${player.net >= 0 ? '+' : ''}₹${Math.abs(player.net)}
-                        </div>
-                    </div>
-                </div>
-            `}).join('');
+                `;
+            }).join('');
             document.getElementById('standingsList').innerHTML = standingsHTML;
         }
 
         function updateStats() {
-            // Calculate comprehensive stats
             const playerStats = {};
             Object.values(gameData).forEach(gw => {
                 gw.results.forEach((result, index) => {
                     if (gw.players.includes(result.name)) {
                         if (!playerStats[result.name]) {
-                            playerStats[result.name] = { 
-                                games: 0, wins: 0, podiums: 0, scores: [], positions: [], earnings: 0 
+                            playerStats[result.name] = {
+                                games: 0,
+                                wins: 0,
+                                podiums: 0,
+                                scores: [],
+                                positions: [],
+                                earnings: 0
                             };
                         }
-                        playerStats[result.name].games++;
-                        playerStats[result.name].scores.push(result.score);
-                        playerStats[result.name].positions.push(index + 1);
-                        if (index === 0) playerStats[result.name].wins++;
-                        if (index < 3) playerStats[result.name].podiums++;
-                        if (result.prize > 0) playerStats[result.name].earnings += result.prize;
+                        const stats = playerStats[result.name];
+                        stats.games++;
+                        stats.scores.push(result.score);
+                        stats.positions.push(index + 1);
+                        if (index === 0) stats.wins++;
+                        if (index < 3) stats.podiums++;
+                        if (result.prize > 0) stats.earnings += result.prize;
                     }
                 });
             });
             
-            // Generate Player Stories
             const playerStories = {
                 'Bharath': {
                     emoji: '🔥',
-                    story: 'From zero to hero! Dead last in GW6 with 24 points, then BOOM - back-to-back victories with 83 and 90 points! Now on a ridiculous 3-game podium streak (1st→1st→2nd). The ultimate phoenix rising from the ashes. Everyone else is playing checkers, Bharath is playing 4D chess.'
+                    story: `Early-season chaos merchant who bottomed out with a brutal 24-pointer, then went on an absurd heater: big finish in GW7, back-to-back wins around GW8, a podium in GW9 and more money in GW10 with the Bench Boost. GW11 was Enzo pain, but overall he feels like one of the main endbosses of the pool.`
                 },
                 'Gokul': {
                     emoji: '🎢',
-                    story: 'The definition of volatility. Dropped a nuclear 95-point bomb in GW7, then crashed to 31 points in GW9. That\'s a 64-point swing! Won the league early with 2 victories, but lately it\'s been more rollercoaster than rocket ship. Still up ₹750 though, so who\'s complaining?'
+                    story: `Lives purely on vibes and variance. From clean win in GW6 to the 95-point nuclear bomb in GW7, then a crash to 31 in GW9. Two gameweeks later he’s back with 2nd place in GW11. Never boring, always somewhere near the extreme end of the graph.`
                 },
                 'Shashank': {
                     emoji: '🦄',
-                    story: 'The differential king finally got his crown! While everyone was captaining Haaland like sheep, this maverick picked Mbeumo and won GW9. Also tried Semenyo multiple times. Playing FPL on hard mode and making it look good. Patience pays off, differential gang rise up!'
+                    story: `The differential zealot. Semenyo and Mbeumo captains looked insane for weeks, then Mbeumo finally delivered the famous GW9 win. Immediately followed it with Mbeumo again and then Caicedo captain in GW11. True pioneer of “if it hits, I’m a legend” FPL.`
                 },
                 'Sukhpal': {
-                    emoji: '🎯',
-                    story: 'Mr. Consistent strikes again. Never wins, never bombs. Just quietly grinds into the top 4 almost every week. 2nd in GW8, 4th in GW9, multiple top-5 finishes. Not flashy, just effective. The tortoise in a race of hares, and currently ahead in the standings!'
+                    emoji: '👑',
+                    story: `Mr. steady turned assassin. Quietly stacking top finishes through the season, then dropped a monster 93 in GW10 to remind everyone who runs this lobby. A mix of slow accumulation and one big punch that completely changes the net table.`
                 },
                 'Raghu': {
-                    emoji: '💔',
-                    story: 'Started as a top-3 machine in early GWs, but the wheels fell off dramatically. Hit wildcard in GW8 and got 63 points (meh), then redeemed himself with 3rd place in GW9. The comeback trail is real. Can the early-season Raghu return?'
+                    emoji: '📉',
+                    story: `Started the season as a podium machine, then hit a long wobble while tinkering with wildcards. The GW9 3rd-place finish and a decent GW10 show there’s still a strong manager under the noise, even if the last couple of weeks have been more grind than glory.`
                 },
                 'Neeraj': {
                     emoji: '⚡',
-                    story: 'Won the very first GW and thought "this is easy!" Narrator: It was not easy. Since that GW2 victory, been wandering in the middle of the pack. Sometimes top-5, sometimes bottom-5. The ultimate enigma wrapped in a mystery. Will lightning strike twice?'
+                    story: `Took the very first pot of the season and has stayed relevant without totally running away with it. After drifting in mid-table for a bit, the 2nd place in GW10 with 89 points proves the upside is very much alive—especially when he joins the Haaland train at the right time.`
                 },
                 'Aniruddh': {
                     emoji: '🎖️',
-                    story: 'The prize hunter! Doesn\'t win often, but always seems to finish in the money. Multiple top-5 finishes keeping the net positive. The definition of "playing it safe" - rarely at the top, rarely at the bottom, just banking prizes week after week.'
+                    story: `Used to be the “always in the money, rarely winning” guy. That narrative flipped in GW11, where he navigated a low-scoring mess better than everyone else and took his first full win. Still feels like the banker of solid decisions more than chaos punts.`
                 },
                 'Rounak': {
                     emoji: '📈',
-                    story: 'The late bloomer! Started at 14th in GW3 and everyone wrote him off. Now look at him - 3rd place in GW7, 7th and 10th in recent weeks. Slowly but surely climbing the ladder. Give this man another month and he might just take over the league!'
+                    story: `Started from the basement with a 27-pointer in the early weeks and slowly climbed into relevance: podium in GW7, consistent mid-table finishes, and a steady graph trending up. Feels like the classic late bloomer who might own the second half of the season.`
                 },
                 'Mayank': {
                     emoji: '🃏',
-                    story: 'Triple Captain in GW8, got 80 points and 3rd place. Respectable! Won GW5 as well. But consistency? Never heard of her. Goes from top-3 to bottom-5 and back again. Living on the edge, one gameweek at a time. The wildcard of the league, literally and figuratively.'
+                    story: `Loves a big swing. Won GW5, then went all-in with Triple Captain in GW8 to grab another podium. Since then it’s been bumpy—with punts like Caicedo captain in GW11—but his style always keeps him one move away from another huge haul.`
                 },
                 'Sandesh': {
                     emoji: '🌊',
-                    story: 'Peaked early with a MASSIVE 83-point GW3 victory and been chasing that high ever since. Used Free Hit in GW8 and... got 7th place. Sometimes the best strategy is overthinking. Still, that early win bankroll is keeping him afloat!'
+                    story: `Peaked super early with that famous 83 in GW3 and has been chasing another wave ever since. Free Hit João Pedro in GW8 and decent scores in 10/11 show the ideas are good; the luck just hasn’t fully aligned again yet.`
                 },
                 'Puneet': {
                     emoji: '💼',
-                    story: 'The solid performer who never quite gets over the hump. Won GW2, and since then? Always close, never quite there. Multiple top-6 finishes but the W is elusive. The definition of "so close yet so far." One day, Puneet, one day...'
+                    story: `Perennial nearly-man. Strong starts, a win in GW2, podiums in GW4 and GW5, and then a solid 4th in GW11. Always close enough to feel dangerous, rarely far enough behind to be written off. The classic “you don’t notice him until he’s suddenly top three” guy.`
                 },
                 'Venky': {
                     emoji: '🎭',
-                    story: 'Won GW4 with a beautiful Salah differential, then proceeded to forget how he did it. Up and down, but mostly down recently. Still managed to split 5th place in GW9, so the comeback might be brewing. The early-season hero looking for redemption!'
+                    story: `From the Salah-differential win in GW4 to a cold patch and then a podium in the gritty GW11 trench. The graph is pure up-and-down theatre: when it clicks it looks beautiful, when it doesn’t it really doesn’t. High variance in a chill exterior.`
                 },
                 'Shubs': {
                     emoji: '💸',
-                    story: 'The league\'s most generous donor. Played every single gameweek, won exactly zero rupees. Used wildcard in GW9 and finished 15th. Pain. Pure pain. But hey, someone has to fund everyone else\'s winnings, and Shubs is taking one for the team like a champ!'
+                    story: `Spent the first half of the season as the official prize-pool sponsor: lots of entries, no cash. GW10 finally broke the curse with a big 3rd-place finish, followed by a solid 42 in GW11. Narrative has shifted from “generous donor” to “sleeping threat.”`
                 },
                 'Sagar': {
                     emoji: '🎲',
-                    story: 'Started in GW6, immediately thought "I got this!" Narrator: He did not have this. Been hovering around mid-to-bottom positions. Split 5th place in GW9 though, so maybe the tide is turning? The new guy trying to prove he belongs. Keep grinding!'
+                    story: `Joined mid-season and immediately jumped into chip plays and Haaland captains. The FH in GW10 delivered a neat 5th-place finish; GW11 was rough, but he already feels fully integrated into the chaos meta of this mini-league.`
                 },
                 'Jalaj': {
                     emoji: '🎣',
-                    story: 'The João Pedro loyalist! Everyone else is chasing Haaland, Jalaj is out here backing João Pedro like it\'s a religion. Finally split 5th place in GW9! Sometimes loyalty pays off... just not consistently. But when it hits, it feels so good.'
+                    story: `The João Pedro believer. Took time to find his feet, then started picking up money in GW9 and again in GW11 with that three-way tie for 5th. Not always in the spotlight, but quietly turning loyalty into returns.`
                 },
                 'Sarjan': {
                     emoji: '😅',
-                    story: 'Another João Pedro faithful, but the results have been... let\'s say "character building." Bottom-3 finishes are becoming a habit. But there\'s always next week! Sometimes you\'re the hammer, sometimes you\'re the nail. Sarjan is definitely the nail right now.'
+                    story: `Another João Pedro disciple who’s eaten a lot of red weeks along the way. The shared 5th in GW11 finally puts something back into the account. Still feels one sensible captaincy streak away from flipping the narrative.`
                 },
                 'Arindam': {
                     emoji: '🌱',
-                    story: 'Joined in GW4 and has been on a journey of self-discovery. Some highs, many lows, but always learning. Currently down ₹500 but hey, you can\'t put a price on the FPL experience! The eternal optimist who believes next week will be different.'
+                    story: `Late entrant to the league, learning the rhythm of the group. Had some tough early weeks, then chipped in with stable scores and a neat little prize share in GW11. Right now in the “gaining reps” phase more than the “farming cash” phase.`
                 }
             };
             
-            // Generate Player Stories HTML
             const storiesHTML = Object.entries(playerStories)
                 .filter(([name]) => playerStats[name] && playerStats[name].games >= 5)
-                .sort((a, b) => (playerStats[b[0]].earnings - playerStats[b[0]].games * 100) - (playerStats[a[0]].earnings - playerStats[a[0]].games * 100))
+                .sort((a, b) => {
+                    const netA = playerStats[a[0]].earnings - playerStats[a[0]].games * 100;
+                    const netB = playerStats[b[0]].earnings - playerStats[b[0]].games * 100;
+                    return netB - netA;
+                })
                 .map(([name, story]) => `
                     <div class="player-story-card">
                         <div class="story-header">
@@ -1097,223 +1144,170 @@
             
             document.getElementById('playerStories').innerHTML = storiesHTML;
             
-            // Calculate trends and movements
-            const calculateTrend = (positions) => {
-                if (positions.length < 3) return 0;
-                const recent3 = positions.slice(-3);
-                const earlier3 = positions.slice(-6, -3);
-                if (earlier3.length === 0) return 0;
-                const recentAvg = recent3.reduce((a,b) => a+b, 0) / recent3.length;
-                const earlierAvg = earlier3.reduce((a,b) => a+b, 0) / earlier3.length;
-                return earlierAvg - recentAvg; // Positive = improving
-            };
-
-            // Find best resurrection story
-            const findResurrection = () => {
-                const candidates = Object.entries(playerStats).filter(([_, s]) => s.games >= 6).map(([name, stats]) => {
-                    const worst = Math.max(...stats.positions);
-                    const worstIndex = stats.positions.lastIndexOf(worst);
-                    if (worstIndex >= stats.positions.length - 2) return [name, {...stats, score: 0}];
-                    const afterWorst = stats.positions.slice(worstIndex + 1);
-                    const improvement = worst - (afterWorst.reduce((a,b) => a+b, 0) / afterWorst.length);
-                    return [name, {...stats, score: improvement, worst, afterWorst: afterWorst.length}];
-                });
-                return candidates.sort((a, b) => b[1].score - a[1].score)[0];
-            };
-
-            // Find peak performance
-            const peakPerformance = Object.entries(playerStats).map(([name, stats]) => {
-                const maxScore = Math.max(...stats.scores);
-                return [name, {...stats, maxScore}];
-            }).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
-
-            // Performance Awards
-            const performanceAwards = [
-                {
-                    title: 'King of the League',
-                    emoji: '👑',
-                    desc: 'Most victories - the champion',
-                    winner: Object.entries(playerStats).sort((a, b) => b[1].wins - a[1].wins)[0]
-                },
-                {
-                    title: 'Resurrection Master',
-                    emoji: '🔥',
-                    desc: 'Ultimate comeback from disaster',
-                    winner: findResurrection()
-                },
-                {
-                    title: 'Peak Performance',
-                    emoji: '⛰️',
-                    desc: 'Highest single GW score',
-                    winner: peakPerformance
-                },
-                {
-                    title: 'Mr. Reliable',
-                    emoji: '🎯',
-                    desc: 'Most consistent positions',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
-                        const avg = stats.positions.reduce((a,b) => a+b, 0) / stats.positions.length;
+            const performanceAwards = (() => {
+                const entries = Object.entries(playerStats);
+                if (!entries.length) return [];
+                
+                const mostWins = [...entries].sort((a, b) => b[1].wins - a[1].wins)[0];
+                const peakPerformance = [...entries].map(([name, stats]) => {
+                    return [name, { ...stats, maxScore: Math.max(...stats.scores) }];
+                }).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
+                const mostConsistent = [...entries]
+                    .filter(([_, s]) => s.games >= 5)
+                    .map(([name, stats]) => {
+                        const avg = stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length;
                         const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length;
-                        return [name, {...stats, variance}];
-                    }).sort((a, b) => a[1].variance - b[1].variance)[0]
-                },
-                {
-                    title: 'Prize Magnet',
-                    emoji: '🎖️',
-                    desc: 'Most top-5 finishes',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
+                        return [name, { ...stats, variance }];
+                    }).sort((a, b) => a[1].variance - b[1].variance)[0];
+                const prizeMagnet = [...entries]
+                    .filter(([_, s]) => s.games >= 5)
+                    .map(([name, stats]) => {
                         const prizeCount = stats.positions.filter(p => p <= 5).length;
-                        return [name, {...stats, prizeCount}];
-                    }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0]
-                },
-                {
-                    title: 'Form Horse',
-                    emoji: '🐎',
-                    desc: 'On fire right now (L3 avg)',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 3).map(([name, stats]) => {
+                        return [name, { ...stats, prizeCount }];
+                    }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0];
+                const formHorse = [...entries]
+                    .filter(([_, s]) => s.games >= 3)
+                    .map(([name, stats]) => {
                         const recent3 = stats.positions.slice(-3);
-                        const avgRecent = recent3.reduce((a,b) => a+b, 0) / recent3.length;
-                        return [name, {...stats, avgRecent}];
-                    }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0]
-                }
-            ];
+                        const avgRecent = recent3.reduce((a, b) => a + b, 0) / recent3.length;
+                        return [name, { ...stats, avgRecent }];
+                    }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0];
+                
+                return [
+                    {
+                        title: 'King of the League',
+                        emoji: '👑',
+                        desc: 'Most gameweek wins so far.',
+                        winner: mostWins
+                    },
+                    {
+                        title: 'Peak Performance',
+                        emoji: '⛰️',
+                        desc: 'Highest single-gameweek score.',
+                        winner: peakPerformance
+                    },
+                    {
+                        title: 'Mr. Reliable',
+                        emoji: '🎯',
+                        desc: 'Most consistent positions across the season.',
+                        winner: mostConsistent
+                    },
+                    {
+                        title: 'Prize Magnet',
+                        emoji: '🎖️',
+                        desc: 'Most frequent appearances in the payout spots.',
+                        winner: prizeMagnet
+                    },
+                    {
+                        title: 'Form Horse',
+                        emoji: '🐎',
+                        desc: 'Best average rank over the last three entries.',
+                        winner: formHorse
+                    }
+                ];
+            })();
             
-            // Fun Awards - Story-driven badges
-            const funAwards = [
-                {
-                    title: 'Phoenix Rising',
-                    emoji: '🔥',
-                    desc: 'From ashes to glory - epic turnaround',
-                    winner: ['Bharath', playerStats['Bharath']]
-                },
-                {
-                    title: 'Differential Genius',
-                    emoji: '🧠',
-                    desc: 'Brave captains against the template',
-                    winner: ['Shashank', playerStats['Shashank']]
-                },
-                {
-                    title: 'The Fader',
-                    emoji: '📉',
-                    desc: 'Started strong, momentum fading',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
-                        const firstHalf = stats.positions.slice(0, Math.floor(stats.games/2));
-                        const secondHalf = stats.positions.slice(Math.floor(stats.games/2));
-                        const decline = (secondHalf.reduce((a,b) => a+b, 0) / secondHalf.length) - 
-                                       (firstHalf.reduce((a,b) => a+b, 0) / firstHalf.length);
-                        return [name, {...stats, decline}];
-                    }).sort((a, b) => b[1].decline - a[1].decline)[0]
-                },
-                {
-                    title: 'So Close Yet So Far',
-                    emoji: '😫',
-                    desc: 'Multiple top-6 without winning',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.wins === 0 && s.games >= 5).map(([name, stats]) => {
-                        const nearMisses = stats.positions.filter(p => p <= 6).length;
-                        return [name, {...stats, nearMisses}];
-                    }).sort((a, b) => b[1].nearMisses - a[1].nearMisses)[0]
-                },
-                {
-                    title: 'Wildcard Warrior',
-                    emoji: '🎰',
-                    desc: 'Most unpredictable week-to-week',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
-                        const swings = [];
-                        for (let i = 1; i < stats.positions.length; i++) {
-                            swings.push(Math.abs(stats.positions[i] - stats.positions[i-1]));
+            const funAwards = (() => {
+                const entries = Object.entries(playerStats);
+                if (!entries.length) return [];
+                
+                const resurrection = [...entries]
+                    .filter(([_, s]) => s.games >= 6)
+                    .map(([name, stats]) => {
+                        const worst = Math.max(...stats.positions);
+                        const worstIndex = stats.positions.lastIndexOf(worst);
+                        if (worstIndex >= stats.positions.length - 2) {
+                            return [name, { ...stats, score: 0 }];
                         }
-                        const avgSwing = swings.reduce((a,b) => a+b, 0) / swings.length;
-                        return [name, {...stats, avgSwing}];
-                    }).sort((a, b) => b[1].avgSwing - a[1].avgSwing)[0]
-                },
-                {
-                    title: 'Early Peak Syndrome',
-                    emoji: '💫',
-                    desc: 'Chasing that first high',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
+                        const afterWorst = stats.positions.slice(worstIndex + 1);
+                        const improvement = worst - (afterWorst.reduce((a, b) => a + b, 0) / afterWorst.length);
+                        return [name, { ...stats, score: improvement }];
+                    }).sort((a, b) => b[1].score - a[1].score)[0];
+                
+                const earlyPeak = [...entries]
+                    .filter(([_, s]) => s.games >= 5)
+                    .map(([name, stats]) => {
                         const bestPos = Math.min(...stats.positions);
                         const bestIndex = stats.positions.indexOf(bestPos);
-                        if (bestIndex >= stats.positions.length - 2) return [name, {...stats, score: 0}];
+                        if (bestIndex >= stats.positions.length - 2) {
+                            return [name, { ...stats, score: 0 }];
+                        }
                         const afterBest = stats.positions.slice(bestIndex + 1);
-                        const decline = afterBest.reduce((a,b) => a+b, 0) / afterBest.length - bestPos;
-                        return [name, {...stats, score: bestPos === 1 ? decline * 2 : decline}];
-                    }).sort((a, b) => b[1].score - a[1].score)[0]
-                },
-                {
-                    title: 'Late Bloomer',
-                    emoji: '🌱',
-                    desc: 'Getting better with time',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
-                        const firstHalf = stats.positions.slice(0, Math.floor(stats.games/2));
-                        const secondHalf = stats.positions.slice(Math.floor(stats.games/2));
-                        const improvement = (firstHalf.reduce((a,b) => a+b, 0) / firstHalf.length) - 
-                                           (secondHalf.reduce((a,b) => a+b, 0) / secondHalf.length);
-                        return [name, {...stats, improvement}];
-                    }).sort((a, b) => b[1].improvement - a[1].improvement)[0]
-                },
-                {
-                    title: 'Template Prisoner',
-                    emoji: '🐑',
-                    desc: 'Following the crowd to nowhere',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5 && s.wins === 0).map(([name, stats]) => {
-                        const bottom = stats.positions.filter(p => p > 10).length;
-                        return [name, {...stats, bottom}];
-                    }).sort((a, b) => b[1].bottom - a[1].bottom)[0]
-                },
-                {
-                    title: 'Mid-Table Merchant',
-                    emoji: '⚙️',
-                    desc: 'Safely average, never spectacular',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.games >= 5).map(([name, stats]) => {
-                        const midTable = stats.positions.filter(p => p >= 6 && p <= 11).length;
-                        const rate = midTable / stats.games;
-                        return [name, {...stats, rate, midTable}];
-                    }).sort((a, b) => b[1].rate - a[1].rate)[0]
-                },
-                {
-                    title: 'Generous Donor',
-                    emoji: '💸',
-                    desc: 'Funding everyone else\'s success',
-                    winner: Object.entries(playerStats).filter(([_, s]) => s.earnings === 0 && s.games >= 5)
-                        .sort((a, b) => b[1].games - a[1].games)[0]
-                }
-            ].filter(award => award.winner && award.winner[1]);
-            
-            const performanceHTML = performanceAwards.filter(a => a.winner).map(award => {
-                const [name, stats] = award.winner;
-                let statDetail = '';
+                        const decline = afterBest.reduce((a, b) => a + b, 0) / afterBest.length - bestPos;
+                        return [name, { ...stats, score: decline }];
+                    }).sort((a, b) => b[1].score - a[1].score)[0];
                 
-                // Add stat details based on award type
-                if (award.title === 'King of the League') {
-                    statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.wins / stats.games * 100)}%"></div></div>`;
-                } else if (award.title === 'Prize Magnet') {
-                    statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.prizeCount / stats.games * 100)}%"></div></div>`;
-                }
+                const lateBloomer = [...entries]
+                    .filter(([_, s]) => s.games >= 5)
+                    .map(([name, stats]) => {
+                        const firstHalf = stats.positions.slice(0, Math.floor(stats.games / 2));
+                        const secondHalf = stats.positions.slice(Math.floor(stats.games / 2));
+                        const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) -
+                                            (secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length);
+                        return [name, { ...stats, improvement }];
+                    }).sort((a, b) => b[1].improvement - a[1].improvement)[0];
                 
-                return `
-                    <div class="award">
-                        <div class="award-info">
-                            <div class="award-title">${award.emoji} ${award.title}</div>
-                            <div class="award-desc">${award.desc}</div>
-                            ${statDetail}
-                        </div>
-                        <div class="award-winner">${name}</div>
-                    </div>
-                `;
-            }).join('');
+                const generousDonor = [...entries]
+                    .filter(([_, s]) => s.earnings === 0 && s.games >= 5)
+                    .sort((a, b) => b[1].games - a[1].games)[0];
+                
+                const wildcardWarrior = [...entries]
+                    .filter(([_, s]) => s.games >= 5)
+                    .map(([name, stats]) => {
+                        const swings = [];
+                        for (let i = 1; i < stats.positions.length; i++) {
+                            swings.push(Math.abs(stats.positions[i] - stats.positions[i - 1]));
+                        }
+                        const avgSwing = swings.reduce((a, b) => a + b, 0) / swings.length;
+                        return [name, { ...stats, avgSwing }];
+                    }).sort((a, b) => b[1].avgSwing - a[1].avgSwing)[0];
+                
+                return [
+                    { title: 'Phoenix Rising', emoji: '🔥', desc: 'Biggest comeback after a disaster week.', winner: resurrection },
+                    { title: 'Early Peak Syndrome', emoji: '💫', desc: 'Massive high followed by a long comedown.', winner: earlyPeak },
+                    { title: 'Late Bloomer', emoji: '🌱', desc: 'Started slow, heating up over time.', winner: lateBloomer },
+                    { title: 'Generous Donor', emoji: '💸', desc: 'Most entries with zero winnings so far.', winner: generousDonor },
+                    { title: 'Wildcard Warrior', emoji: '🎰', desc: 'Most dramatic week-to-week rank swings.', winner: wildcardWarrior }
+                ];
+            })();
             
-            const funHTML = funAwards.filter(a => a.winner).map(award => {
-                const [name] = award.winner;
-                return `
-                    <div class="award">
-                        <div class="award-info">
-                            <div class="award-title">${award.emoji} ${award.title}</div>
-                            <div class="award-desc">${award.desc}</div>
+            const performanceHTML = performanceAwards
+                .filter(a => a.winner && a.winner[1])
+                .map(award => {
+                    const [name, stats] = award.winner;
+                    let statDetail = '';
+                    if (award.title === 'King of the League') {
+                        statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.wins / stats.games) * 100}%"></div></div>`;
+                    }
+                    if (award.title === 'Prize Magnet') {
+                        statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.prizeCount / stats.games) * 100}%"></div></div>`;
+                    }
+                    return `
+                        <div class="award">
+                            <div class="award-info">
+                                <div class="award-title">${award.emoji} ${award.title}</div>
+                                <div class="award-desc">${award.desc}</div>
+                                ${statDetail}
+                            </div>
+                            <div class="award-winner">${name}</div>
                         </div>
-                        <div class="award-winner">${name}</div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            
+            const funHTML = funAwards
+                .filter(a => a.winner && a.winner[1])
+                .map(award => {
+                    const [name] = award.winner;
+                    return `
+                        <div class="award">
+                            <div class="award-info">
+                                <div class="award-title">${award.emoji} ${award.title}</div>
+                                <div class="award-desc">${award.desc}</div>
+                            </div>
+                            <div class="award-winner">${name}</div>
+                        </div>
+                    `;
+                }).join('');
             
             document.getElementById('performanceAwards').innerHTML = performanceHTML;
             document.getElementById('funAwards').innerHTML = funHTML;
