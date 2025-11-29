@@ -593,7 +593,8 @@
             <button class="gw-btn" onclick="showGW(8)">GW 8</button>
             <button class="gw-btn" onclick="showGW(9)">GW 9</button>
             <button class="gw-btn" onclick="showGW(10)">GW 10</button>
-            <button class="gw-btn active" onclick="showGW(11)">GW 11</button>
+            <button class="gw-btn" onclick="showGW(11)">GW 11</button>
+            <button class="gw-btn active" onclick="showGW(12)">GW 12</button>
         </div>
 
         <div class="tabs">
@@ -618,7 +619,7 @@
                         <div class="info-label">Entry</div>
                     </div>
                     <div class="info-item">
-                        <div class="info-value">GW<span id="currentGW">11</span></div>
+                        <div class="info-value">GW<span id="currentGW">12</span></div>
                         <div class="info-label">Battle</div>
                     </div>
                 </div>
@@ -728,7 +729,7 @@
             }
         };
 
-        // Game data GW2–GW11
+        // Game data GW2–GW12
         const gameData = {
             2: {
                 players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'],
@@ -956,10 +957,34 @@
                     { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 },
                     { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }
                 ]
+            },
+            12: {
+                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
+                results: [
+                    { name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 },
+                    { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 },
+                    { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 },
+                    { name: 'Rounak', score: 48, captain: 'Haaland (FH1)', prize: 250 },
+                    { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 },
+                    { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 46, captain: 'Haaland (BB1)', prize: 0 },
+                    { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 },
+                    { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 },
+                    { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 },
+                    { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 35, captain: 'Haaland (TC1)', prize: 0 },
+                    { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 },
+                    { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 },
+                    { name: 'Sagar', score: 32, captain: 'Haaland (TC1)', prize: 0 },
+                    { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 },
+                    { name: 'Jalaj', score: 27, captain: 'João Pedro', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 11;
+        let currentGW = 12;
 
         function showGW(gw) {
             currentGW = gw;
@@ -1016,6 +1041,7 @@
             const leaderboardHTML = data.results.map((player, i) => {
                 const rank = i + 1;
                 let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
+                const medals = ['🥇', '🥈', '🥉', '4', '5'];
                 let rankDisplay = rank <= 5 && player.prize > 0 ? (medals[rank-1] || rank) : rank;
                 
                 let trendArrow = '';
@@ -1102,6 +1128,11 @@
                     emoji: '🧊',
                     title: 'Low-Scoring Chaos Week!',
                     story: '<span class="highlight">Aniruddh</span> grinds out a 49-point win in a cold, low-scoring gameweek. <span class="highlight">Gokul</span> and <span class="highlight">Venky</span> join him on the podium, while a three-way tie at 43 sees <span class="highlight">Jalaj</span>, <span class="highlight">Arindam</span> and <span class="highlight">Sarjan</span> split the last prize.'
+                },
+                12: {
+                    emoji: '🎄',
+                    title: 'Shubs Wins the Festive GW!',
+                    story: '<span class="highlight">Shubs</span> finally tops the pile with 61 and a simple Haaland captain, nudging <span class="highlight">Bharath</span> into 2nd. <span class="highlight">Raghu</span> returns to the podium, while chips fly around with <span class="highlight">Rounak\'s</span> FH, <span class="highlight">Sandesh\'s</span> BB and double TC shots from <span class="highlight">Venky</span> and <span class="highlight">Sagar</span> failing to crack the prize spots.'
                 }
             };
             
@@ -1248,71 +1279,71 @@
             const playerStories = {
                 'Bharath': {
                     emoji: '🔥',
-                    story: `Early-season chaos merchant who bottomed out with a brutal 24-pointer, then went on an absurd heater: big finish in GW7, back-to-back wins around GW8, a podium in GW9 and more money in GW10 with the Bench Boost. GW11 was Enzo pain, but overall he feels like one of the main endbosses of the pool.`
+                    story: `Early-season chaos merchant who bottomed out with a brutal 24-pointer, then went on an absurd heater: big finish in GW7, back-to-back wins around GW8, a podium in GW9 and more money in GW10 with the Bench Boost. GW12 adds another 2nd-place finish to the resume—one of the main endbosses of the pool.`
                 },
                 'Gokul': {
                     emoji: '🎢',
-                    story: `Lives purely on vibes and variance. From clean win in GW6 to the 95-point nuclear bomb in GW7, then a crash to 31 in GW9. Two gameweeks later he’s back with 2nd place in GW11. Never boring, always somewhere near the extreme end of the graph.`
+                    story: `Lives purely on vibes and variance. From clean win in GW6 to the 95-point nuclear bomb in GW7, then a crash to 31 in GW9. Two gameweeks later he’s back with 2nd in GW11 and a solid mid-table 46 in GW12. Never boring, always somewhere near the extreme end of the graph.`
                 },
                 'Shashank': {
                     emoji: '🦄',
-                    story: `The differential zealot. Semenyo and Mbeumo captains looked insane for weeks, then Mbeumo finally delivered the famous GW9 win. Immediately followed it with Mbeumo again and then Caicedo captain in GW11. True pioneer of “if it hits, I’m a legend” FPL.`
+                    story: `The differential zealot. Semenyo and Mbeumo captains looked insane for weeks, then Mbeumo finally delivered the famous GW9 win. Since then it’s been Caicedo and Salah punts that don’t always land, but the table still fears the week when another wild call explodes.`
                 },
                 'Sukhpal': {
                     emoji: '👑',
-                    story: `Mr. steady turned assassin. Quietly stacking top finishes through the season, then dropped a monster 93 in GW10 to remind everyone who runs this lobby. A mix of slow accumulation and one big punch that completely changes the net table.`
+                    story: `Mr. steady turned assassin. Quietly stacking top finishes through the season, then dropped a monster 93 in GW10 to reset everyone’s net standings. GW12 is more measured with 45, but the overall graph still screams “always one big haul away from top.”`
                 },
                 'Raghu': {
                     emoji: '📉',
-                    story: `Started the season as a podium machine, then hit a long wobble while tinkering with wildcards. The GW9 3rd-place finish and a decent GW10 show there’s still a strong manager under the noise, even if the last couple of weeks have been more grind than glory.`
+                    story: `Started the season as a podium machine, then hit a wobble while tinkering with wildcards. GW9 and GW10 were signs of life; GW12 finally brings another podium with 50. Narrative arc: mid-season crisis followed by slow, storyline-appropriate redemption.`
                 },
                 'Neeraj': {
                     emoji: '⚡',
-                    story: `Took the very first pot of the season and has stayed relevant without totally running away with it. After drifting in mid-table for a bit, the 2nd place in GW10 with 89 points proves the upside is very much alive—especially when he joins the Haaland train at the right time.`
+                    story: `Took the very first pot of the season and has stayed relevant without totally running away with it. 2nd in GW10 and a tidy 5th in GW12 show there’s always another spike around the corner when the template plus a tiny twist comes together.`
                 },
                 'Aniruddh': {
                     emoji: '🎖️',
-                    story: `Used to be the “always in the money, rarely winning” guy. That narrative flipped in GW11, where he navigated a low-scoring mess better than everyone else and took his first full win. Still feels like the banker of solid decisions more than chaos punts.`
+                    story: `Used to be the “always in the money, rarely winning” guy. GW11 flipped that with a gritty low-scoring win, and GW12 follows up with another solid, if unspectacular, 45. Quietly compounding both points and rupees over time.`
                 },
                 'Rounak': {
                     emoji: '📈',
-                    story: `Started from the basement with a 27-pointer in the early weeks and slowly climbed into relevance: podium in GW7, consistent mid-table finishes, and a steady graph trending up. Feels like the classic late bloomer who might own the second half of the season.`
+                    story: `Started from the basement with a 27-pointer in the early weeks and slowly climbed into relevance: podium in GW7, consistent mid-table finishes, then another cash finish in GW12 with a smart FH. Classic late bloomer energy, graph still trending up.`
                 },
                 'Mayank': {
                     emoji: '🃏',
-                    story: `Loves a big swing. Won GW5, then went all-in with Triple Captain in GW8 to grab another podium. Since then it’s been bumpy—with punts like Caicedo captain in GW11—but his style always keeps him one move away from another huge haul.`
+                    story: `Loves a big swing. Won GW5, then went all-in with Triple Captain in GW8 to grab another podium. The weeks since have been bumpy—including Caicedo captain and Mateta punts—but his style always keeps him one move away from another huge haul.`
                 },
                 'Sandesh': {
                     emoji: '🌊',
-                    story: `Peaked super early with that famous 83 in GW3 and has been chasing another wave ever since. Free Hit João Pedro in GW8 and decent scores in 10/11 show the ideas are good; the luck just hasn’t fully aligned again yet.`
+                    story: `Peaked super early with that famous 83 in GW3 and has been chasing another wave ever since. Free Hit João Pedro in GW8, steady mid-table finishes, and now a BB in GW12 that didn’t quite hit. Feels one chip from completely rewriting the season.`
                 },
                 'Puneet': {
                     emoji: '💼',
-                    story: `Perennial nearly-man. Strong starts, a win in GW2, podiums in GW4 and GW5, and then a solid 4th in GW11. Always close enough to feel dangerous, rarely far enough behind to be written off. The classic “you don’t notice him until he’s suddenly top three” guy.`
+                    story: `Perennial nearly-man. Strong starts, a win in GW2, podiums in GW4 and GW5, and then a solid 4th in GW11. GW12 is a quiet 38, keeping him in that zone where nobody ever relaxes when he’s within 20 points.`
                 },
                 'Venky': {
                     emoji: '🎭',
-                    story: `From the Salah-differential win in GW4 to a cold patch and then a podium in the gritty GW11 trench. The graph is pure up-and-down theatre: when it clicks it looks beautiful, when it doesn’t it really doesn’t. High variance in a chill exterior.`
+                    story: `From the Salah-differential win in GW4 to a cold patch and then a podium in the gritty GW11 trench. GW12’s triple-captain on Haaland doesn’t fully pay off, adding to the drama. The graph is pure theatre: when it clicks it looks beautiful, when it doesn’t it really doesn’t.`
                 },
                 'Shubs': {
                     emoji: '💸',
-                    story: `Spent the first half of the season as the official prize-pool sponsor: lots of entries, no cash. GW10 finally broke the curse with a big 3rd-place finish, followed by a solid 42 in GW11. Narrative has shifted from “generous donor” to “sleeping threat.”`
+                    story: `Spent the first half of the season as the official prize-pool sponsor: lots of entries, little cash. GW10 broke the curse with a big 3rd-place, and GW12 finally brings the full coronation with a clean, chip-free 61-point win. From donor to festive king.`
                 },
                 'Sagar': {
                     emoji: '🎲',
-                    story: `Joined mid-season and immediately jumped into chip plays and Haaland captains. The FH in GW10 delivered a neat 5th-place finish; GW11 was rough, but he already feels fully integrated into the chaos meta of this mini-league.`
+                    story: `Joined mid-season and immediately jumped into chip plays and Haaland captains. The FH in GW10 brought a 5th-place return; TC in GW12 whiffed but shows intent. Already feels like part of the chaos backbone of the league.`
                 },
                 'Jalaj': {
                     emoji: '🎣',
-                    story: `The João Pedro believer. Took time to find his feet, then started picking up money in GW9 and again in GW11 with that three-way tie for 5th. Not always in the spotlight, but quietly turning loyalty into returns.`
+                    story: `The João Pedro believer. Picked up money in GW9 and again in GW11 with that three-way tie for 5th. GW12’s 27 reminds everyone that loyalty to a Pedro comes with both feast and famine.`
                 },
                 'Sarjan': {
                     emoji: '😅',
-                    story: `Another João Pedro disciple who’s eaten a lot of red weeks along the way. The shared 5th in GW11 finally puts something back into the account. Still feels one sensible captaincy streak away from flipping the narrative.`
+                    story: `Another João Pedro disciple who’s eaten a lot of red weeks along the way. The shared 5th in GW11 and a mid-table 39 in GW12 keep the account ticking. Still one sensible captaincy streak away from flipping the whole narrative.`
                 },
                 'Arindam': {
                     emoji: '🌱',
-                    story: `Late entrant to the league, learning the rhythm of the group. Had some tough early weeks, then chipped in with stable scores and a neat little prize share in GW11. Right now in the “gaining reps” phase more than the “farming cash” phase.`
+                    story: `Late entrant to the league, learning the rhythm of the group. Tough early weeks, then small cash in GW11 and a decent 33 in GW12. Right now in the “stacking experience” arc more than the “farming profit” arc, but it’s trending in the right direction.`
                 }
             };
             
@@ -1559,7 +1590,7 @@
                         Shubs has entered <b>${shubsGames}</b> battles and withdrawn a total of <b>₹${shubsWinnings}</b>.
                     </div>
                     <div class="rivalry-sub">
-                        The pool still leads on aggregate, but GW10 showed this rivalry is finally becoming competitive.
+                        The pool still leads on aggregate, but GW12 shows this rivalry is finally swinging back his way.
                     </div>
                 </div>
             `;
