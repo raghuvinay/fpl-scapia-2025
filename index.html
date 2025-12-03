@@ -62,6 +62,11 @@
             padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .gw-selector::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
         
         .gw-btn {
@@ -580,21 +585,18 @@
     <div class="container">
         <div class="header">
             <div class="logo">✈️ SCAPIA FPL</div>
-            <div class="tagline">Where every gameweek is a new journey</div>
+            <div class="tagline">GW13: The Week of the Broken Chips</div>
         </div>
 
         <div class="gw-selector">
-            <button class="gw-btn" onclick="showGW(2)">GW 2</button>
-            <button class="gw-btn" onclick="showGW(3)">GW 3</button>
-            <button class="gw-btn" onclick="showGW(4)">GW 4</button>
-            <button class="gw-btn" onclick="showGW(5)">GW 5</button>
             <button class="gw-btn" onclick="showGW(6)">GW 6</button>
             <button class="gw-btn" onclick="showGW(7)">GW 7</button>
             <button class="gw-btn" onclick="showGW(8)">GW 8</button>
             <button class="gw-btn" onclick="showGW(9)">GW 9</button>
             <button class="gw-btn" onclick="showGW(10)">GW 10</button>
             <button class="gw-btn" onclick="showGW(11)">GW 11</button>
-            <button class="gw-btn active" onclick="showGW(12)">GW 12</button>
+            <button class="gw-btn" onclick="showGW(12)">GW 12</button>
+            <button class="gw-btn active" onclick="showGW(13)">GW 13</button>
         </div>
 
         <div class="tabs">
@@ -603,7 +605,6 @@
             <button class="tab" onclick="showTab('stats')">📊 Stats</button>
         </div>
 
-        <!-- Battle Tab -->
         <div id="battle" class="content active">
             <div id="spotlight"></div>
             
@@ -619,7 +620,7 @@
                         <div class="info-label">Entry</div>
                     </div>
                     <div class="info-item">
-                        <div class="info-value">GW<span id="currentGW">12</span></div>
+                        <div class="info-value">GW<span id="currentGW">13</span></div>
                         <div class="info-label">Battle</div>
                     </div>
                 </div>
@@ -630,15 +631,13 @@
             <div id="banter"></div>
         </div>
 
-        <!-- Standings Tab -->
         <div id="standings" class="content">
             <div id="standingsList"></div>
         </div>
 
-        <!-- Stats Tab -->
         <div id="stats" class="content">
             <div class="stats-section">
-                <div class="stat-title">📖 Player Stories</div>
+                <div class="stat-title">📖 Player Stories (GW13 Update)</div>
                 <div id="playerStories"></div>
             </div>
             <div class="stats-section">
@@ -657,334 +656,118 @@
     </div>
 
     <script>
-        // Manager nicknames & taglines (used only in stories)
+        // Manager nicknames & taglines
         const managerMeta = {
             'Bharath': {
                 nick: 'Heat Check Merchant',
-                tagline: 'Either 24 points or Ballon d’Or form, nothing in between.'
+                tagline: 'Currently in the "Ballon d\'Or form" cooling off period (20 pts).'
             },
             'Gokul': {
                 nick: 'Volatility FC',
-                tagline: 'If there’s a 60-point swing to be found, he’ll take it.'
+                tagline: 'Bench Boosted his way to 5th place. Efficiency or desperation?'
             },
             'Raghu': {
                 nick: 'Narrative Merchant',
-                tagline: 'Lives for long arcs: early highs, mid-season pain, redemption incoming.'
+                tagline: 'Back in the money. The narrative arc demanded a redemption.'
             },
             'Venky': {
                 nick: 'Salah Syndicate',
-                tagline: 'Differential captain choices powered by pure gut and espresso.'
+                tagline: 'Finished 14th this week. The syndicate is taking a short break.'
             },
             'Shashank': {
                 nick: 'Differential Ultras',
-                tagline: 'If EO is above 50%, he’s not interested in captaining it.'
+                tagline: 'Captained Mbeumo for 14 total points. Died on the hill he built.'
             },
             'Shubs': {
-                nick: 'Ex-Sponsor of the Pot',
-                tagline: 'Used to fund the pool, now occasionally withdraws from it.'
+                nick: 'Sponsor of the Pot',
+                tagline: 'Triple Captained Haaland for 37 points. The generosity returns.'
             },
             'Sukhpal': {
                 nick: 'Steady Assassin',
-                tagline: 'Looks calm, but that 93-point punch came out of nowhere.'
+                tagline: 'A rare quiet week (35 pts), but still lurking mid-table.'
             },
             'Neeraj': {
                 nick: 'Lightning Starter',
-                tagline: 'Won the opener and keeps threatening another thunderbolt.'
+                tagline: 'Stuck in the mud with 27 points. Needs another thunderbolt soon.'
             },
             'Puneet': {
-                nick: 'Always There Thereabouts',
-                tagline: 'Perennial “so close” merchant, always lurking around the podium.'
+                nick: 'Mr. Consistent',
+                tagline: 'Consistently 35 points this week. Not great, not terrible.'
             },
             'Mayank': {
                 nick: 'Chip Gambler',
-                tagline: 'Triple captains, weird punts, somehow walks away with cash.'
+                tagline: 'Didn\'t even need a chip to win GW13. Just pure vibes.'
             },
             'Rounak': {
                 nick: 'Late Bloomer',
-                tagline: 'Started at the bottom, graphs now trending only one way.'
+                tagline: 'Triple Captain fail (39 pts), but still snuck into the money in 7th... wait no, 7th pays nothing.'
             },
             'Sandesh': {
                 nick: 'Peak GW3',
-                tagline: 'Dropped an 83 early, has been chasing that wave ever since.'
+                tagline: 'Triple Captained for 27 points. We need to check on him.'
             },
             'Sarjan': {
                 nick: 'Painful Pedro Enjoyer',
-                tagline: 'If João Pedro blanks, he probably captained him.'
+                tagline: 'Finally! The Pedro patience paid off with a 4th place cash finish.'
             },
             'Sagar': {
                 nick: 'Chip Enthusiast',
-                tagline: 'Treats FH and chips like festival fireworks—use first, explain later.'
+                tagline: '21 points. The fireworks were duds this week.'
             },
             'Jalaj': {
                 nick: 'Loyal Pedro Holder',
-                tagline: 'Sticks with João Pedro long enough for the points to eventually arrive.'
+                tagline: 'Pedro finally hauled, but the rest of his team stayed on the bus (17 pts).'
             },
             'Arindam': {
                 nick: 'Project Long Game',
-                tagline: 'Learning the league’s rhythm, picking up scars and small wins.'
+                tagline: 'The project has launched! First big podium finish (3rd).'
             },
             'Aniruddh': {
                 nick: 'Prize Magnet',
-                tagline: 'Quietly collects payouts, now with a gritty GW11 win in the bag.'
+                tagline: 'Rare miss for the magnet. 23 points and out of the money.'
             }
         };
 
-        // Game data GW2–GW12
+        // Game data
         const gameData = {
-            2: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'],
-                pool: 1100,
-                prizes: [600, 400, 100],
+            2: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'], pool: 1100, prizes: [600, 400, 100], results: [{ name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 }, { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 }, { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 }, { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 }, { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 }, { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 }, { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 }, { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }] },
+            3: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh'], pool: 1400, prizes: [700, 400, 200, 100], results: [{ name: 'Sandesh', score: 83, captain: 'João Pedro', prize: 700 }, { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 }, { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 }, { name: 'Sarjan', score: 64, captain: 'João Pedro', prize: 150 }, { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 53, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 }, { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 }, { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 }, { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }] },
+            4: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'], pool: 1500, prizes: [700, 450, 250, 100], results: [{ name: 'Venky', score: 77, captain: 'Salah', prize: 700 }, { name: 'Raghu', score: 73, captain: 'Haaland', prize: 450 }, { name: 'Sukhpal', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Puneet', score: 66, captain: 'Haaland', prize: 100 }, { name: 'Arindam', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 63, captain: 'João Pedro', prize: 0 }, { name: 'Rounak', score: 63, captain: 'João Pedro', prize: 0 }, { name: 'Aniruddh', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 62, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 60, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 58, captain: 'Salah', prize: 0 }, { name: 'Shubs', score: 55, captain: 'Salah', prize: 0 }, { name: 'Gokul', score: 53, captain: 'Kudus', prize: 0 }, { name: 'Mayank', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 41, captain: 'Ekitiké', prize: 0 }] },
+            5: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'], pool: 1500, prizes: [500, 400, 300, 200, 100], results: [{ name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 }, { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 }, { name: 'Venky', score: 51, captain: 'Salah', prize: 0 }, { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 47, captain: 'João Pedro', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 44, captain: 'João Pedro', prize: 0 }, { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 }, { name: 'Rounak', score: 38, captain: 'João Pedro', prize: 0 }] },
+            6: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 68, captain: 'Haaland', prize: 600 }, { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 250 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 150 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 29, captain: 'João Pedro', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 }, { name: 'Jalaj', score: 26, captain: 'João Pedro', prize: 0 }, { name: 'Bharath', score: 24, captain: 'João Pedro', prize: 0 }, { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }] },
+            7: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 }, { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 }, { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 48, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 47, captain: 'João Pedro', prize: 0 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 0 }] },
+            8: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 }, { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 }, { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 }, { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 }, { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 68, captain: 'João Pedro (FH)', prize: 0 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 }, { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Jalaj', score: 37, captain: 'João Pedro', prize: 0 }] },
+            9: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 }, { name: 'Bharath', score: 68, captain: 'João Pedro', prize: 400 }, { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 }, { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 }, { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Jalaj', score: 57, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 44, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 }, { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 37, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 }, { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 }, { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }] },
+            10: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 }, { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 }, { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 82, captain: 'Haaland (BB1)', prize: 250 }, { name: 'Sagar', score: 81, captain: 'Haaland (FH1)', prize: 150 }, { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 }, { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 64, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 62, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }] },
+            11: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 }, { name: 'Jalaj', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Sandesh', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 }, { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 }, { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 }, { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }] },
+            12: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 }, { name: 'Rounak', score: 48, captain: 'Haaland (FH1)', prize: 250 }, { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 }, { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Haaland (BB1)', prize: 0 }, { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 35, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 }, { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 32, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 }, { name: 'Jalaj', score: 27, captain: 'João Pedro', prize: 0 }] },
+            13: { 
+                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], 
+                pool: 1700, 
+                prizes: [600, 400, 300, 250, 150], 
                 results: [
-                    { name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 },
-                    { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 },
-                    { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 },
-                    { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 },
-                    { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 },
-                    { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 },
-                    { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 },
-                    { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 },
-                    { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 },
-                    { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }
-                ]
-            },
-            3: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh'],
-                pool: 1400,
-                prizes: [700, 400, 200, 100],
-                results: [
-                    { name: 'Sandesh', score: 83, captain: 'João Pedro', prize: 700 },
-                    { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 },
-                    { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 },
-                    { name: 'Sarjan', score: 64, captain: 'João Pedro', prize: 150 },
-                    { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 },
-                    { name: 'Bharath', score: 58, captain: 'João Pedro', prize: 0 },
-                    { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 },
-                    { name: 'Neeraj', score: 53, captain: 'João Pedro', prize: 0 },
-                    { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 },
-                    { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 },
-                    { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 },
-                    { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 },
-                    { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 },
-                    { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }
-                ]
-            },
-            4: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'],
-                pool: 1500,
-                prizes: [700, 450, 250, 100],
-                results: [
-                    { name: 'Venky', score: 77, captain: 'Salah', prize: 700 },
-                    { name: 'Raghu', score: 73, captain: 'Haaland', prize: 450 },
-                    { name: 'Sukhpal', score: 69, captain: 'Haaland', prize: 250 },
-                    { name: 'Puneet', score: 66, captain: 'Haaland', prize: 100 },
-                    { name: 'Arindam', score: 65, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 63, captain: 'João Pedro', prize: 0 },
-                    { name: 'Rounak', score: 63, captain: 'João Pedro', prize: 0 },
-                    { name: 'Aniruddh', score: 63, captain: 'Haaland', prize: 0 },
-                    { name: 'Neeraj', score: 62, captain: 'Salah', prize: 0 },
-                    { name: 'Sarjan', score: 60, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shashank', score: 58, captain: 'Salah', prize: 0 },
-                    { name: 'Shubs', score: 55, captain: 'Salah', prize: 0 },
-                    { name: 'Gokul', score: 53, captain: 'Kudus', prize: 0 },
-                    { name: 'Mayank', score: 46, captain: 'Haaland', prize: 0 },
-                    { name: 'Bharath', score: 41, captain: 'Ekitiké', prize: 0 }
-                ]
-            },
-            5: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'],
-                pool: 1500,
-                prizes: [500, 400, 300, 200, 100],
-                results: [
-                    { name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 },
-                    { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 },
-                    { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 },
-                    { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 },
-                    { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 },
-                    { name: 'Venky', score: 51, captain: 'Salah', prize: 0 },
-                    { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 },
-                    { name: 'Neeraj', score: 47, captain: 'João Pedro', prize: 0 },
-                    { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 },
-                    { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 },
-                    { name: 'Sarjan', score: 44, captain: 'João Pedro', prize: 0 },
-                    { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 },
-                    { name: 'Sandesh', score: 40, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 },
-                    { name: 'Rounak', score: 38, captain: 'João Pedro', prize: 0 }
-                ]
-            },
-            6: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Gokul', score: 68, captain: 'Haaland', prize: 600 },
-                    { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 },
-                    { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 },
-                    { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 250 },
-                    { name: 'Rounak', score: 57, captain: 'Haaland', prize: 150 },
-                    { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 },
-                    { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 },
-                    { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 },
-                    { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 },
-                    { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 46, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 },
-                    { name: 'Sarjan', score: 29, captain: 'João Pedro', prize: 0 },
-                    { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 },
-                    { name: 'Jalaj', score: 26, captain: 'João Pedro', prize: 0 },
-                    { name: 'Bharath', score: 24, captain: 'João Pedro', prize: 0 },
-                    { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }
-                ]
-            },
-            7: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 },
-                    { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 },
-                    { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 },
-                    { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 200 },
-                    { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 200 },
-                    { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 },
-                    { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 },
-                    { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 },
-                    { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 },
-                    { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 },
-                    { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 },
-                    { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 },
-                    { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 },
-                    { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 },
-                    { name: 'Jalaj', score: 48, captain: 'João Pedro', prize: 0 },
-                    { name: 'Sandesh', score: 47, captain: 'João Pedro', prize: 0 },
-                    { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 0 }
-                ]
-            },
-            8: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 },
-                    { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 },
-                    { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 },
-                    { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 },
-                    { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 },
-                    { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 },
-                    { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 68, captain: 'João Pedro (FH)', prize: 0 },
-                    { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 },
-                    { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 },
-                    { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 },
-                    { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 },
-                    { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 },
-                    { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 },
-                    { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 },
-                    { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 },
-                    { name: 'Jalaj', score: 37, captain: 'João Pedro', prize: 0 }
-                ]
-            },
-            9: {
-                players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 },
-                    { name: 'Bharath', score: 68, captain: 'João Pedro', prize: 400 },
-                    { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 },
-                    { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 },
-                    { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 },
-                    { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 },
-                    { name: 'Jalaj', score: 57, captain: 'João Pedro', prize: 50 },
-                    { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 },
-                    { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 },
-                    { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 44, captain: 'João Pedro', prize: 0 },
-                    { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 },
-                    { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 },
-                    { name: 'Sarjan', score: 37, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 },
-                    { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 },
-                    { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }
-                ]
-            },
-            10: {
-                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 },
-                    { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 },
-                    { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 },
-                    { name: 'Bharath', score: 82, captain: 'Haaland (BB1)', prize: 250 },
-                    { name: 'Sagar', score: 81, captain: 'Haaland (FH1)', prize: 150 },
-                    { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 },
-                    { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 },
-                    { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 },
-                    { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 },
-                    { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 },
-                    { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 },
-                    { name: 'Jalaj', score: 64, captain: 'João Pedro', prize: 0 },
-                    { name: 'Sandesh', score: 62, captain: 'João Pedro', prize: 0 },
-                    { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 },
-                    { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 },
-                    { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 },
-                    { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }
-                ]
-            },
-            11: {
-                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 },
-                    { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 },
-                    { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 },
-                    { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 },
-                    { name: 'Jalaj', score: 43, captain: 'João Pedro', prize: 50 },
-                    { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 },
-                    { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 50 },
-                    { name: 'Sandesh', score: 42, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 },
-                    { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 },
-                    { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 },
-                    { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 },
-                    { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 },
-                    { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 },
-                    { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 },
-                    { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 },
-                    { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }
-                ]
-            },
-            12: {
-                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
-                pool: 1700,
-                prizes: [600, 400, 300, 250, 150],
-                results: [
-                    { name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 },
-                    { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 },
-                    { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 },
-                    { name: 'Rounak', score: 48, captain: 'Haaland (FH1)', prize: 250 },
-                    { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 },
-                    { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 46, captain: 'Haaland (BB1)', prize: 0 },
-                    { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 },
-                    { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 },
-                    { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 },
-                    { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 },
-                    { name: 'Venky', score: 35, captain: 'Haaland (TC1)', prize: 0 },
-                    { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 },
-                    { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 },
-                    { name: 'Sagar', score: 32, captain: 'Haaland (TC1)', prize: 0 },
-                    { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 },
-                    { name: 'Jalaj', score: 27, captain: 'João Pedro', prize: 0 }
-                ]
+                    { name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 },
+                    { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 },
+                    { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 },
+                    { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 250 },
+                    { name: 'Gokul', score: 40, captain: 'Haaland (BB1)', prize: 150 },
+                    { name: 'Rounak', score: 39, captain: 'Haaland (TC1)', prize: 0 },
+                    { name: 'Shubs', score: 37, captain: 'Haaland (TC1)', prize: 0 },
+                    { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 },
+                    { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 },
+                    { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 27, captain: 'Haaland (TC1)', prize: 0 },
+                    { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 },
+                    { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 },
+                    { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 },
+                    { name: 'Jalaj', score: 17, captain: 'João Pedro', prize: 0 },
+                    { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }
+                ] 
             }
         };
 
-        let currentGW = 12;
+        let currentGW = 13;
 
         function showGW(gw) {
             currentGW = gw;
@@ -1079,61 +862,18 @@
         
         function generateSpotlight(gw) {
             const stories = {
-                2: {
-                    emoji: '⚡',
-                    title: 'Neeraj Wins the Opener!',
-                    story: '<span class="highlight">Neeraj</span> claims first blood with 61 points and a Salah captain as the Scapia mini-league battle begins.'
-                },
-                3: {
-                    emoji: '🌊',
-                    title: 'Sandesh\'s Massive Haul!',
-                    story: '<span class="highlight">Sandesh</span> explodes for 83 with a João Pedro captain. First week with 4 prizes as more warriors join the arena.'
-                },
-                4: {
-                    emoji: '🚀',
-                    title: 'Venky\'s Salah Masterclass!',
-                    story: '<span class="highlight">Venky</span> banks a big win with 77 thanks to the Salah differential while four managers share the spoils.'
-                },
-                5: {
-                    emoji: '💰',
-                    title: 'Five-Way Prize Split!',
-                    story: '<span class="highlight">Mayank</span> tops the week, but five different managers walk away with cash. Most balanced battle so far.'
-                },
-                6: {
-                    emoji: '🎯',
-                    title: 'Gokul Rises to the Top!',
-                    story: '<span class="highlight">Gokul</span> takes his first win with 68 as the Haaland captaincy continues to dominate the payout zone.'
-                },
-                7: {
-                    emoji: '👑',
-                    title: 'Gokul Goes Nuclear!',
-                    story: '<span class="highlight">Gokul</span> detonates a 95-pointer. <span class="highlight">Bharath</span> rebounds from a 24-pointer to finish 2nd and kick-start a hot streak.'
-                },
-                8: {
-                    emoji: '🔥',
-                    title: 'Bharath\'s Back-to-Back Domination!',
-                    story: '<span class="highlight">Bharath</span> follows up his surge with a huge 90 and another win. Triple-captain <span class="highlight">Mayank</span> and <span class="highlight">Gokul</span> share 3rd as Haaland farms everyone coins.'
-                },
-                9: {
-                    emoji: '🦄',
-                    title: 'The Differential King Strikes!',
-                    story: '<span class="highlight">Shashank</span> finally cashes in with Mbeumo captain and takes the week. <span class="highlight">Bharath</span> completes a crazy 1st→1st→2nd run while several Haaland captainers share 5th.'
-                },
-                10: {
-                    emoji: '🚨',
-                    title: 'Sukhpal Drops a Monster!',
-                    story: '<span class="highlight">Sukhpal</span> smashes 93 with Haaland to take a statement win. <span class="highlight">Neeraj</span> and <span class="highlight">Shubs</span> round off the podium, while <span class="highlight">Bharath\'s</span> Bench Boost and <span class="highlight">Sagar\'s</span> Free Hit both land in the money.'
-                },
-                11: {
-                    emoji: '🧊',
-                    title: 'Low-Scoring Chaos Week!',
-                    story: '<span class="highlight">Aniruddh</span> grinds out a 49-point win in a cold, low-scoring gameweek. <span class="highlight">Gokul</span> and <span class="highlight">Venky</span> join him on the podium, while a three-way tie at 43 sees <span class="highlight">Jalaj</span>, <span class="highlight">Arindam</span> and <span class="highlight">Sarjan</span> split the last prize.'
-                },
-                12: {
-                    emoji: '🎄',
-                    title: 'Shubs Wins the Festive GW!',
-                    story: '<span class="highlight">Shubs</span> finally tops the pile with 61 and a simple Haaland captain, nudging <span class="highlight">Bharath</span> into 2nd. <span class="highlight">Raghu</span> returns to the podium, while chips fly around with <span class="highlight">Rounak\'s</span> FH, <span class="highlight">Sandesh\'s</span> BB and double TC shots from <span class="highlight">Venky</span> and <span class="highlight">Sagar</span> failing to crack the prize spots.'
-                }
+                2: { emoji: '⚡', title: 'Neeraj Wins the Opener!', story: '<span class="highlight">Neeraj</span> claims first blood with 61 points and a Salah captain as the Scapia mini-league battle begins.' },
+                3: { emoji: '🌊', title: 'Sandesh\'s Massive Haul!', story: '<span class="highlight">Sandesh</span> explodes for 83 with a João Pedro captain. First week with 4 prizes as more warriors join the arena.' },
+                4: { emoji: '🚀', title: 'Venky\'s Salah Masterclass!', story: '<span class="highlight">Venky</span> banks a big win with 77 thanks to the Salah differential while four managers share the spoils.' },
+                5: { emoji: '💰', title: 'Five-Way Prize Split!', story: '<span class="highlight">Mayank</span> tops the week, but five different managers walk away with cash. Most balanced battle so far.' },
+                6: { emoji: '🎯', title: 'Gokul Rises to the Top!', story: '<span class="highlight">Gokul</span> takes his first win with 68 as the Haaland captaincy continues to dominate the payout zone.' },
+                7: { emoji: '👑', title: 'Gokul Goes Nuclear!', story: '<span class="highlight">Gokul</span> detonates a 95-pointer. <span class="highlight">Bharath</span> rebounds from a 24-pointer to finish 2nd and kick-start a hot streak.' },
+                8: { emoji: '🔥', title: 'Bharath\'s Back-to-Back Domination!', story: '<span class="highlight">Bharath</span> follows up his surge with a huge 90 and another win. Triple-captain <span class="highlight">Mayank</span> and <span class="highlight">Gokul</span> share 3rd.' },
+                9: { emoji: '🦄', title: 'The Differential King Strikes!', story: '<span class="highlight">Shashank</span> finally cashes in with Mbeumo captain and takes the week. <span class="highlight">Bharath</span> completes a crazy 1st→1st→2nd run.' },
+                10: { emoji: '🚨', title: 'Sukhpal Drops a Monster!', story: '<span class="highlight">Sukhpal</span> smashes 93 with Haaland to take a statement win. <span class="highlight">Neeraj</span> and <span class="highlight">Shubs</span> round off the podium.' },
+                11: { emoji: '🧊', title: 'Low-Scoring Chaos Week!', story: '<span class="highlight">Aniruddh</span> grinds out a 49-point win in a cold, low-scoring gameweek. <span class="highlight">Gokul</span> and <span class="highlight">Venky</span> join him on the podium.' },
+                12: { emoji: '🎄', title: 'Shubs Wins the Festive GW!', story: '<span class="highlight">Shubs</span> finally tops the pile with 61 and a simple Haaland captain, nudging <span class="highlight">Bharath</span> into 2nd.' },
+                13: { emoji: '🤡', title: 'The Triple Captain Disaster!', story: '<span class="highlight">Mayank</span> wins with just 47 points in a brutal week. <span class="highlight">Rounak</span>, <span class="highlight">Shubs</span>, and <span class="highlight">Sandesh</span> all wasted their Triple Captain chips and failed to even crack the top 5! <span class="highlight">Arindam</span> grabs his first podium.' }
             };
             
             const story = stories[gw] || { emoji: '🎮', title: 'The Battle Continues!', story: 'Another spicy gameweek in the books.' };
@@ -1167,12 +907,17 @@
 
             if (lowest) {
                 const meta = managerMeta[lowest.name] || {};
-                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} hit rock bottom this week with ${lowest.score} points and a <b>${lowest.captain}</b> captain. Analytics department has opened an internal review.`;
+                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} hit absolute rock bottom with ${lowest.score} points. <b>${lowest.captain}</b> captain was a crime against FPL.`;
             }
 
             if (bestNonPrize) {
                 const meta = managerMeta[bestNonPrize.name] || {};
-                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} dropped ${bestNonPrize.score} points but still walked away with <b>₹0</b>. Spirit award winner, wallet loser.`;
+                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} scored ${bestNonPrize.score} points—more than 3 Triple Captainers!—but still won <b>₹0</b>. Tragic hero.`;
+            }
+            
+            // Special Roast for GW13
+            if(gw === 13) {
+                 roastText = "Shashank captained Mbeumo for 14 total points while 3 managers wasted their Triple Captain chips on blankers. The Hall of Shame is crowded this week.";
             }
 
             document.getElementById('banter').innerHTML = `
@@ -1224,8 +969,8 @@
             })).sort((a, b) => b.net - a.net);
             
             const standingsHTML = standings.map(player => {
-                const streakBadge = player.streak >= 2
-                    ? `<span class="streak-badge">🔥 ${player.streak}x streak</span>`
+                const streakBadge = player.streak >= 2 
+                    ? `<span class="streak-badge">🔥 ${player.streak}x streak</span>` 
                     : '';
                 
                 return `
@@ -1277,74 +1022,23 @@
             });
             
             const playerStories = {
-                'Bharath': {
-                    emoji: '🔥',
-                    story: `Early-season chaos merchant who bottomed out with a brutal 24-pointer, then went on an absurd heater: big finish in GW7, back-to-back wins around GW8, a podium in GW9 and more money in GW10 with the Bench Boost. GW12 adds another 2nd-place finish to the resume—one of the main endbosses of the pool.`
-                },
-                'Gokul': {
-                    emoji: '🎢',
-                    story: `Lives purely on vibes and variance. From clean win in GW6 to the 95-point nuclear bomb in GW7, then a crash to 31 in GW9. Two gameweeks later he’s back with 2nd in GW11 and a solid mid-table 46 in GW12. Never boring, always somewhere near the extreme end of the graph.`
-                },
-                'Shashank': {
-                    emoji: '🦄',
-                    story: `The differential zealot. Semenyo and Mbeumo captains looked insane for weeks, then Mbeumo finally delivered the famous GW9 win. Since then it’s been Caicedo and Salah punts that don’t always land, but the table still fears the week when another wild call explodes.`
-                },
-                'Sukhpal': {
-                    emoji: '👑',
-                    story: `Mr. steady turned assassin. Quietly stacking top finishes through the season, then dropped a monster 93 in GW10 to reset everyone’s net standings. GW12 is more measured with 45, but the overall graph still screams “always one big haul away from top.”`
-                },
-                'Raghu': {
-                    emoji: '📉',
-                    story: `Started the season as a podium machine, then hit a wobble while tinkering with wildcards. GW9 and GW10 were signs of life; GW12 finally brings another podium with 50. Narrative arc: mid-season crisis followed by slow, storyline-appropriate redemption.`
-                },
-                'Neeraj': {
-                    emoji: '⚡',
-                    story: `Took the very first pot of the season and has stayed relevant without totally running away with it. 2nd in GW10 and a tidy 5th in GW12 show there’s always another spike around the corner when the template plus a tiny twist comes together.`
-                },
-                'Aniruddh': {
-                    emoji: '🎖️',
-                    story: `Used to be the “always in the money, rarely winning” guy. GW11 flipped that with a gritty low-scoring win, and GW12 follows up with another solid, if unspectacular, 45. Quietly compounding both points and rupees over time.`
-                },
-                'Rounak': {
-                    emoji: '📈',
-                    story: `Started from the basement with a 27-pointer in the early weeks and slowly climbed into relevance: podium in GW7, consistent mid-table finishes, then another cash finish in GW12 with a smart FH. Classic late bloomer energy, graph still trending up.`
-                },
-                'Mayank': {
-                    emoji: '🃏',
-                    story: `Loves a big swing. Won GW5, then went all-in with Triple Captain in GW8 to grab another podium. The weeks since have been bumpy—including Caicedo captain and Mateta punts—but his style always keeps him one move away from another huge haul.`
-                },
-                'Sandesh': {
-                    emoji: '🌊',
-                    story: `Peaked super early with that famous 83 in GW3 and has been chasing another wave ever since. Free Hit João Pedro in GW8, steady mid-table finishes, and now a BB in GW12 that didn’t quite hit. Feels one chip from completely rewriting the season.`
-                },
-                'Puneet': {
-                    emoji: '💼',
-                    story: `Perennial nearly-man. Strong starts, a win in GW2, podiums in GW4 and GW5, and then a solid 4th in GW11. GW12 is a quiet 38, keeping him in that zone where nobody ever relaxes when he’s within 20 points.`
-                },
-                'Venky': {
-                    emoji: '🎭',
-                    story: `From the Salah-differential win in GW4 to a cold patch and then a podium in the gritty GW11 trench. GW12’s triple-captain on Haaland doesn’t fully pay off, adding to the drama. The graph is pure theatre: when it clicks it looks beautiful, when it doesn’t it really doesn’t.`
-                },
-                'Shubs': {
-                    emoji: '💸',
-                    story: `Spent the first half of the season as the official prize-pool sponsor: lots of entries, little cash. GW10 broke the curse with a big 3rd-place, and GW12 finally brings the full coronation with a clean, chip-free 61-point win. From donor to festive king.`
-                },
-                'Sagar': {
-                    emoji: '🎲',
-                    story: `Joined mid-season and immediately jumped into chip plays and Haaland captains. The FH in GW10 brought a 5th-place return; TC in GW12 whiffed but shows intent. Already feels like part of the chaos backbone of the league.`
-                },
-                'Jalaj': {
-                    emoji: '🎣',
-                    story: `The João Pedro believer. Picked up money in GW9 and again in GW11 with that three-way tie for 5th. GW12’s 27 reminds everyone that loyalty to a Pedro comes with both feast and famine.`
-                },
-                'Sarjan': {
-                    emoji: '😅',
-                    story: `Another João Pedro disciple who’s eaten a lot of red weeks along the way. The shared 5th in GW11 and a mid-table 39 in GW12 keep the account ticking. Still one sensible captaincy streak away from flipping the whole narrative.`
-                },
-                'Arindam': {
-                    emoji: '🌱',
-                    story: `Late entrant to the league, learning the rhythm of the group. Tough early weeks, then small cash in GW11 and a decent 33 in GW12. Right now in the “stacking experience” arc more than the “farming profit” arc, but it’s trending in the right direction.`
-                }
+                'Bharath': { emoji: '❄️', story: `Went from "unbeatable god" to "frozen statue" real quick. Scored 20 points in GW13 to remind everyone he is human. Still a net-positive giant, but the heat check failed spectacularly this week.` },
+                'Gokul': { emoji: '🎢', story: `The volatility king. Bench Boosted in GW13 to scrape a 5th place finish. He'll take the ₹150, but let's be honest, that chip usage was... interesting. Currently sitting pretty high in the net standings.` },
+                'Shashank': { emoji: '📉', story: `The Differential Zealot hit a new low. Captained Mbeumo for a grand total of 14 points in GW13. It's not just a bad week; it's a protest against the template. The protest failed.` },
+                'Sukhpal': { emoji: '😐', story: `Dropped a respectable but boring 35 in GW13. After that monster GW10 win, he's settled into a rhythm of lurking in mid-table, waiting for Haaland to haul again.` },
+                'Raghu': { emoji: '🥈', story: `The "Narrative Merchant" is officially back! After a mid-season wobble, he secures 2nd place in GW13. The story arc demanded a redemption, and Raghu delivered.` },
+                'Neeraj': { emoji: '🐢', story: `Started the season fast, now moving at a glacial pace. 27 points in GW13 keeps him firmly in the "donated to the pot" category for another week.` },
+                'Aniruddh': { emoji: '💸', story: `Usually a prize magnet, but GW13 repelled him hard. 23 points is his lowest score in ages. The steady income stream has temporarily dried up.` },
+                'Rounak': { emoji: '🚮', story: `Triple Captain on Haaland... for 39 points. And finished 6th. The "Late Bloomer" just bloomed into a faceplant. Tragedy.` },
+                'Mayank': { emoji: '🎰', story: `The Chip Gambler won GW13 without even using a chip! A low-scoring 47 was enough to take the top prize. Proving you don't need strategy when you have luck.` },
+                'Sandesh': { emoji: '💀', story: `Triple Captained for 27 points. I repeat, Triple Captained for 27 points. The GW3 glory days feel like a distant memory.` },
+                'Puneet': { emoji: '😐', story: `Mr. Consistent lived up to his name with a bang-average 35. He's always there, lurking, never quite winning big, but never imploding like Shashank.` },
+                'Venky': { emoji: '💤', story: `Finished 14th in GW13. The Salah Syndicate is on a sabbatical. The graph is currently pointing towards "donation mode."` },
+                'Shubs': { emoji: '🏥', story: `Another Triple Captain casualty. 37 points. He went from winning GW12 to sponsoring the pot again in record time.` },
+                'Sagar': { emoji: '🎆', story: `21 points. The fireworks were wet. A quiet disaster of a week for the chip enthusiast.` },
+                'Jalaj': { emoji: '🚌', story: `João Pedro returned, but the rest of Jalaj's team stayed on the bus. 17 points is... tough.` },
+                'Sarjan': { emoji: '🙌', story: `The patience paid off! Finally, a cash finish (4th) thanks to sticking with João Pedro while everyone else panicked.` },
+                'Arindam': { emoji: '🥉', story: `The "Project" has liftoff! Arindam secures his first-ever podium finish (3rd) in GW13. The apprentice is becoming a master.` }
             };
             
             const storiesHTML = Object.entries(playerStories)
@@ -1402,36 +1096,11 @@
                 }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0];
             
             const performanceAwards = [
-                {
-                    title: 'Season Win Leader',
-                    emoji: '🏅',
-                    desc: 'Most individual gameweek wins so far.',
-                    winner: mostWins
-                },
-                {
-                    title: 'Peak Performance',
-                    emoji: '⛰️',
-                    desc: 'Highest single-gameweek score in the league.',
-                    winner: peakPerformance
-                },
-                {
-                    title: 'Mr. Reliable',
-                    emoji: '🎯',
-                    desc: 'Most consistent positions across all entries.',
-                    winner: mostConsistent
-                },
-                {
-                    title: 'Prize Magnet',
-                    emoji: '🎖️',
-                    desc: 'Most frequent top-5 appearances.',
-                    winner: prizeMagnet
-                },
-                {
-                    title: 'Form Horse',
-                    emoji: '🐎',
-                    desc: 'Best average rank over the last three entries.',
-                    winner: formHorse
-                }
+                { title: 'Season Win Leader', emoji: '🏅', desc: 'Most individual gameweek wins so far.', winner: mostWins },
+                { title: 'Peak Performance', emoji: '⛰️', desc: 'Highest single-gameweek score in the league.', winner: peakPerformance },
+                { title: 'Mr. Reliable', emoji: '🎯', desc: 'Most consistent positions across all entries.', winner: mostConsistent },
+                { title: 'Prize Magnet', emoji: '🎖️', desc: 'Most frequent top-5 appearances.', winner: prizeMagnet },
+                { title: 'Form Horse', emoji: '🐎', desc: 'Best average rank over the last three entries.', winner: formHorse }
             ];
             
             const generousDonor = [...entries]
@@ -1476,7 +1145,7 @@
                 .map(([name, stats]) => {
                     const firstHalf = stats.positions.slice(0, Math.floor(stats.games / 2));
                     const secondHalf = stats.positions.slice(Math.floor(stats.games / 2));
-                    const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) -
+                    const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) - 
                                         (secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length);
                     return [name, { ...stats, improvement }];
                 }).sort((a, b) => b[1].improvement - a[1].improvement)[0];
@@ -1532,7 +1201,6 @@
         }
 
         function updateRivalries() {
-            // Head-to-head helper
             function h2h(a, b) {
                 let aWins = 0, bWins = 0, ties = 0, meetings = 0;
                 Object.values(gameData).forEach(gw => {
@@ -1552,7 +1220,6 @@
             const rv1 = h2h('Raghu', 'Venky');
             const rv2 = h2h('Bharath', 'Gokul');
 
-            // Shubs vs prize pool: games vs winnings
             let shubsGames = 0, shubsWinnings = 0;
             Object.values(gameData).forEach(gw => {
                 if (!gw.players.includes('Shubs')) return;
@@ -1567,21 +1234,21 @@
                 <div class="rivalry-card">
                     <div class="rivalry-title">Founders Derby: Raghu vs Venky</div>
                     <div class="rivalry-line">
-                        In ${rv1.meetings} gameweeks together, Raghu has finished above Venky <b>${rv1.aWins}</b> times,
+                        In ${rv1.meetings} gameweeks together, Raghu has finished above Venky <b>${rv1.aWins}</b> times, 
                         Venky has finished above Raghu <b>${rv1.bWins}</b> times, with <b>${rv1.ties}</b> draws.
                     </div>
                     <div class="rivalry-sub">
-                        Dressing-room narrative: whoever loses this week “has to run the next marketing experiment.”
+                        GW13 Update: Raghu (2nd) crushes Venky (14th). The gap widens.
                     </div>
                 </div>
                 <div class="rivalry-card">
                     <div class="rivalry-title">Chaos Classico: Bharath vs Gokul</div>
                     <div class="rivalry-line">
-                        When both play, Bharath has beaten Gokul <b>${rv2.aWins}</b> times, 
+                        When both play, Bharath has beaten Gokul <b>${rv2.aWins}</b> times,  
                         Gokul has beaten Bharath <b>${rv2.bWins}</b> times, with <b>${rv2.ties}</b> ties.
                     </div>
                     <div class="rivalry-sub">
-                        This fixture is responsible for half the 90+ scores and half the 30-or-less disasters in the league.
+                        GW13 Update: Bharath freezes (20 pts), Gokul cashes (40 pts). Advantage Gokul.
                     </div>
                 </div>
                 <div class="rivalry-card">
@@ -1590,7 +1257,7 @@
                         Shubs has entered <b>${shubsGames}</b> battles and withdrawn a total of <b>₹${shubsWinnings}</b>.
                     </div>
                     <div class="rivalry-sub">
-                        The pool still leads on aggregate, but GW12 shows this rivalry is finally swinging back his way.
+                        GW13 Update: Sponsoring the pot again with a TC fail. The house always wins.
                     </div>
                 </div>
             `;
