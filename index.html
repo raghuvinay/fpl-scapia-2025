@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scapia FPL Weekly Tracker</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --scapia-orange: #FF6B35;
             --scapia-dark: #1A1A2E;
@@ -22,7 +17,6 @@
             --success: #48bb78;
             --danger: #e53e3e;
         }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, var(--scapia-dark) 0%, var(--scapia-navy) 50%, var(--scapia-accent) 100%);
@@ -30,573 +24,110 @@
             color: #fff;
             padding: 15px;
         }
+        .container { max-width: 500px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 2.5rem; font-weight: 900; color: var(--scapia-orange); text-shadow: 0 0 20px rgba(255, 107, 53, 0.5); }
+        .tagline { color: #a0aec0; font-style: italic; margin-top: 5px; }
         
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
+        /* GW Selector */
+        .gw-selector { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; scrollbar-width: none; }
+        .gw-selector::-webkit-scrollbar { display: none; }
+        .gw-btn { padding: 10px 18px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s; white-space: nowrap; }
+        .gw-btn:hover { background: rgba(255, 107, 53, 0.2); transform: translateY(-2px); }
+        .gw-btn.active { background: var(--scapia-orange); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3); }
         
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        /* Tabs */
+        .tabs { display: flex; background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; margin-bottom: 25px; }
+        .tab { flex: 1; padding: 12px; background: transparent; border: none; color: rgba(255, 255, 255, 0.7); font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.3s; }
+        .tab.active { background: var(--scapia-orange); color: white; }
+        .content { display: none; }
+        .content.active { display: block; }
         
-        .logo {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--scapia-orange);
-            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
-        }
+        /* Cards */
+        .prize-card { background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1)); border: 1px solid var(--scapia-orange); border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center; position: relative; overflow: hidden; }
+        .spotlight-card { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border: 2px solid var(--scapia-orange); border-radius: 20px; padding: 20px; margin-bottom: 25px; position: relative; overflow: hidden; }
+        .spotlight-title { font-size: 1.3rem; font-weight: 900; color: var(--scapia-orange); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .spotlight-story { font-size: 1rem; line-height: 1.6; color: #e0e0e0; }
+        .highlight { color: var(--scapia-orange); font-weight: 700; }
         
-        .tagline {
-            color: #a0aec0;
-            font-style: italic;
-            margin-top: 5px;
-        }
+        /* Pool Info */
+        .pool-amount { font-size: 2.8rem; font-weight: 900; color: var(--scapia-orange); text-shadow: 0 0 25px rgba(255, 107, 53, 0.5); }
+        .pool-info { display: flex; justify-content: space-around; margin: 20px 0; }
+        .info-item { text-align: center; }
+        .info-value { font-size: 1.3rem; font-weight: 700; }
+        .info-label { font-size: 0.8rem; color: #a0aec0; }
         
-        .gw-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            overflow-x: auto;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            scrollbar-width: none; /* Firefox */
-        }
+        /* Prizes */
+        .prizes { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
+        .prize { text-align: center; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        .prize-amount { font-weight: 700; margin-top: 5px; }
+        
+        /* Leaderboard */
+        .leaderboard { background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .player-row { display: flex; align-items: center; padding: 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; transition: all 0.3s; position: relative; }
+        .player-row.winner { background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.1)); border-left: 3px solid var(--scapia-gold); }
+        .rank { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 900; margin-right: 15px; }
+        .rank-1 { background: linear-gradient(135deg, var(--scapia-gold), #ffed4e); color: #000; }
+        .rank-2 { background: linear-gradient(135deg, var(--scapia-silver), #d7d7d7); color: #000; }
+        .rank-3 { background: linear-gradient(135deg, var(--scapia-bronze), #e6ac79); color: #000; }
+        .rank-other { background: rgba(255, 107, 53, 0.2); border: 1px solid var(--scapia-orange); }
+        .player-info { flex: 1; }
+        .player-name { font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; }
+        .player-captain { font-size: 0.8rem; color: #a0aec0; }
+        .score-prize { text-align: right; }
+        .score { font-size: 1.3rem; font-weight: 700; }
+        .prize-won { color: var(--success); font-weight: 600; }
 
-        .gw-selector::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
-        }
+        /* Story Cards */
+        .player-story-card { background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(15, 52, 96, 0.2)); border: 1px solid rgba(255, 107, 53, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .story-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .story-player { font-size: 1.2rem; font-weight: 800; color: var(--scapia-orange); }
+        .manager-nick { font-size: 0.9rem; color: #cbd5e0; font-style: italic; font-weight: 400; display: block; margin-top: 2px; }
+        .archetype-badge { background: rgba(255, 107, 53, 0.2); border: 1px solid var(--scapia-orange); color: var(--scapia-orange); font-size: 0.7rem; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-top: 8px; display: inline-block; }
         
-        .gw-btn {
-            padding: 10px 18px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
+        .story-section { margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .story-label { font-size: 0.75rem; text-transform: uppercase; color: var(--scapia-orange); letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .story-text { font-size: 0.95rem; line-height: 1.5; color: #e0e0e0; font-style: italic; }
+        .story-stat-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .story-stat { font-size: 0.75rem; color: #cbd5e0; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); }
         
-        .gw-btn:hover {
-            background: rgba(255, 107, 53, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .gw-btn.active {
-            background: var(--scapia-orange);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
-        }
-        
-        .tabs {
-            display: flex;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 25px;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            background: var(--scapia-orange);
-            color: white;
-        }
-        
-        .content {
-            display: none;
-        }
-        
-        .content.active {
-            display: block;
-        }
-        
-        .prize-card {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
-            border: 1px solid var(--scapia-orange);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .prize-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
-            animation: shine 3s infinite;
-        }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-        
-        .spotlight-card {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15));
-            border: 2px solid var(--scapia-orange);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .spotlight-title {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--scapia-orange);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .spotlight-emoji {
-            font-size: 2rem;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .spotlight-story {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #e0e0e0;
-        }
-        
-        .highlight {
-            color: var(--scapia-orange);
-            font-weight: 700;
-        }
-        
-        .pool-amount {
-            font-size: 2.8rem;
-            font-weight: 900;
-            color: var(--scapia-orange);
-            text-shadow: 0 0 25px rgba(255, 107, 53, 0.5);
-        }
-        
-        .pool-info {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-        }
-        
-        .info-item {
-            text-align: center;
-        }
-        
-        .info-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        
-        .info-label {
-            font-size: 0.8rem;
-            color: #a0aec0;
-        }
-        
-        .prizes {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .prize {
-            text-align: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        
-        .prize-emoji {
-            font-size: 1.5rem;
-        }
-        
-        .prize-amount {
-            font-weight: 700;
-            margin-top: 5px;
-        }
-        
-        .leaderboard {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .player-row {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .player-row:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-        
-        .player-row.winner {
-            background: linear-gradient(90deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 53, 0.1));
-            border-left: 3px solid var(--scapia-gold);
-            animation: glow 2s infinite;
-        }
-        
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-        }
-        
-        .trend-indicator {
-            margin-left: 8px;
-            font-size: 1rem;
-            opacity: 0.7;
-        }
-        
-        .trend-up { color: var(--success); }
-        .trend-down { color: var(--danger); }
-        .trend-same { color: #a0aec0; }
-        
-        .rank {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: 900;
-            margin-right: 15px;
-        }
-        
-        .rank-1 {
-            background: linear-gradient(135deg, var(--scapia-gold), #ffed4e);
-            color: #000;
-        }
-        
-        .rank-2 {
-            background: linear-gradient(135deg, var(--scapia-silver), #d7d7d7);
-            color: #000;
-        }
-        
-        .rank-3 {
-            background: linear-gradient(135deg, var(--scapia-bronze), #e6ac79);
-            color: #000;
-        }
-        
-        .rank-other {
-            background: rgba(255, 107, 53, 0.2);
-            border: 1px solid var(--scapia-orange);
-        }
-        
-        .player-info {
-            flex: 1;
-        }
-        
-        .player-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .player-captain {
-            font-size: 0.8rem;
-            color: #a0aec0;
-        }
-        
-        .score-prize {
-            text-align: right;
-        }
-        
-        .score {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        
-        .prize-won {
-            color: var(--success);
-            font-weight: 600;
-        }
+        /* Banter */
+        .banter-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .banter-card { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; }
+        .banter-title { font-weight: 700; margin-bottom: 4px; }
+        .banter-roast .banter-title { color: var(--danger); }
+        .banter-compliment .banter-title { color: var(--success); }
 
-        /* Banter section */
-        .banter-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .banter-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.3));
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-size: 0.85rem;
-        }
-        .banter-title {
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .banter-roast .banter-title {
-            color: var(--danger);
-        }
-        .banter-compliment .banter-title {
-            color: var(--success);
-        }
-        
-        .standing-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .standing-player {
-            flex: 1;
-        }
-        
-        .standing-name {
-            font-weight: 700;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-        }
+        /* Standings */
+        .standing-card { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .net-amount { font-size: 1.4rem; font-weight: 900; }
+        .positive { color: var(--success); }
+        .negative { color: var(--danger); }
 
-        .manager-nick {
-            font-size: 0.85rem;
-            color: var(--scapia-orange);
-            font-style: italic;
-            margin-left: 4px;
-        }
-
-        .manager-tagline {
-            font-size: 0.8rem;
-            color: #cbd5e0;
-        }
+        /* Awards & Lore */
+        .award { padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .award-title { font-weight: 700; color: var(--scapia-orange); }
+        .badge-icon { margin-left: 4px; cursor: help; }
+        .rivalry-card { padding: 12px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 10px; }
         
-        .standing-stats {
-            font-size: 0.85rem;
-            color: #a0aec0;
-            margin-top: 4px;
-        }
-        
-        .standing-earnings {
-            text-align: right;
-        }
-        
-        .net-amount {
-            font-size: 1.4rem;
-            font-weight: 900;
-        }
-        
-        .positive {
-            color: var(--success);
-        }
-        
-        .negative {
-            color: var(--danger);
-        }
-        
-        .stats-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--scapia-orange);
-            margin-bottom: 15px;
-        }
-        
-        .award {
-            padding: 12px;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
-        
-        .award:hover {
-            transform: translateX(5px);
-            border-left-color: var(--scapia-orange);
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1));
-        }
-        
-        .streak-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            background: linear-gradient(135deg, #ff6b35, #ff8c42);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #000;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .stat-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-        
-        .stat-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--scapia-orange), var(--scapia-gold));
-            border-radius: 10px;
-            transition: width 1s ease;
-        }
-        
-        .award-info {
-            flex: 1;
-        }
-        
-        .award-title {
-            font-weight: 700;
-            color: var(--scapia-orange);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .award-desc {
-            font-size: 0.85rem;
-            color: #a0aec0;
-            font-style: italic;
-        }
-        
-        .player-story-card {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(15, 52, 96, 0.2));
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            border-radius: 15px;
-            padding: 18px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-        
-        .player-story-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--scapia-orange);
-            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.2);
-        }
-        
-        .story-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .story-player {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--scapia-orange);
-        }
-        
-        .story-emoji {
-            font-size: 1.5rem;
-        }
-
-        .story-tagline {
-            font-size: 0.8rem;
-            color: #cbd5e0;
-            font-style: italic;
-            margin-bottom: 8px;
-        }
-        
-        .story-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #e0e0e0;
-            font-style: italic;
-        }
-        
-        .award-winner {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        /* Rivalries */
-        .rivalry-card {
-            padding: 12px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 12px;
-            margin-bottom: 10px;
-        }
-        .rivalry-title {
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .rivalry-line {
-            font-size: 0.85rem;
-            color: #e2e8f0;
-        }
-        .rivalry-sub {
-            font-size: 0.8rem;
-            color: #a0aec0;
-            margin-top: 4px;
-        }
+        .lore-entry { padding: 12px; border-left: 2px solid var(--scapia-orange); background: rgba(255,255,255,0.02); margin-bottom: 10px; border-radius: 0 8px 8px 0; }
+        .lore-gw { font-weight: 800; color: var(--scapia-orange); font-size: 0.8rem; margin-bottom: 2px; }
+        .lore-text { font-size: 0.9rem; color: #e2e8f0; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">✈️ SCAPIA FPL</div>
-            <div class="tagline">GW13: The Week of the Broken Chips</div>
+            <div class="tagline">GW14: The Great Split</div>
         </div>
 
         <div class="gw-selector">
-            <button class="gw-btn" onclick="showGW(6)">GW 6</button>
-            <button class="gw-btn" onclick="showGW(7)">GW 7</button>
-            <button class="gw-btn" onclick="showGW(8)">GW 8</button>
-            <button class="gw-btn" onclick="showGW(9)">GW 9</button>
             <button class="gw-btn" onclick="showGW(10)">GW 10</button>
             <button class="gw-btn" onclick="showGW(11)">GW 11</button>
             <button class="gw-btn" onclick="showGW(12)">GW 12</button>
-            <button class="gw-btn active" onclick="showGW(13)">GW 13</button>
+            <button class="gw-btn" onclick="showGW(13)">GW 13</button>
+            <button class="gw-btn active" onclick="showGW(14)">GW 14</button>
         </div>
 
         <div class="tabs">
@@ -607,128 +138,167 @@
 
         <div id="battle" class="content active">
             <div id="spotlight"></div>
-            
             <div class="prize-card">
                 <div class="pool-amount">₹<span id="poolAmount">1700</span></div>
                 <div class="pool-info">
-                    <div class="info-item">
-                        <div class="info-value" id="playerCount">17</div>
-                        <div class="info-label">Warriors</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-value">₹100</div>
-                        <div class="info-label">Entry</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-value">GW<span id="currentGW">13</span></div>
-                        <div class="info-label">Battle</div>
-                    </div>
+                    <div class="info-item"><div class="info-value" id="playerCount">17</div><div class="info-label">Warriors</div></div>
+                    <div class="info-item"><div class="info-value">₹100</div><div class="info-label">Entry</div></div>
+                    <div class="info-item"><div class="info-value">GW<span id="currentGW">14</span></div><div class="info-label">Battle</div></div>
                 </div>
                 <div class="prizes" id="prizeList"></div>
             </div>
-
             <div class="leaderboard" id="leaderboard"></div>
             <div id="banter"></div>
         </div>
 
-        <div id="standings" class="content">
-            <div id="standingsList"></div>
-        </div>
+        <div id="standings" class="content"><div id="standingsList"></div></div>
 
         <div id="stats" class="content">
             <div class="stats-section">
-                <div class="stat-title">📖 Player Stories (GW13 Update)</div>
+                <div class="stat-title">📖 Manager Profiles</div>
                 <div id="playerStories"></div>
             </div>
             <div class="stats-section">
-                <div class="stat-title">🤺 Rivalries & Beef</div>
-                <div id="rivalries"></div>
+                <div class="stat-title">📜 Season History (The Lore)</div>
+                <div id="seasonLoreList"></div>
             </div>
-            <div class="stats-section">
-                <div class="stat-title">🏆 Performance Awards</div>
-                <div id="performanceAwards"></div>
-            </div>
-            <div class="stats-section">
-                <div class="stat-title">😂 Hall of Fame & Shame</div>
-                <div id="funAwards"></div>
-            </div>
+            <div class="stats-section"><div class="stat-title">🤺 Rivalries & Beef</div><div id="rivalries"></div></div>
+            <div class="stats-section"><div class="stat-title">🏆 Performance Awards</div><div id="performanceAwards"></div></div>
+            <div class="stats-section"><div class="stat-title">😂 Hall of Fame & Shame</div><div id="funAwards"></div></div>
         </div>
     </div>
 
     <script>
-        // Manager nicknames & taglines
-        const managerMeta = {
-            'Bharath': {
-                nick: 'Heat Check Merchant',
-                tagline: 'Currently in the "Ballon d\'Or form" cooling off period (20 pts).'
-            },
+        // Season Lore: Context for the AI and users
+        const seasonLore = {
+            "GW2": "⚡ The Opening Salvo: Neeraj claims first blood with 61 points.",
+            "GW3": "🌊 The Sandesh Peak: Sandesh scores 83, setting an early benchmark.",
+            "GW4": "🚀 The Salah Syndicate: Venky proves there is life beyond Haaland (77 pts).",
+            "GW5": "💰 The Socialist Week: A massive 5-way prize split; Mayank tops it.",
+            "GW6": "🎯 Gokul Rising: Gokul secures his first win of the campaign.",
+            "GW7": "☢️ The Nuclear Option: Gokul drops a season-high 95 points.",
+            "GW8": "🔥 Heater Check: Bharath dominates with 90 points back-to-back.",
+            "GW9": "🦄 Differential Day: Shashank wins with Mbeumo captain.",
+            "GW10": "🚨 The Sukhpal Statement: A massive 93-point haul out of nowhere.",
+            "GW11": "🧊 The Trench War: Aniruddh wins with just 49 points in a low-scoring week.",
+            "GW12": "🎁 The Sponsor Collects: Shubs finally wins a pot after weeks of donating.",
+            "GW13": "🤡 The Chip Massacre: Multiple Triple Captains fail; Mayank wins with 47.",
+            "GW14": "🤝 The Great Split: Ties for 1st and 4th place create a unique payout structure."
+        };
+
+        // GW14 specific stories
+        const gw14Stories = {
+            'Gokul': "Joint winner with 82 points! Bench Boosted last week for 5th, played normal this week for 1st. The efficiency is frightening.",
+            'Rounak': "The Redemption Arc is complete. After the TC disaster in GW13, he bounces back instantly with 82 points and a shared 1st place.",
+            'Shubs': "3rd place with 78 points. He has officially stopped sponsoring the prize pool and started draining it. The reversal is real.",
+            'Raghu': "Tied for 4th with 76 points. Snuck into the money again. The narrative arc demanded he stay relevant, and he delivered.",
+            'Neeraj': "Back in the points! Shared 4th place with 76 points. The 'Lightning Starter' proves he still has some voltage left.",
+            'Arindam': "75 points. A score that would win many weeks, but he finishes 6th, missing the money by exactly 1 point. Absolutely brutal.",
+            'Puneet': "74 points. 7th place. Mr. Consistent did his job, but in a high-scoring week, 'consistent' wasn't enough for cash.",
+            'Aniruddh': "71 points. Usually a score that guarantees a podium, but this week it barely cracked the top 10. Tough crowd.",
+            'Sukhpal': "68 points. Solid score, but in a high-scoring week like GW14, it gets you absolutely nothing.",
+            'Venky': "66 points. Another week, another donation. The Salah Syndicate is currently operating at a loss.",
+            'Bharath': "65 points. Finished 11th. The 'Heat Check' has cooled down significantly. Mid-table obscurity beckons.",
+            'Mayank': "52 points. Captained Gakpo. A classic 'Differential Hunter' move that died on the hill of variance.",
+            'Sandesh': "50 points. The graph continues to flatten. Needs a spark to find that GW3 magic again.",
+            'Sagar': "46 points. No chips, no glory, no money. Just vibes and a donation.",
+            'Sarjan': "43 points. Captained João Pedro. The medical team is on standby for Sarjan's morale.",
+            'Shashank': "42 points. Captained Mbeumo again. The definition of insanity is doing the same thing and expecting different results.",
+            'Jalaj': "25 points. An absolute disaster class. The bus didn't just crash; it exploded."
+        };
+
+        // Season Journey Narrative Data
+        const seasonJourneys = {
             'Gokul': {
-                nick: 'Volatility FC',
-                tagline: 'Bench Boosted his way to 5th place. Efficiency or desperation?'
-            },
-            'Raghu': {
-                nick: 'Narrative Merchant',
-                tagline: 'Back in the money. The narrative arc demanded a redemption.'
-            },
-            'Venky': {
-                nick: 'Salah Syndicate',
-                tagline: 'Finished 14th this week. The syndicate is taking a short break.'
-            },
-            'Shashank': {
-                nick: 'Differential Ultras',
-                tagline: 'Captained Mbeumo for 14 total points. Died on the hill he built.'
-            },
-            'Shubs': {
-                nick: 'Sponsor of the Pot',
-                tagline: 'Triple Captained Haaland for 37 points. The generosity returns.'
-            },
-            'Sukhpal': {
-                nick: 'Steady Assassin',
-                tagline: 'A rare quiet week (35 pts), but still lurking mid-table.'
-            },
-            'Neeraj': {
-                nick: 'Lightning Starter',
-                tagline: 'Stuck in the mud with 27 points. Needs another thunderbolt soon.'
-            },
-            'Puneet': {
-                nick: 'Mr. Consistent',
-                tagline: 'Consistently 35 points this week. Not great, not terrible.'
-            },
-            'Mayank': {
-                nick: 'Chip Gambler',
-                tagline: 'Didn\'t even need a chip to win GW13. Just pure vibes.'
+                journey: "Started as a mid-table lurker, but the GW7 explosion (95 pts) revealed his true nature: Volatility. He is either winning the whole pot or finishing bottom 3.",
+                signature: "Bench Boost in GW13 (???)"
             },
             'Rounak': {
-                nick: 'Late Bloomer',
-                tagline: 'Triple Captain fail (39 pts), but still snuck into the money in 7th... wait no, 7th pays nothing.'
+                journey: "The ultimate 'Late Bloomer'. Spent the first 5 weeks in the basement (27 pts in GW3!). Since GW7, he's been on a relentless upward trajectory.",
+                signature: "Recovering from TC Fail"
             },
-            'Sandesh': {
-                nick: 'Peak GW3',
-                tagline: 'Triple Captained for 27 points. We need to check on him.'
+            'Shubs': {
+                journey: "The 'Sponsor' redemption arc is the story of the season. For 10 weeks, he funded the prize pool without return. Now, he has turned into the shark.",
+                signature: "Finally stopped donating"
             },
-            'Sarjan': {
-                nick: 'Painful Pedro Enjoyer',
-                tagline: 'Finally! The Pedro patience paid off with a 4th place cash finish.'
+            'Raghu': {
+                journey: "The 'Narrative Merchant' loves drama. Started strong, dipped in the middle, and has now clawed back into the money in GW13 and GW14.",
+                signature: "Plot Armor"
             },
-            'Sagar': {
-                nick: 'Chip Enthusiast',
-                tagline: '21 points. The fireworks were duds this week.'
-            },
-            'Jalaj': {
-                nick: 'Loyal Pedro Holder',
-                tagline: 'Pedro finally hauled, but the rest of his team stayed on the bus (17 pts).'
+            'Neeraj': {
+                journey: "The 'Lightning Starter' won the very first pot (GW2) but then went dark for weeks. GW14's return to form signals the batteries are recharged.",
+                signature: "Early Bird"
             },
             'Arindam': {
-                nick: 'Project Long Game',
-                tagline: 'The project has launched! First big podium finish (3rd).'
+                journey: "The 'Heartbreak Kid'. Joined late, learned the ropes, and finally hit form in GW13. GW14 was cruel: 75 points but missed money by 1 point.",
+                signature: "Missed by 1 pt"
+            },
+            'Bharath': {
+                journey: "The 'Heat Check' player. Had an insane run from GW7-9 where he was untouchable. Since then? The ice age. He's been cooling off rapidly.",
+                signature: "Streaky"
+            },
+            'Shashank': {
+                journey: "A man of principle. He decided early on that he would die by the 'Differential' sword. Mbeumo/Semenyo captains every week. Sometimes it wins, usually it hurts.",
+                signature: "Anti-Template"
+            },
+            'Jalaj': {
+                journey: "The 'Loyal Pedro Holder'. His season is entirely defined by whether João Pedro is fit or not. When Pedro doesn't play... you get GW14.",
+                signature: "Pedro or Bust"
+            },
+            'Sukhpal': {
+                journey: "The 'Steady Assassin'. He rarely has a disaster week, but rarely explodes (except the monster GW10). He is the baseline of the league.",
+                signature: "Consistent 6/10"
+            },
+            'Mayank': {
+                journey: "The 'Chip Gambler'. Loves a Triple Captain or a weird punt. It makes him dangerous because he can win any week out of nowhere.",
+                signature: "Gakpo Captain (lol)"
+            },
+            'Venky': {
+                journey: "The 'Salah Syndicate'. Had his moment in the sun early (GW4 win), but the syndicate has filed for bankruptcy recently. Been donating for a month.",
+                signature: "Salah over Haaland"
+            },
+            'Puneet': {
+                journey: "Mr. Consistent. Always 30-50 points. Never 100, never 20. He is the most stable asset in the Scapia Exchange, but stability doesn't win pots.",
+                signature: "Safe Hands"
+            },
+            'Sagar': {
+                journey: "Joined late and immediately tried to blow up the league with chips. It hasn't really worked yet. He's currently paying his 'tuition fees'.",
+                signature: "Chip Spammer"
+            },
+            'Sarjan': {
+                journey: "Another victim of the Pedro cult. He had one glorious moment in GW13, but mostly it's been a season of 'what if' he just captained Haaland.",
+                signature: "Pedro believer"
+            },
+            'Sandesh': {
+                journey: "Peaked in GW3 with 83 points and has been chasing that high ever since. The graph has been a slow, gentle slope downwards.",
+                signature: "GW3 Glory"
             },
             'Aniruddh': {
-                nick: 'Prize Magnet',
-                tagline: 'Rare miss for the magnet. 23 points and out of the money.'
+                journey: "The 'Prize Magnet'. Usually finds a way to scrape 5th place. GW14 was a rare miss for him, proving even magnets can lose their pull.",
+                signature: "Scrapes 5th"
             }
         };
 
-        // Game data
+        const managerMeta = {
+            'Bharath': { nick: 'Heat Check Merchant', archetype: 'THE STREAK PLAYER' },
+            'Gokul': { nick: 'Redruben Is Cooking', archetype: 'THE CHAOS MERCHANT' },
+            'Raghu': { nick: 'Narrative Merchant', archetype: 'THE SCRIPTWRITER' },
+            'Venky': { nick: 'Salah Syndicate', archetype: 'THE DONATION BOX' },
+            'Shashank': { nick: 'Differential Ultras', archetype: 'THE HIPSTER' },
+            'Shubs': { nick: 'Pot Drainer', archetype: 'THE SHARK' },
+            'Sukhpal': { nick: 'Steady Assassin', archetype: 'THE SILENT KILLER' },
+            'Neeraj': { nick: 'Lightning Starter', archetype: 'THE VOLTAGE' },
+            'Puneet': { nick: 'Mr. Consistent', archetype: 'THE BENCHWARMER' },
+            'Mayank': { nick: 'Differential Hunter', archetype: 'THE GAMBLER' },
+            'Rounak': { nick: 'Late Bloomer', archetype: 'THE REDEMPTION ARC' },
+            'Sandesh': { nick: 'Peak GW3', archetype: 'THE ONE-HIT WONDER' },
+            'Sarjan': { nick: 'Painful Pedro Enjoyer', archetype: 'THE LOYALIST' },
+            'Sagar': { nick: 'Chip Enthusiast', archetype: 'THE FIREWORK' },
+            'Jalaj': { nick: 'Loyal Pedro Holder', archetype: 'THE BUS DRIVER' },
+            'Arindam': { nick: 'Heartbreak Kid', archetype: 'THE ALMOST-HERO' },
+            'Aniruddh': { nick: 'Prize Magnet', archetype: 'THE GRINDER' }
+        };
+
         const gameData = {
             2: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'], pool: 1100, prizes: [600, 400, 100], results: [{ name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 }, { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 }, { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 }, { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 }, { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 }, { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 }, { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 }, { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }] },
             3: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh'], pool: 1400, prizes: [700, 400, 200, 100], results: [{ name: 'Sandesh', score: 83, captain: 'João Pedro', prize: 700 }, { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 }, { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 }, { name: 'Sarjan', score: 64, captain: 'João Pedro', prize: 150 }, { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 53, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 }, { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 }, { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 }, { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }] },
@@ -741,111 +311,107 @@
             10: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 }, { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 }, { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 82, captain: 'Haaland (BB1)', prize: 250 }, { name: 'Sagar', score: 81, captain: 'Haaland (FH1)', prize: 150 }, { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 }, { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 64, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 62, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }] },
             11: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 }, { name: 'Jalaj', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Sandesh', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 }, { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 }, { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 }, { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }] },
             12: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 }, { name: 'Rounak', score: 48, captain: 'Haaland (FH1)', prize: 250 }, { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 }, { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Haaland (BB1)', prize: 0 }, { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 35, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 }, { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 32, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 }, { name: 'Jalaj', score: 27, captain: 'João Pedro', prize: 0 }] },
-            13: { 
-                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], 
-                pool: 1700, 
-                prizes: [600, 400, 300, 250, 150], 
+            13: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 }, { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 }, { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 250 }, { name: 'Gokul', score: 40, captain: 'Haaland (BB1)', prize: 150 }, { name: 'Rounak', score: 39, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 27, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 17, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }] },
+            14: {
+                players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
+                pool: 1700,
+                prizes: [600, 400, 300, 250, 150],
                 results: [
-                    { name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 },
-                    { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 },
-                    { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 },
-                    { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 250 },
-                    { name: 'Gokul', score: 40, captain: 'Haaland (BB1)', prize: 150 },
-                    { name: 'Rounak', score: 39, captain: 'Haaland (TC1)', prize: 0 },
-                    { name: 'Shubs', score: 37, captain: 'Haaland (TC1)', prize: 0 },
-                    { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 },
-                    { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 },
-                    { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 },
-                    { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 },
-                    { name: 'Sandesh', score: 27, captain: 'Haaland (TC1)', prize: 0 },
-                    { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 },
-                    { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 },
-                    { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 },
-                    { name: 'Jalaj', score: 17, captain: 'João Pedro', prize: 0 },
-                    { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }
-                ] 
+                    { name: 'Gokul', score: 82, captain: 'Haaland', prize: 500 },
+                    { name: 'Rounak', score: 82, captain: 'Haaland', prize: 500 },
+                    { name: 'Shubs', score: 78, captain: 'Haaland', prize: 300 },
+                    { name: 'Raghu', score: 76, captain: 'Haaland', prize: 200 },
+                    { name: 'Neeraj', score: 76, captain: 'Haaland', prize: 200 },
+                    { name: 'Arindam', score: 75, captain: 'Haaland', prize: 0 },
+                    { name: 'Puneet', score: 74, captain: 'Haaland', prize: 0 },
+                    { name: 'Aniruddh', score: 71, captain: 'Haaland', prize: 0 },
+                    { name: 'Sukhpal', score: 68, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 66, captain: 'Haaland', prize: 0 },
+                    { name: 'Bharath', score: 65, captain: 'Haaland', prize: 0 },
+                    { name: 'Mayank', score: 52, captain: 'Gakpo', prize: 0 },
+                    { name: 'Sandesh', score: 50, captain: 'Haaland', prize: 0 },
+                    { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 },
+                    { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 },
+                    { name: 'Shashank', score: 42, captain: 'Mbeumo', prize: 0 },
+                    { name: 'Jalaj', score: 25, captain: 'João Pedro', prize: 0 }
+                ]
             }
         };
 
-        let currentGW = 13;
+        let currentGW = 14;
 
         function showGW(gw) {
             currentGW = gw;
             document.querySelectorAll('.gw-btn').forEach(btn => btn.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
+            if (event && event.target) { event.target.classList.add('active'); }
             updateBattle();
         }
 
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
-            
+            if (event && event.target) { event.target.classList.add('active'); }
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
-            
             if (tab === 'standings') updateStandings();
-            if (tab === 'stats') {
-                updateStats();
-                updateRivalries();
+            if (tab === 'stats') { updateStats(); updateRivalries(); }
+        }
+
+        function getBadges(playerName, data, prevPositions, i) {
+            let badges = '';
+            if (i === 0 || (data.results[i].score === data.results[0].score)) { badges += '<span class="badge-icon" title="The King: Weekly Winner">👑</span>'; }
+            if (i === data.results.length - 1) { badges += '<span class="badge-icon" title="The Clown: Lowest Score">🤡</span>'; }
+            const lowestPrizeIndex = data.results.findLastIndex(p => p.prize > 0);
+            if (lowestPrizeIndex !== -1 && i > lowestPrizeIndex) {
+                const prizeCutoff = data.results[lowestPrizeIndex].score;
+                if (prizeCutoff - data.results[i].score <= 2) { badges += '<span class="badge-icon" title="Heartbreak: Missed money by <= 2 pts">🕯️</span>'; }
             }
+            if (data.results[i].prize > 0) {
+                 const prevGW = gameData[currentGW - 1];
+                 if(prevGW) {
+                     const prevResult = prevGW.results.find(p => p.name === playerName);
+                     if(prevResult && prevResult.prize > 0) { badges += '<span class="badge-icon" title="Heater: Won in consecutive weeks">🔥</span>'; }
+                 }
+            }
+            return badges;
         }
 
         function updateBattle() {
             const data = gameData[currentGW];
-            
             const spotlight = generateSpotlight(currentGW);
             document.getElementById('spotlight').innerHTML = spotlight;
-            
             document.getElementById('poolAmount').textContent = data.pool;
             document.getElementById('playerCount').textContent = data.players.length;
             document.getElementById('currentGW').textContent = currentGW;
             
             const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
             const prizeHTML = data.prizes.map((prize, i) => `
-                <div class="prize">
-                    <div class="prize-emoji">${medals[i]}</div>
-                    <div class="prize-amount">₹${prize}</div>
-                </div>
+                <div class="prize"><div class="prize-emoji">${medals[i]}</div><div class="prize-amount">₹${prize}</div></div>
             `).join('');
             document.getElementById('prizeList').innerHTML = prizeHTML;
             
             const prevGW = gameData[currentGW - 1];
             const prevPositions = {};
-            if (prevGW) {
-                prevGW.results.forEach((player, idx) => {
-                    prevPositions[player.name] = idx + 1;
-                });
-            }
+            if (prevGW) { prevGW.results.forEach((player, idx) => { prevPositions[player.name] = idx + 1; }); }
             
             const leaderboardHTML = data.results.map((player, i) => {
                 const rank = i + 1;
                 let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
                 const medals = ['🥇', '🥈', '🥉', '4', '5'];
                 let rankDisplay = rank <= 5 && player.prize > 0 ? (medals[rank-1] || rank) : rank;
-                
                 let trendArrow = '';
                 if (prevPositions[player.name]) {
                     const prevRank = prevPositions[player.name];
-                    if (prevRank > rank) {
-                        trendArrow = '<span class="trend-indicator trend-up">📈</span>';
-                    } else if (prevRank < rank) {
-                        trendArrow = '<span class="trend-indicator trend-down">📉</span>';
-                    } else {
-                        trendArrow = '<span class="trend-indicator trend-same">➡️</span>';
-                    }
+                    if (prevRank > rank) { trendArrow = '<span class="trend-indicator trend-up">📈</span>'; }
+                    else if (prevRank < rank) { trendArrow = '<span class="trend-indicator trend-down">📉</span>'; }
+                    else { trendArrow = '<span class="trend-indicator trend-same">➡️</span>'; }
                 }
-                
                 const winnerClass = player.prize > 0 ? 'winner' : '';
-                
+                const badges = getBadges(player.name, data, prevPositions, i);
                 return `
                     <div class="player-row ${winnerClass}">
                         <div class="rank ${rankClass}">${rankDisplay}</div>
                         <div class="player-info">
-                            <div class="player-name">${player.name}${trendArrow}</div>
+                            <div class="player-name">${player.name} ${badges} ${trendArrow}</div>
                             <div class="player-captain">⚡ ${player.captain}</div>
                         </div>
                         <div class="score-prize">
@@ -856,141 +422,61 @@
                 `;
             }).join('');
             document.getElementById('leaderboard').innerHTML = leaderboardHTML;
-
             updateBanter(currentGW);
         }
         
         function generateSpotlight(gw) {
             const stories = {
-                2: { emoji: '⚡', title: 'Neeraj Wins the Opener!', story: '<span class="highlight">Neeraj</span> claims first blood with 61 points and a Salah captain as the Scapia mini-league battle begins.' },
-                3: { emoji: '🌊', title: 'Sandesh\'s Massive Haul!', story: '<span class="highlight">Sandesh</span> explodes for 83 with a João Pedro captain. First week with 4 prizes as more warriors join the arena.' },
-                4: { emoji: '🚀', title: 'Venky\'s Salah Masterclass!', story: '<span class="highlight">Venky</span> banks a big win with 77 thanks to the Salah differential while four managers share the spoils.' },
-                5: { emoji: '💰', title: 'Five-Way Prize Split!', story: '<span class="highlight">Mayank</span> tops the week, but five different managers walk away with cash. Most balanced battle so far.' },
-                6: { emoji: '🎯', title: 'Gokul Rises to the Top!', story: '<span class="highlight">Gokul</span> takes his first win with 68 as the Haaland captaincy continues to dominate the payout zone.' },
-                7: { emoji: '👑', title: 'Gokul Goes Nuclear!', story: '<span class="highlight">Gokul</span> detonates a 95-pointer. <span class="highlight">Bharath</span> rebounds from a 24-pointer to finish 2nd and kick-start a hot streak.' },
-                8: { emoji: '🔥', title: 'Bharath\'s Back-to-Back Domination!', story: '<span class="highlight">Bharath</span> follows up his surge with a huge 90 and another win. Triple-captain <span class="highlight">Mayank</span> and <span class="highlight">Gokul</span> share 3rd.' },
-                9: { emoji: '🦄', title: 'The Differential King Strikes!', story: '<span class="highlight">Shashank</span> finally cashes in with Mbeumo captain and takes the week. <span class="highlight">Bharath</span> completes a crazy 1st→1st→2nd run.' },
-                10: { emoji: '🚨', title: 'Sukhpal Drops a Monster!', story: '<span class="highlight">Sukhpal</span> smashes 93 with Haaland to take a statement win. <span class="highlight">Neeraj</span> and <span class="highlight">Shubs</span> round off the podium.' },
-                11: { emoji: '🧊', title: 'Low-Scoring Chaos Week!', story: '<span class="highlight">Aniruddh</span> grinds out a 49-point win in a cold, low-scoring gameweek. <span class="highlight">Gokul</span> and <span class="highlight">Venky</span> join him on the podium.' },
-                12: { emoji: '🎄', title: 'Shubs Wins the Festive GW!', story: '<span class="highlight">Shubs</span> finally tops the pile with 61 and a simple Haaland captain, nudging <span class="highlight">Bharath</span> into 2nd.' },
-                13: { emoji: '🤡', title: 'The Triple Captain Disaster!', story: '<span class="highlight">Mayank</span> wins with just 47 points in a brutal week. <span class="highlight">Rounak</span>, <span class="highlight">Shubs</span>, and <span class="highlight">Sandesh</span> all wasted their Triple Captain chips and failed to even crack the top 5! <span class="highlight">Arindam</span> grabs his first podium.' }
+                13: { emoji: '🤡', title: 'The Triple Captain Disaster!', story: '<span class="highlight">Mayank</span> wins with just 47 points in a brutal week. <span class="highlight">Rounak</span>, <span class="highlight">Shubs</span>, and <span class="highlight">Sandesh</span> all wasted their Triple Captain chips and failed to even crack the top 5!' },
+                14: { emoji: '🤝', title: 'Double Trouble at the Top!', story: '<span class="highlight">Gokul</span> and <span class="highlight">Rounak</span> share the crown with 82 points each! <span class="highlight">Raghu</span> and <span class="highlight">Neeraj</span> also split the 4th/5th prize, leaving <span class="highlight">Arindam</span> heartbroken just 1 point away from the cash.' }
             };
-            
             const story = stories[gw] || { emoji: '🎮', title: 'The Battle Continues!', story: 'Another spicy gameweek in the books.' };
-            
-            return `
-                <div class="spotlight-card">
-                    <div class="spotlight-title">
-                        <span class="spotlight-emoji">${story.emoji}</span>
-                        ${story.title}
-                    </div>
-                    <div class="spotlight-story">${story.story}</div>
-                </div>
-            `;
+            return `<div class="spotlight-card"><div class="spotlight-title"><span class="spotlight-emoji">${story.emoji}</span>${story.title}</div><div class="spotlight-story">${story.story}</div></div>`;
         }
 
-        // Roast & Compliment of the week
         function updateBanter(gw) {
             const data = gameData[gw];
             if (!data) return;
-
             const results = data.results;
             const lowest = results[results.length - 1];
             const nonPrize = results.filter(p => p.prize === 0);
             let bestNonPrize = null;
-            if (nonPrize.length > 0) {
-                bestNonPrize = nonPrize.reduce((best, cur) => (cur.score > best.score ? cur : best), nonPrize[0]);
-            }
-
+            if (nonPrize.length > 0) { bestNonPrize = nonPrize.reduce((best, cur) => (cur.score > best.score ? cur : best), nonPrize[0]); }
             let roastText = '';
             let complimentText = '';
-
             if (lowest) {
                 const meta = managerMeta[lowest.name] || {};
-                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} hit absolute rock bottom with ${lowest.score} points. <b>${lowest.captain}</b> captain was a crime against FPL.`;
+                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} managed just ${lowest.score} points. That's colder than a December morning.`;
             }
-
             if (bestNonPrize) {
                 const meta = managerMeta[bestNonPrize.name] || {};
-                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} scored ${bestNonPrize.score} points—more than 3 Triple Captainers!—but still won <b>₹0</b>. Tragic hero.`;
+                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} dropped ${bestNonPrize.score} points—a score that would win many other weeks—and got absolutely nothing. Brutal luck.`;
             }
-            
-            // Special Roast for GW13
-            if(gw === 13) {
-                 roastText = "Shashank captained Mbeumo for 14 total points while 3 managers wasted their Triple Captain chips on blankers. The Hall of Shame is crowded this week.";
-            }
-
-            document.getElementById('banter').innerHTML = `
-                <div class="banter-section">
-                    <div class="banter-card banter-roast">
-                        <div class="banter-title">🔥 Roast of the Week</div>
-                        <div class="banter-text">${roastText}</div>
-                    </div>
-                    <div class="banter-card banter-compliment">
-                        <div class="banter-title">💚 Clutch with No Cash</div>
-                        <div class="banter-text">${complimentText}</div>
-                    </div>
-                </div>
-            `;
+            document.getElementById('banter').innerHTML = `<div class="banter-section"><div class="banter-card banter-roast"><div class="banter-title">🔥 Roast of the Week</div><div class="banter-text">${roastText}</div></div><div class="banter-card banter-compliment"><div class="banter-title">💚 Clutch with No Cash</div><div class="banter-text">${complimentText}</div></div></div>`;
         }
 
         function updateStandings() {
             const earnings = {};
-            
             Object.keys(gameData).forEach(gwNum => {
                 const gw = gameData[gwNum];
                 gw.results.forEach(result => {
                     if (gw.players.includes(result.name)) {
-                        if (!earnings[result.name]) {
-                            earnings[result.name] = { won: 0, played: 0, currentStreak: 0, topStreak: 0 };
-                        }
+                        if (!earnings[result.name]) { earnings[result.name] = { won: 0, played: 0, currentStreak: 0, topStreak: 0 }; }
                         earnings[result.name].played++;
                         if (result.prize > 0) {
                             earnings[result.name].won += result.prize;
                             earnings[result.name].currentStreak++;
-                            earnings[result.name].topStreak = Math.max(
-                                earnings[result.name].topStreak,
-                                earnings[result.name].currentStreak
-                            );
-                        } else {
-                            earnings[result.name].currentStreak = 0;
-                        }
+                            earnings[result.name].topStreak = Math.max(earnings[result.name].topStreak, earnings[result.name].currentStreak);
+                        } else { earnings[result.name].currentStreak = 0; }
                     }
                 });
             });
-            
-            const standings = Object.entries(earnings).map(([name, data]) => ({
-                name,
-                net: data.won - data.played * 100,
-                won: data.won,
-                played: data.played,
-                streak: data.currentStreak,
-                topStreak: data.topStreak
-            })).sort((a, b) => b.net - a.net);
-            
-            const standingsHTML = standings.map(player => {
-                const streakBadge = player.streak >= 2 
-                    ? `<span class="streak-badge">🔥 ${player.streak}x streak</span>` 
-                    : '';
-                
-                return `
-                    <div class="standing-card">
-                        <div class="standing-player">
-                            <div class="standing-name">
-                                ${player.name}
-                                ${streakBadge}
-                            </div>
-                            <div class="standing-stats">
-                                🎮 ${player.played} games | 💰 ₹${player.played * 100} entry | Winnings: ₹${player.won}
-                            </div>
-                        </div>
-                        <div class="standing-earnings">
-                            <div class="net-amount ${player.net >= 0 ? 'positive' : 'negative'}">
-                                ${player.net >= 0 ? '+' : '-'}₹${Math.abs(player.net)}
-                            </div>
-                        </div>
-                    </div>
-                `;
+            const standings = Object.entries(earnings).map(([name, data]) => ({ name, net: data.won - data.played * 100, won: data.won, played: data.played, streak: data.currentStreak, topStreak: data.topStreak })).sort((a, b) => b.net - a.net);
+            const standingsHTML = standings.map((player, index) => {
+                let badges = '';
+                if(player.streak >= 2) badges += '<span class="badge-icon">🔥</span>';
+                if(index <= 2) badges += '<span class="badge-icon">💰</span>';
+                return `<div class="standing-card"><div class="standing-player"><div class="standing-name">${player.name}${badges}</div><div class="standing-stats">🎮 ${player.played} games | 💰 ₹${player.played * 100} entry | Winnings: ₹${player.won}</div></div><div class="standing-earnings"><div class="net-amount ${player.net >= 0 ? 'positive' : 'negative'}">${player.net >= 0 ? '+' : '-'}₹${Math.abs(player.net)}</div></div></div>`;
             }).join('');
             document.getElementById('standingsList').innerHTML = standingsHTML;
         }
@@ -1000,16 +486,7 @@
             Object.values(gameData).forEach(gw => {
                 gw.results.forEach((result, index) => {
                     if (gw.players.includes(result.name)) {
-                        if (!playerStats[result.name]) {
-                            playerStats[result.name] = {
-                                games: 0,
-                                wins: 0,
-                                podiums: 0,
-                                scores: [],
-                                positions: [],
-                                earnings: 0
-                            };
-                        }
+                        if (!playerStats[result.name]) { playerStats[result.name] = { games: 0, wins: 0, podiums: 0, scores: [], positions: [], earnings: 0 }; }
                         const stats = playerStats[result.name];
                         stats.games++;
                         stats.scores.push(result.score);
@@ -1021,181 +498,86 @@
                 });
             });
             
-            const playerStories = {
-                'Bharath': { emoji: '❄️', story: `Went from "unbeatable god" to "frozen statue" real quick. Scored 20 points in GW13 to remind everyone he is human. Still a net-positive giant, but the heat check failed spectacularly this week.` },
-                'Gokul': { emoji: '🎢', story: `The volatility king. Bench Boosted in GW13 to scrape a 5th place finish. He'll take the ₹150, but let's be honest, that chip usage was... interesting. Currently sitting pretty high in the net standings.` },
-                'Shashank': { emoji: '📉', story: `The Differential Zealot hit a new low. Captained Mbeumo for a grand total of 14 points in GW13. It's not just a bad week; it's a protest against the template. The protest failed.` },
-                'Sukhpal': { emoji: '😐', story: `Dropped a respectable but boring 35 in GW13. After that monster GW10 win, he's settled into a rhythm of lurking in mid-table, waiting for Haaland to haul again.` },
-                'Raghu': { emoji: '🥈', story: `The "Narrative Merchant" is officially back! After a mid-season wobble, he secures 2nd place in GW13. The story arc demanded a redemption, and Raghu delivered.` },
-                'Neeraj': { emoji: '🐢', story: `Started the season fast, now moving at a glacial pace. 27 points in GW13 keeps him firmly in the "donated to the pot" category for another week.` },
-                'Aniruddh': { emoji: '💸', story: `Usually a prize magnet, but GW13 repelled him hard. 23 points is his lowest score in ages. The steady income stream has temporarily dried up.` },
-                'Rounak': { emoji: '🚮', story: `Triple Captain on Haaland... for 39 points. And finished 6th. The "Late Bloomer" just bloomed into a faceplant. Tragedy.` },
-                'Mayank': { emoji: '🎰', story: `The Chip Gambler won GW13 without even using a chip! A low-scoring 47 was enough to take the top prize. Proving you don't need strategy when you have luck.` },
-                'Sandesh': { emoji: '💀', story: `Triple Captained for 27 points. I repeat, Triple Captained for 27 points. The GW3 glory days feel like a distant memory.` },
-                'Puneet': { emoji: '😐', story: `Mr. Consistent lived up to his name with a bang-average 35. He's always there, lurking, never quite winning big, but never imploding like Shashank.` },
-                'Venky': { emoji: '💤', story: `Finished 14th in GW13. The Salah Syndicate is on a sabbatical. The graph is currently pointing towards "donation mode."` },
-                'Shubs': { emoji: '🏥', story: `Another Triple Captain casualty. 37 points. He went from winning GW12 to sponsoring the pot again in record time.` },
-                'Sagar': { emoji: '🎆', story: `21 points. The fireworks were wet. A quiet disaster of a week for the chip enthusiast.` },
-                'Jalaj': { emoji: '🚌', story: `João Pedro returned, but the rest of Jalaj's team stayed on the bus. 17 points is... tough.` },
-                'Sarjan': { emoji: '🙌', story: `The patience paid off! Finally, a cash finish (4th) thanks to sticking with João Pedro while everyone else panicked.` },
-                'Arindam': { emoji: '🥉', story: `The "Project" has liftoff! Arindam secures his first-ever podium finish (3rd) in GW13. The apprentice is becoming a master.` }
-            };
-            
-            const storiesHTML = Object.entries(playerStories)
+            const storiesHTML = Object.entries(managerMeta)
                 .filter(([name]) => playerStats[name] && playerStats[name].games >= 5)
                 .sort((a, b) => {
                     const netA = playerStats[a[0]].earnings - playerStats[a[0]].games * 100;
                     const netB = playerStats[b[0]].earnings - playerStats[b[0]].games * 100;
                     return netB - netA;
                 })
-                .map(([name, story]) => {
-                    const meta = managerMeta[name] || {};
+                .map(([name, meta]) => {
+                    const journey = seasonJourneys[name] || { journey: 'A quiet season so far.', signature: 'Unknown' };
+                    const gw14Story = gw14Stories[name] || 'Survived the week.';
+                    const stats = playerStats[name];
+                    const bestRank = Math.min(...stats.positions);
+                    const worstRank = Math.max(...stats.positions);
+                    
                     return `
                         <div class="player-story-card">
                             <div class="story-header">
-                                <div class="story-player">
-                                    ${name}
-                                    ${meta.nick ? `<span class="manager-nick">“${meta.nick}”</span>` : ''}
+                                <div>
+                                    <div class="story-player">${name} <span class="manager-nick">“${meta.nick}”</span></div>
+                                    <div class="archetype-badge">${meta.archetype}</div>
                                 </div>
-                                <div class="story-emoji">${story.emoji}</div>
                             </div>
-                            ${meta.tagline ? `<div class="story-tagline">${meta.tagline}</div>` : ''}
-                            <div class="story-text">${story.story}</div>
+                            
+                            <div class="story-section">
+                                <div class="story-label">⚡ GW14 Report</div>
+                                <div class="story-text">"${gw14Story}"</div>
+                            </div>
+
+                            <div class="story-section">
+                                <div class="story-label">📖 Season Arc</div>
+                                <div class="story-text">"${journey.journey}"</div>
+                            </div>
+
+                            <div class="story-stat-row">
+                                <div class="story-stat">📈 Best Rank: ${bestRank}</div>
+                                <div class="story-stat">📉 Worst Rank: ${worstRank}</div>
+                                <div class="story-stat">⭐ Move: ${journey.signature}</div>
+                            </div>
                         </div>
                     `;
                 }).join('');
-            
             document.getElementById('playerStories').innerHTML = storiesHTML;
             
+            // Render Lore
+            const loreHTML = Object.entries(seasonLore).map(([gw, text]) => {
+                return `
+                    <div class="lore-entry">
+                        <div class="lore-gw">${gw}</div>
+                        <div class="lore-text">${text}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('seasonLoreList').innerHTML = loreHTML;
+
             const entries = Object.entries(playerStats);
             if (!entries.length) return;
-            
             const mostWins = [...entries].sort((a, b) => b[1].wins - a[1].wins)[0];
-            const peakPerformance = [...entries].map(([name, stats]) => {
-                return [name, { ...stats, maxScore: Math.max(...stats.scores) }];
-            }).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
-            const mostConsistent = [...entries]
-                .filter(([_, s]) => s.games >= 5)
-                .map(([name, stats]) => {
-                    const avg = stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length;
-                    const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length;
-                    return [name, { ...stats, variance }];
-                }).sort((a, b) => a[1].variance - b[1].variance)[0];
-            const prizeMagnet = [...entries]
-                .filter(([_, s]) => s.games >= 5)
-                .map(([name, stats]) => {
-                    const prizeCount = stats.positions.filter(p => p <= 5).length;
-                    return [name, { ...stats, prizeCount }];
-                }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0];
-            const formHorse = [...entries]
-                .filter(([_, s]) => s.games >= 3)
-                .map(([name, stats]) => {
-                    const recent3 = stats.positions.slice(-3);
-                    const avgRecent = recent3.reduce((a, b) => a + b, 0) / recent3.length;
-                    return [name, { ...stats, avgRecent }];
-                }).sort((a, b) => a[1].avgRecent - b[1].avgRecent)[0];
+            const peakPerformance = [...entries].map(([name, stats]) => [name, { ...stats, maxScore: Math.max(...stats.scores) }]).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
+            const mostConsistent = [...entries].filter(([_, s]) => s.games >= 5).map(([name, stats]) => { const avg = stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length; const variance = stats.positions.reduce((sum, pos) => sum + Math.pow(pos - avg, 2), 0) / stats.positions.length; return [name, { ...stats, variance }]; }).sort((a, b) => a[1].variance - b[1].variance)[0];
+            const prizeMagnet = [...entries].filter(([_, s]) => s.games >= 5).map(([name, stats]) => { const prizeCount = stats.positions.filter(p => p <= 5).length; return [name, { ...stats, prizeCount }]; }).sort((a, b) => b[1].prizeCount - a[1].prizeCount)[0];
             
             const performanceAwards = [
                 { title: 'Season Win Leader', emoji: '🏅', desc: 'Most individual gameweek wins so far.', winner: mostWins },
                 { title: 'Peak Performance', emoji: '⛰️', desc: 'Highest single-gameweek score in the league.', winner: peakPerformance },
                 { title: 'Mr. Reliable', emoji: '🎯', desc: 'Most consistent positions across all entries.', winner: mostConsistent },
-                { title: 'Prize Magnet', emoji: '🎖️', desc: 'Most frequent top-5 appearances.', winner: prizeMagnet },
-                { title: 'Form Horse', emoji: '🐎', desc: 'Best average rank over the last three entries.', winner: formHorse }
+                { title: 'Prize Magnet', emoji: '🎖️', desc: 'Most frequent top-5 appearances.', winner: prizeMagnet }
             ];
             
-            const generousDonor = [...entries]
-                .filter(([_, s]) => s.earnings === 0 && s.games >= 5)
-                .sort((a, b) => b[1].games - a[1].games)[0];
-            const wildcardWarrior = [...entries]
-                .filter(([_, s]) => s.games >= 5)
-                .map(([name, stats]) => {
-                    const swings = [];
-                    for (let i = 1; i < stats.positions.length; i++) {
-                        swings.push(Math.abs(stats.positions[i] - stats.positions[i - 1]));
-                    }
-                    const avgSwing = swings.reduce((a, b) => a + b, 0) / swings.length;
-                    return [name, { ...stats, avgSwing }];
-                }).sort((a, b) => b[1].avgSwing - a[1].avgSwing)[0];
-            const resurrection = [...entries]
-                .filter(([_, s]) => s.games >= 6)
-                .map(([name, stats]) => {
-                    const worst = Math.max(...stats.positions);
-                    const worstIndex = stats.positions.lastIndexOf(worst);
-                    if (worstIndex >= stats.positions.length - 2) {
-                        return [name, { ...stats, score: 0 }];
-                    }
-                    const afterWorst = stats.positions.slice(worstIndex + 1);
-                    const improvement = worst - (afterWorst.reduce((a, b) => a + b, 0) / afterWorst.length);
-                    return [name, { ...stats, score: improvement }];
-                }).sort((a, b) => b[1].score - a[1].score)[0];
-            const earlyPeak = [...entries]
-                .filter(([_, s]) => s.games >= 5)
-                .map(([name, stats]) => {
-                    const bestPos = Math.min(...stats.positions);
-                    const bestIndex = stats.positions.indexOf(bestPos);
-                    if (bestIndex >= stats.positions.length - 2) {
-                        return [name, { ...stats, score: 0 }];
-                    }
-                    const afterBest = stats.positions.slice(bestIndex + 1);
-                    const decline = afterBest.reduce((a, b) => a + b, 0) / afterBest.length - bestPos;
-                    return [name, { ...stats, score: decline }];
-                }).sort((a, b) => b[1].score - a[1].score)[0];
-            const lateBloomer = [...entries]
-                .filter(([_, s]) => s.games >= 5)
-                .map(([name, stats]) => {
-                    const firstHalf = stats.positions.slice(0, Math.floor(stats.games / 2));
-                    const secondHalf = stats.positions.slice(Math.floor(stats.games / 2));
-                    const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) - 
-                                        (secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length);
-                    return [name, { ...stats, improvement }];
-                }).sort((a, b) => b[1].improvement - a[1].improvement)[0];
+            const generousDonor = [...entries].filter(([_, s]) => s.earnings === 0 && s.games >= 5).sort((a, b) => b[1].games - a[1].games)[0];
+            const resurrection = [...entries].filter(([_, s]) => s.games >= 6).map(([name, stats]) => { const worst = Math.max(...stats.positions); const worstIndex = stats.positions.lastIndexOf(worst); if (worstIndex >= stats.positions.length - 2) { return [name, { ...stats, score: 0 }]; } const afterWorst = stats.positions.slice(worstIndex + 1); const improvement = worst - (afterWorst.reduce((a, b) => a + b, 0) / afterWorst.length); return [name, { ...stats, score: improvement }]; }).sort((a, b) => b[1].score - a[1].score)[0];
+            const lateBloomer = [...entries].filter(([_, s]) => s.games >= 5).map(([name, stats]) => { const firstHalf = stats.positions.slice(0, Math.floor(stats.games / 2)); const secondHalf = stats.positions.slice(Math.floor(stats.games / 2)); const improvement = (firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length) - (secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length); return [name, { ...stats, improvement }]; }).sort((a, b) => b[1].improvement - a[1].improvement)[0];
             
             const funAwards = [
                 { title: 'Phoenix Rising', emoji: '🔥', desc: 'Biggest comeback after a disaster week.', winner: resurrection },
-                { title: 'Early Peak Syndrome', emoji: '💫', desc: 'Massive early high followed by a long comedown.', winner: earlyPeak },
                 { title: 'Late Bloomer', emoji: '🌱', desc: 'Started slow, heating up over time.', winner: lateBloomer },
-                { title: 'Generous Donor', emoji: '💸', desc: 'Most entries with no winnings so far.', winner: generousDonor },
-                { title: 'Wildcard Warrior', emoji: '🎰', desc: 'Most dramatic week-to-week rank swings.', winner: wildcardWarrior }
+                { title: 'Generous Donor', emoji: '💸', desc: 'Most entries with no winnings so far.', winner: generousDonor }
             ];
             
-            const performanceHTML = performanceAwards
-                .filter(a => a.winner && a.winner[1])
-                .map(award => {
-                    const [name, stats] = award.winner;
-                    let statDetail = '';
-                    if (award.title === 'Season Win Leader') {
-                        statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.wins / stats.games) * 100}%"></div></div>`;
-                    }
-                    if (award.title === 'Prize Magnet') {
-                        statDetail = `<div class="stat-bar"><div class="stat-fill" style="width: ${(stats.prizeCount / stats.games) * 100}%"></div></div>`;
-                    }
-                    return `
-                        <div class="award">
-                            <div class="award-info">
-                                <div class="award-title">${award.emoji} ${award.title}</div>
-                                <div class="award-desc">${award.desc}</div>
-                                ${statDetail}
-                            </div>
-                            <div class="award-winner">${name}</div>
-                        </div>
-                    `;
-                }).join('');
-            
-            const funHTML = funAwards
-                .filter(a => a.winner && a.winner[1])
-                .map(award => {
-                    const [name] = award.winner;
-                    return `
-                        <div class="award">
-                            <div class="award-info">
-                                <div class="award-title">${award.emoji} ${award.title}</div>
-                                <div class="award-desc">${award.desc}</div>
-                            </div>
-                            <div class="award-winner">${name}</div>
-                        </div>
-                    `;
-                }).join('');
-            
+            const performanceHTML = performanceAwards.filter(a => a.winner && a.winner[1]).map(award => `<div class="award"><div class="award-info"><div class="award-title">${award.emoji} ${award.title}</div><div class="award-desc">${award.desc}</div></div><div class="award-winner">${award.winner[0]}</div></div>`).join('');
+            const funHTML = funAwards.filter(a => a.winner && a.winner[1]).map(award => `<div class="award"><div class="award-info"><div class="award-title">${award.emoji} ${award.title}</div><div class="award-desc">${award.desc}</div></div><div class="award-winner">${award.winner[0]}</div></div>`).join('');
             document.getElementById('performanceAwards').innerHTML = performanceHTML;
             document.getElementById('funAwards').innerHTML = funHTML;
         }
@@ -1209,62 +591,27 @@
                     gw.results.forEach((res, idx) => positions[res.name] = idx + 1);
                     if (positions[a] && positions[b]) {
                         meetings++;
-                        if (positions[a] < positions[b]) aWins++;
-                        else if (positions[b] < positions[a]) bWins++;
-                        else ties++;
+                        if (positions[a] < positions[b]) aWins++; else if (positions[b] < positions[a]) bWins++; else ties++;
                     }
                 });
                 return { aWins, bWins, ties, meetings };
             }
-
             const rv1 = h2h('Raghu', 'Venky');
             const rv2 = h2h('Bharath', 'Gokul');
-
             let shubsGames = 0, shubsWinnings = 0;
             Object.values(gameData).forEach(gw => {
                 if (!gw.players.includes('Shubs')) return;
                 const entry = gw.results.find(r => r.name === 'Shubs');
-                if (entry) {
-                    shubsGames++;
-                    shubsWinnings += entry.prize;
-                }
+                if (entry) { shubsGames++; shubsWinnings += entry.prize; }
             });
-
             const rivalryHTML = `
-                <div class="rivalry-card">
-                    <div class="rivalry-title">Founders Derby: Raghu vs Venky</div>
-                    <div class="rivalry-line">
-                        In ${rv1.meetings} gameweeks together, Raghu has finished above Venky <b>${rv1.aWins}</b> times, 
-                        Venky has finished above Raghu <b>${rv1.bWins}</b> times, with <b>${rv1.ties}</b> draws.
-                    </div>
-                    <div class="rivalry-sub">
-                        GW13 Update: Raghu (2nd) crushes Venky (14th). The gap widens.
-                    </div>
-                </div>
-                <div class="rivalry-card">
-                    <div class="rivalry-title">Chaos Classico: Bharath vs Gokul</div>
-                    <div class="rivalry-line">
-                        When both play, Bharath has beaten Gokul <b>${rv2.aWins}</b> times,  
-                        Gokul has beaten Bharath <b>${rv2.bWins}</b> times, with <b>${rv2.ties}</b> ties.
-                    </div>
-                    <div class="rivalry-sub">
-                        GW13 Update: Bharath freezes (20 pts), Gokul cashes (40 pts). Advantage Gokul.
-                    </div>
-                </div>
-                <div class="rivalry-card">
-                    <div class="rivalry-title">Shubs vs The Prize Pool</div>
-                    <div class="rivalry-line">
-                        Shubs has entered <b>${shubsGames}</b> battles and withdrawn a total of <b>₹${shubsWinnings}</b>.
-                    </div>
-                    <div class="rivalry-sub">
-                        GW13 Update: Sponsoring the pot again with a TC fail. The house always wins.
-                    </div>
-                </div>
+                <div class="rivalry-card"><div class="rivalry-title">Founders Derby: Raghu vs Venky</div><div class="rivalry-line">In ${rv1.meetings} gameweeks together, Raghu has finished above Venky <b>${rv1.aWins}</b> times, Venky has finished above Raghu <b>${rv1.bWins}</b> times, with <b>${rv1.ties}</b> draws.</div><div class="rivalry-sub">GW14 Update: Raghu (4th) smashes Venky (10th). The narrative arc bends toward Raghu.</div></div>
+                <div class="rivalry-card"><div class="rivalry-title">Chaos Classico: Bharath vs Gokul</div><div class="rivalry-line">When both play, Bharath has beaten Gokul <b>${rv2.aWins}</b> times, Gokul has beaten Bharath <b>${rv2.bWins}</b> times, with <b>${rv2.ties}</b> ties.</div><div class="rivalry-sub">GW14 Update: Gokul wins the week (1st), Bharath languishes (11th). Volatility FC reigns supreme.</div></div>
+                <div class="rivalry-card"><div class="rivalry-title">Shubs vs The Prize Pool</div><div class="rivalry-line">Shubs has entered <b>${shubsGames}</b> battles and withdrawn a total of <b>₹${shubsWinnings}</b>.</div><div class="rivalry-sub">GW14 Update: Shubs withdraws ₹300. The prize pool is sweating.</div></div>
             `;
             document.getElementById('rivalries').innerHTML = rivalryHTML;
         }
 
-        // Initialize
         updateBattle();
     </script>
 </body>
