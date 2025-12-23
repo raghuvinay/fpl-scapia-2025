@@ -24,19 +24,17 @@
             color: #fff;
             padding: 15px;
         }
-        .container { max-width: 500px; margin: 0 auto; }
+        .container { max-width: 550px; margin: 0 auto; }
         .header { text-align: center; margin-bottom: 30px; }
         .logo { font-size: 2.5rem; font-weight: 900; color: var(--scapia-orange); text-shadow: 0 0 20px rgba(255, 107, 53, 0.5); }
         .tagline { color: #a0aec0; font-style: italic; margin-top: 5px; }
         
-        /* GW Selector */
-        .gw-selector { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; scrollbar-width: none; }
+        .gw-selector { display: flex; gap: 8px; margin-bottom: 25px; overflow-x: auto; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; scrollbar-width: none; }
         .gw-selector::-webkit-scrollbar { display: none; }
-        .gw-btn { padding: 10px 18px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s; white-space: nowrap; }
+        .gw-btn { padding: 8px 14px; min-width: 60px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; white-space: nowrap; font-size: 0.9rem; }
         .gw-btn:hover { background: rgba(255, 107, 53, 0.2); transform: translateY(-2px); }
         .gw-btn.active { background: var(--scapia-orange); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3); }
         
-        /* Tabs */
         .tabs { display: flex; background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; margin-bottom: 25px; }
         .tab { flex: 1; padding: 12px; background: transparent; border: none; color: rgba(255, 255, 255, 0.7); font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.3s; }
         .tab.active { background: var(--scapia-orange); color: white; }
@@ -45,19 +43,17 @@
         
         /* Cards */
         .prize-card { background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.1)); border: 1px solid var(--scapia-orange); border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center; position: relative; overflow: hidden; }
-        .spotlight-card { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border: 2px solid var(--scapia-orange); border-radius: 20px; padding: 20px; margin-bottom: 25px; position: relative; overflow: hidden; }
-        .spotlight-title { font-size: 1.3rem; font-weight: 900; color: var(--scapia-orange); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .spotlight-card { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 53, 0.15)); border: 2px solid var(--scapia-orange); border-radius: 20px; padding: 20px; margin-bottom: 25px; position: relative; overflow: hidden; text-align: center; }
+        .spotlight-title { font-size: 1.3rem; font-weight: 900; color: var(--scapia-orange); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .spotlight-story { font-size: 1rem; line-height: 1.6; color: #e0e0e0; }
         .highlight { color: var(--scapia-orange); font-weight: 700; }
         
-        /* Pool Info */
         .pool-amount { font-size: 2.8rem; font-weight: 900; color: var(--scapia-orange); text-shadow: 0 0 25px rgba(255, 107, 53, 0.5); }
         .pool-info { display: flex; justify-content: space-around; margin: 20px 0; }
         .info-item { text-align: center; }
         .info-value { font-size: 1.3rem; font-weight: 700; }
         .info-label { font-size: 0.8rem; color: #a0aec0; }
         
-        /* Prizes */
         .prizes { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; }
         .prize { text-align: center; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
         .prize-amount { font-weight: 700; margin-top: 5px; }
@@ -78,24 +74,39 @@
         .score { font-size: 1.3rem; font-weight: 700; }
         .prize-won { color: var(--success); font-weight: 600; }
 
-        /* Story Cards */
-        .player-story-card { background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(15, 52, 96, 0.2)); border: 1px solid rgba(255, 107, 53, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; }
-        .story-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; z-index: 2; position: relative; }
-        .story-player { font-size: 1.2rem; font-weight: 800; color: var(--scapia-orange); }
-        .manager-nick { font-size: 0.9rem; color: #cbd5e0; font-style: italic; font-weight: 400; display: block; margin-top: 2px; }
-        .archetype-badge { position: absolute; top: 20px; right: 20px; background: rgba(255, 107, 53, 0.1); border: 1px solid var(--scapia-orange); color: var(--scapia-orange); font-size: 0.65rem; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; font-weight: 700; }
+        /* Story Cards - Enriched */
+        .player-story-card { background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(15, 52, 96, 0.2)); border: 1px solid rgba(255, 107, 53, 0.3); border-radius: 15px; padding: 0; margin-bottom: 25px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        
+        .story-header-section { padding: 20px; position: relative; z-index: 2; display: flex; gap: 15px; align-items: flex-start; }
+        .avatar-container { width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid var(--scapia-orange); flex-shrink: 0; background: #000; }
+        .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+        .header-info { flex: 1; }
+        
+        .story-player { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 2px; }
+        .manager-nick { font-size: 0.9rem; color: var(--scapia-orange); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .character-ref { font-size: 0.75rem; color: #a0aec0; font-style: italic; margin-top: 2px; }
+        
+        .wallet-pill { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: rgba(0,0,0,0.4); display: inline-block; margin-top: 5px; }
+        .in-profit { color: var(--success); border: 1px solid var(--success); }
+        .in-loss { color: var(--danger); border: 1px solid var(--danger); }
+        
+        .story-content { padding: 0 20px 20px 20px; }
+        
+        .story-quote { font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; color: #fff; opacity: 0.9; background: rgba(255, 255, 255, 0.05); padding: 12px; border-left: 3px solid var(--scapia-orange); margin-bottom: 15px; border-radius: 0 8px 8px 0; }
         
         .story-section { margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
         .story-label { font-size: 0.7rem; text-transform: uppercase; color: var(--scapia-orange); letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; opacity: 0.8; }
         .story-text { font-size: 0.9rem; line-height: 1.5; color: #e0e0e0; }
-        
-        .wallet-pill { font-size: 0.8rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.4); display: inline-block; margin-top: 5px; }
-        .in-profit { color: var(--success); border: 1px solid var(--success); }
-        .in-loss { color: var(--danger); border: 1px solid var(--danger); }
-        
-        .story-quote { font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; color: #fff; opacity: 0.9; background: rgba(255, 255, 255, 0.05); padding: 10px; border-left: 3px solid var(--scapia-orange); margin: 15px 0; border-radius: 0 8px 8px 0; }
-        .story-stat-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
-        .story-stat { font-size: 0.75rem; color: #cbd5e0; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); }
+
+        .scout-report { margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; }
+        .stat-row { display: flex; align-items: center; margin-bottom: 6px; }
+        .stat-label { width: 90px; font-size: 0.75rem; color: #a0aec0; }
+        .stat-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+        .stat-val { height: 100%; border-radius: 3px; }
+        .stat-val.template { background: #3b82f6; }
+        .stat-val.form { background: #48bb78; }
+        .stat-val.volatility { background: #e53e3e; }
+        .stat-number { width: 35px; text-align: right; font-size: 0.75rem; font-weight: 700; margin-left: 8px; }
 
         /* Banter & Other */
         .banter-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
@@ -133,16 +144,10 @@
     <div class="container">
         <div class="header">
             <div class="logo">✈️ SCAPIA FPL</div>
-            <div class="tagline">GW16: The Century Club</div>
+            <div class="tagline">GW17: The Thai-Theater Pact</div>
         </div>
 
-        <div class="gw-selector">
-            <button class="gw-btn" onclick="showGW(12)">GW 12</button>
-            <button class="gw-btn" onclick="showGW(13)">GW 13</button>
-            <button class="gw-btn" onclick="showGW(14)">GW 14</button>
-            <button class="gw-btn" onclick="showGW(15)">GW 15</button>
-            <button class="gw-btn active" onclick="showGW(16)">GW 16</button>
-        </div>
+        <div class="gw-selector" id="gwSelector"></div>
 
         <div class="tabs">
             <button class="tab active" onclick="showTab('battle')">⚔️ Battle</button>
@@ -157,7 +162,7 @@
                 <div class="pool-info">
                     <div class="info-item"><div class="info-value" id="playerCount">17</div><div class="info-label">Warriors</div></div>
                     <div class="info-item"><div class="info-value">₹100</div><div class="info-label">Entry</div></div>
-                    <div class="info-item"><div class="info-value">GW<span id="currentGW">16</span></div><div class="info-label">Battle</div></div>
+                    <div class="info-item"><div class="info-value">GW<span id="currentGW">17</span></div><div class="info-label">Battle</div></div>
                 </div>
                 <div class="prizes" id="prizeList"></div>
             </div>
@@ -169,119 +174,170 @@
 
         <div id="stats" class="content">
             <div class="stats-section">
-                <div class="stat-title">📖 Manager Profiles & Journeys</div>
+                <div class="stat-title">📖 Manager Scout Reports</div>
                 <div id="playerStories"></div>
             </div>
-            <div class="stats-section">
-                <div class="stat-title">🤺 Dynamic Rivalries</div>
-                <div id="rivalries"></div>
-            </div>
+            <div class="stats-section"><div class="stat-title">🤺 Dynamic Rivalries</div><div id="rivalries"></div></div>
             <div class="stats-section">
                 <div class="stat-title">📜 Season History (The Lore)</div>
                 <div id="seasonLoreList"></div>
             </div>
-            <div class="stats-section">
-                <div class="stat-title">🏆 Performance Awards</div>
-                <div id="performanceAwards"></div>
-            </div>
-            <div class="stats-section">
-                <div class="stat-title">😂 Hall of Fame & Shame</div>
-                <div id="funAwards"></div>
-            </div>
+            <div class="stats-section"><div class="stat-title">🏆 Performance Awards</div><div id="performanceAwards"></div></div>
+            <div class="stats-section"><div class="stat-title">😂 Hall of Fame & Shame</div><div id="funAwards"></div></div>
         </div>
     </div>
 
     <script>
-        const seasonLore = {
-            "GW7": "☢️ The Nuclear Option: Gokul drops a season-high 95 points.",
-            "GW8": "🔥 Heater Check: Bharath dominates with 90 points back-to-back.",
-            "GW9": "🦄 Differential Day: Shashank wins with Mbeumo captain.",
-            "GW10": "🚨 The Sukhpal Statement: A massive 93-point haul out of nowhere.",
-            "GW11": "🧊 The Trench War: Aniruddh wins with just 49 points in a low-scoring week.",
-            "GW13": "🤡 The Chip Massacre: Multiple Triple Captains fail; Mayank wins with 47.",
-            "GW14": "🤝 The Great Split: Ties for 1st and 4th place create a unique payout structure.",
-            "GW15": "🤯 The Foden Masterclass: Shashank Triple Captains Foden for a massive 86-point haul.",
-            "GW16": "💯 The Century Club: Rounak smashes 104 points with a Bench Boost."
+const seasonLore = {
+            "GW2": "⚡ The Opening Salvo: Neeraj claims first blood (61 pts), while Sandesh's differential gamble on Ødegaard leaves him stranded at the bottom.",
+            "GW3": "🌊 The Sandesh Peak: Sandesh scores a benchmark 83. Meanwhile, the 'Wood' captainers (Sukhpal, Aniruddh) form a mid-table blockade.",
+            "GW4": "🚀 The Salah Syndicate: Venky proves there is life beyond Haaland, taking gold with Salah while the Haaland-perma-captainers fought for scraps.",
+            "GW5": "💰 The Socialist Week: A massive 5-way prize split proves the league is tight, but Rounak's Pedro punt backfires, leaving him in the basement.",
+            "GW7": "☢️ The Nuclear Option: Gokul drops a season-high 95 points. The gap between 1st and the pack was so large it practically ended the contest by Saturday.",
+            "GW8": "🔥 Heater Check: Bharath dominates with 90 points. The story here was the 'Haaland vs Pedro' war—Haaland won, leaving the Pedro loyalists in the dust.",
+            "GW9": "🦄 Differential Day: Shashank wins with Mbeumo captain (69 pts), proving that following the herd is for sheep. The template teams crashed hard.",
+            "GW10": "🚨 The Sukhpal Statement: A massive 93-point haul out of nowhere. The quietest man in the league shouted the loudest.",
+            "GW11": "🧊 The Trench War: Aniruddh wins with just 49 points. A brutal, low-scoring week where 'surviving' was the only victory condition.",
+            "GW13": "🤡 The Chip Massacre: Multiple Triple Captains fail. Mayank wins with 47 points, proving you don't need to be good, just less bad than everyone else.",
+            "GW14": "🤝 The Great Split: A unique tie for 1st (Gokul/Rounak) and 4th creates a payout anomaly. The mid-table vanished; you either hauled or you drowned.",
+            "GW15": "🤯 The Foden Masterclass: Shashank TC's Foden for 86 points. A stroke of genius that left the Haaland captainers (like Venky and Neeraj) looking obsolete.",
+            "GW16": "💯 The Century Club: Rounak smashes 104 points with a Bench Boost. Neeraj chased hard with 92 on Free Hit, but the rest of the league was playing a different sport.",
+            "GW17": "🎬 The Thai-Theater Pact & The Bench Boost Tragedy: Raghu and Aniruddh synchronized for a massive 103-point summit. But the real story is the heartbreak: Jalaj played a magnificent 83-point Bench Boost and won ₹0—a cruel reminder that when the Haaland Triple Captains roar, even heroes get left behind."
         };
 
-        const gw16Stories = {
-            'Rounak': "104 POINTS! A century! The Bench Boost played to absolute perfection. Rounak has evolved from 'Late Bloomer' to 'End Game Boss'. The league is officially on notice.",
-            'Neeraj': "The Lightning Starter finally strikes again. 92 points with a Free Hit and Saka captaincy. A masterclass in capitalizing on a good gameweek to secure the ₹400 bag.",
-            'Sukhpal': "Another podium for the Steady Assassin. 80 points with a Wildcard. He split the prize with Mayank, but his ability to consistently find the money is becoming terrifying.",
-            'Mayank': "Tied for 3rd with 80 points (FH). The 'Chip Gambler' actually played a good chip this time! Splitting ₹550 with Sukhpal keeps his chaotic profitable run alive.",
-            'Raghu': "75 points. 5th place. The Narrative Merchant snags the last prize (₹150) by the skin of his teeth. He is the master of doing *just* enough to stay relevant.",
-            'Shashank': "74 points. Bench Boost played, but finished 6th. Missed the money by ONE point. After the high of last week's win, this is a painful reality check.",
-            'Aniruddh': "73 points on a Wildcard. Finishing 7th with that score feels harsh, but in a week where 100 was broken, 73 is just 'participation trophy' territory.",
-            'Shubs': "71 points. Captained Saka. A solid score that would win money in GW11 or GW13, but today it's just mid-table fodder. The Shark goes hungry this week.",
-            'Arindam': "62 points. The Heartbreak Kid usually misses money by 1 point. This week he missed it by 13. A quiet week for the Project.",
-            'Puneet': "61 points. Mr. Consistent stays consistent, but the league exploded around him. Stability is great, until everyone else hits turbo mode.",
-            'Venky': "59 points. The donation streak continues. The Salah Syndicate needs a bailout package immediately.",
-            'Bharath': "58 points. The Heat Check is officially over. He has frozen solid in the mid-table. Needs a new spark.",
-            'Sagar': "52 points. The chips are gone, the points are low. It's looking like a long winter for the Valsad Coconuts.",
-            'Gokul': "51 points on a WILDCARD? Captained Thiago?! This is peak Volatility FC. From winning weeks to absolute disasters. Never change, Gokul.",
-            'Jalaj': "51 points. Captained Palmer. The Pedro Holder didn't have much to celebrate this week.",
-            'Sandesh': "50 points. Captained Mateta. Again. The stubbornness is admirable, but the rank is not.",
-            'Sarjan': "39 points. Dead last. Captained João Pedro. At this point, it's not a strategy, it's a toxic relationship."
+        const gwStories = {
+             'default': "Played a solid game. The season is a marathon, not a sprint.",
+             '17': {
+                'Raghu': "103 points! Triple Captain Haaland delivered. The Narrative Merchant is back on top, sharing the throne and the loot (₹500) with Aniruddh. The redemption arc is peaking.",
+                'Aniruddh': "103 points! Matched Raghu blow-for-blow with his own TC Haaland. From 'Prize Magnet' to 'Joint King' in one week. A massive payday after the GW16 slump.",
+                'Bharath': "92 points. TC Haaland paid off. The 'Heat Check' player finally thawed out from his mid-season freeze to grab a podium finish and ₹300.",
+                'Neeraj': "91 points. TC Haaland. Another week, another cash finish (4th place, ₹250). The 'Lightning Starter' is becoming the 'Reliable Finisher'.",
+                'Mayank': "88 points. Snuck into the last prize spot (5th, ₹150) with a standard Haaland captain. The 'Chip Gambler' proved he can win even without rolling the dice.",
+                'Jalaj': "83 points with a Bench Boost! The 'Pedro Holder' finally had a good week, but in a cruel twist of fate, 83 wasn't enough for money. The bus drove well, but missed the stop.",
+                'Aditya': "81 points. TC Haaland. A solid score that would win many other weeks, but GW17 was a high-scoring monster. Unlucky.",
+                'Sukhpal': "79 points with a Bench Boost. The Steady Assassin tried to amplify his score, but just missed out on the elite tier this week. Still lurking.",
+                'Rounak': "77 points. After the century last week, he cools down slightly. Still a respectable score, but the 'End Game Boss' took a breather.",
+                'Parth': "77 points with a Free Hit. Mid-table mediocrity despite the chip. FPL is a cruel mistress.",
+                'Venky': "75 points. The Salah Syndicate actually scored well! But so did everyone else. Another week without a withdrawal from the bank.",
+                'Shashank': "74 points with a Free Hit and Foden captain. The hero of GW15 couldn't replicate the magic. The differential died a quiet death.",
+                'Sagar': "74 points. The Valsad Coconuts are floating in no-man's land.",
+                'Sandesh': "71 points. Captained Haaland. A standard week for the 'Rogue'. Neither chaos nor glory, just existence.",
+                'Arindam': "69 points. The Heartbreak Kid continues his streak of almost-but-not-quite.",
+                'Shubs': "61 points. A quiet week for the Shark after a feeding frenzy. He's still well up for the month.",
+                'Puneet': "56 points. Mr. Consistent consistently missed the memo that this was a high-scoring week. A rare blip for the reliable one.",
+                'Gokul': "52 points. Captained Thiago. Again. The 'Volatility FC' rollercoaster has crashed into the basement. From 1st to 19th in two weeks.",
+                'Sarjan': "47 points. Captained João Pedro. The loyalty is inspiring, but the rank is depressing. The ship is sinking, but the captain is going down with it."
+             }
         };
 
         const aiQuotes = {
-            'Rounak': "\"I woke up feeling dangerous. 100 points was the only acceptable outcome.\"",
-            'Neeraj': "\"Everyone forgot about me. That was a mistake. The batteries are fully charged.\"",
-            'Sukhpal': "\"Chaos is a ladder. While you all panic, I just keep climbing.\"",
-            'Mayank': "\"They call it luck. I call it calculated probability with a side of absolute randomness.\"",
-            'Raghu': "\"5th place is an art form. I painted a masterpiece of mediocrity today.\"",
-            'Shashank': "\"One point. One single point. I will remember this when I sleep.\"",
-            'Aniruddh': "\"Wildcard used. Results pending. Please contact customer support.\"",
-            'Shubs': "\"The shark does not eat every week. Sometimes, the shark just observes.\"",
-            'Arindam': "\"Pain is just weakness leaving the body. I must be very strong by now.\"",
-            'Puneet': "\"Consistency is key. The key to not winning 104 points, apparently.\"",
-            'Venky': "\"The Salah Syndicate is undergoing restructuring. Please bear with us.\"",
+            'Raghu': "\"103 points. Triple digits. Put some respect on the narrative name.\"",
+            'Aniruddh': "\"I told you the magnet works. Sometimes it just takes a Triple Captain to activate it.\"",
+            'Bharath': "\"I'm back. The ice has melted. Fear the heat check.\"",
+            'Neeraj': "\"Another week, another deposit. I am the bank.\"",
+            'Mayank': "\"5th place is still money. I'll take it and run.\"",
+            'Jalaj': "\"83 points on Bench Boost and NO MONEY? I demand a recount.\"",
+            'Sukhpal': "\"Bench Boost for 79. Not great, not terrible. Just... existing.\"",
+            'Rounak': "\"Can't score 100 every week. Let the mortals have their fun.\"",
+            'Venky': "\"75 points and I'm 13th? This league is rigged against the Syndicate.\"",
+            'Shashank': "\"Foden gave, and Foden took away. Such is the differential life.\"",
             'Gokul': "\"Thiago captain. You wouldn't get it. It's high art.\"",
-            'Jalaj': "\"Palmer blanked. Pedro blanked. I am blanking on why I do this.\"",
-            'Sandesh': "\"Mateta will come good. Any year now.\"",
-            'Sarjan': "\"I am standing by my man. Even if my man is on the Brighton bench.\"",
-            'Bharath': "\"Winter is coming. And my team is already frozen.\"",
-            'Sagar': "\"Does anyone have a spare Free Hit I can borrow?\""
+            'Sarjan': "\"Pedro will haul next week. I can feel it.\"",
+            'Puneet': "\"56 points? I thought we agreed to a truce this week.\"",
+            'Sandesh': "\"71 points. It's honest work.\"",
+            'Arindam': "\"69 points. Nice. But also not nice because I'm broke.\"",
+            'Sagar': "\"74 points. I exist.\"",
+            'Shubs': "\"The shark needs to sleep sometimes.\""
         };
-
-        const seasonJourneys = {
-            'Rounak': { journey: "From the basement in GW3 to the first CENTURY of the season in GW16. He has completed the greatest comeback arc in Scapia history.", signature: "104 PTS (BB)" },
-            'Neeraj': { journey: "Started fast, fell asleep for 10 weeks, and just woke up with a vengeance (92 pts). The giant is awake.", signature: "Big Hauls Only" },
-            'Sukhpal': { journey: "The most boringly effective manager. He doesn't make headlines, he just makes withdrawals from the prize pool. The baseline of excellence.", signature: "Consistency" },
-            'Mayank': { journey: "The 'Wildcard Twin' narrative is dead. He's now the 'Chip Mercenary'. Hits and misses, but when he hits, he gets paid.", signature: "Chip & Dip" },
-            'Raghu': { journey: "The survivor. He somehow always finds a way to be in the conversation. 5th place is his new home, and he's comfortable there.", signature: "Scraping By" },
-            'Shashank': { journey: "Living life on the edge. One week he's the king (86 pts), the next he misses cash by 1 point. The Differential lifestyle is stressful.", signature: "High Variance" },
-            'Gokul': { journey: "The enigma. Scores 95 one week, then 51 on a Wildcard the next. Analyzing his team is impossible; you just have to enjoy the show.", signature: "Thiago Captain??" },
-            'Aniruddh': { journey: "The 'Prize Magnet' is malfunctioning. Used a Wildcard and still missed the cash. He needs a recalibration.", signature: "Mid-Table Glue" },
-            'Shubs': { journey: "After draining the pot for weeks, the Shark took a breather. He's still dangerous, but the feeding frenzy paused for GW16.", signature: "Late Bloomer" },
-            'Arindam': { journey: "The unluckiest man in the league. He plays well, scores well, and consistently finishes one spot below the money. It's a tragedy.", signature: "6th Place King" },
-            'Puneet': { journey: "The anchor. He stops the table from floating away. Reliable points, but rarely enough to challenge the explosive scores at the top.", signature: "Safe Hands" },
-            'Venky': { journey: "The Salah Syndicate has filed for Chapter 11 bankruptcy. The donations are generous, but the returns are non-existent.", signature: "Donation Mode" },
-            'Bharath': { journey: "Remember GW7-9? Those were good times. Since then, he's been ghosting the leaderboard.", signature: "Frozen" },
-            'Sagar': { journey: "Came in late, spent all his chips, and is now realizing that FPL is hard without power-ups.", signature: "Out of Ammo" },
-            'Jalaj': { journey: "The 'Pedro Holder' is holding onto hope, but hope doesn't score fantasy points. Stuck in the bottom tier loop.", signature: "Pedro or Bust" },
-            'Sandesh': { journey: "Still chasing the ghost of GW3. The Mateta captaincy shows he wants to be a differential hero, but he's becoming a villain to his own rank.", signature: "Rogue Picks" },
-            'Sarjan': { journey: "Loyalty to João Pedro has cost him everything. 39 points in a week where 100 was possible is a cry for help.", signature: "Pedro Victim" }
+const seasonJourneys = {
+            'Raghu': { 
+                journey: "The 'Director' played the long game perfectly. After a mid-season intermission of character building, he executed the ultimate plot twist in GW17. A 103-point blockbuster with a Triple Captain climax proves that he isn't just watching the movie—he is writing the script.", 
+                signature: "THE DIRECTOR" 
+            },
+            'Aniruddh': { 
+                journey: "The laws of magnetism are absolute. After a fluctuating mid-season where the polarity seemed reversed, the Magnet reactivated in GW17. Matching the league-high score shows that when he turns the power on, the prize pool has no choice but to fly straight into his pocket.", 
+                signature: "PRIZE MAGNET" 
+            },
+            'Bharath': { 
+                journey: "The 'Italian Stallion' took a standing eight count during the mid-season freeze, but he didn't stay down. His return to the podium in GW17 with a 92-point haymaker proves he still has the eye of the tiger. He took the hits, and now he's swinging back.", 
+                signature: "EYE OF THE TIGER" 
+            },
+            'Neeraj': { 
+                journey: "While others rely on luck, the 'Futurist' relies on engineering. From his opening salvo in GW2 to his relentless recent consistency (top 5 in GW16 & 17), his season is a marvel of efficiency. The suit is fully powered, the upgrades are working, and the returns are flowing.", 
+                signature: "IRON EFFICIENCY" 
+            },
+            'Mayank': { 
+                journey: "He started the season flipping coins for ugly wins, but the strategy has evolved into a science. Sneaking into the money yet again in GW17 proves he knows exactly how to game the house. He doesn't need to be the hero; he just needs to be the one walking away with the cash.", 
+                signature: "THE HOUSE ALWAYS WINS" 
+            },
+            'Jalaj': { 
+                journey: "A mythic effort of heroic proportions. He pushed the boulder up the hill with a massive 83-point Bench Boost, only to watch the prize roll just out of reach. It’s a tragicomedy, but the underlying numbers show the bus is finally running on time—the destination is coming.", 
+                signature: "UNLUCKY 83" 
+            },
+            'Rounak': { 
+                journey: "He spent the early season asleep in the pod, but GW16 was his 'Red Pill' moment. Smashing the century barrier (104 pts) wasn't luck; it was him finally seeing the code. He has transcended from a background character to the protagonist of the endgame.", 
+                signature: "THE ONE" 
+            },
+            'Shubs': { 
+                journey: "The market corrected in his favor. After appearing to be a liquidity provider early on, the Shark smelled blood in the second quarter. He executed hostile takeovers of the leaderboard in GW12 & 14, proving that in this economy, greed is undeniably good.", 
+                signature: "GREED IS GOOD" 
+            },
+            'Sukhpal': { 
+                journey: "A season of cold, calculated efficiency. He doesn't make noise; he makes hits. With a massive GW10 haul (93 pts) and constant podium finishes, he moves through the gameweeks with the silence of a professional, collecting bounties while keeping his suit spotless.", 
+                signature: "SILENT ASSASSIN" 
+            },
+            'Gokul': { 
+                journey: "You cannot analyze him; you can only witness him. From a league-breaking 95 points in GW7 to captaining Thiago on a Wildcard, he treats FPL like a social experiment. It’s not about the money; it’s about sending a message that logic is overrated.", 
+                signature: "AGENT OF CHAOS" 
+            },
+            'Shashank': { 
+                journey: "He rejects the template society. When he wins, he wins on his own terms—be it Mbeumo or the legendary Foden Triple Captain in GW15. It’s a chaotic, beautiful rebellion against the boring average, proving that for him, chaos is indeed a ladder.", 
+                signature: "ANTI-TEMPLATE" 
+            },
+            'Venky': { 
+                journey: "The Great Gatsby of FPL. He threw a massive party in GW4 with Salah, but has since been the generous host, funding the dreams of others. It’s a tragic romance with the Egyptian King, noble in its loyalty even as the bank account drains.", 
+                signature: "THE PHILANTHROPIST" 
+            },
+            'Sarjan': { 
+                journey: "He is communicating from a different dimension where João Pedro is the best asset in the game. It’s a lonely mission in deep space, holding onto his beliefs while relativity (and rank) slips away. A heartbreakingly loyal voyage into the unknown.", 
+                signature: "PEDRO LOYALIST" 
+            },
+            'Puneet': { 
+                journey: "He doesn't have the flashy tech or the magic powers, just gritty determination. He grinds out results, stays in the fight, and holds the line. It’s an honest season of work, proving that sometimes the steady soldier outlasts the flashy superheroes.", 
+                signature: "THE SOLDIER" 
+            },
+            'Sandesh': { 
+                journey: "He found the treasure chest early in GW3 and has been sailing on those riches since. While the ship has drifted into calm waters recently (anchored by Mateta), he remains the savvy captain of his own destiny, creating his own map as he goes.", 
+                signature: "PIRATE KING" 
+            },
+            'Arindam': { 
+                journey: "The football keeps getting pulled away at the last second. He consistently scores 'nice' points—like the 69 in GW17—but finds himself inches from the cash line. It’s a struggle, but his persistence in the face of constant 'almosts' is genuinely endearing.", 
+                signature: "HEARTBREAK KID" 
+            },
+            'Sagar': { 
+                journey: "A manic season of explosions and tinkering. He utilized his Free Hit perfectly in GW10 to steal a prize, proving that he doesn't need a long-term plan, just a big gun. He’s scavenging points in the chaos, happy to blow things up just to see what happens.", 
+                signature: "DEMOLITION MAN" 
+            }
         };
 
         const managerMeta = {
-            'Rounak': { nick: 'The Centurion', archetype: 'THE END GAME BOSS' },
-            'Neeraj': { nick: 'Lightning Starter', archetype: 'THE VOLTAGE' },
-            'Sukhpal': { nick: 'Steady Assassin', archetype: 'THE SILENT KILLER' },
-            'Mayank': { nick: 'Chip Gambler', archetype: 'THE MERCENARY' },
-            'Raghu': { nick: 'Narrative Merchant', archetype: 'THE SURVIVOR' },
-            'Shashank': { nick: 'Differential Ultras', archetype: 'THE HIPSTER' },
-            'Aniruddh': { nick: 'Prize Magnet', archetype: 'THE GRINDER' },
-            'Shubs': { nick: 'Pot Drainer', archetype: 'THE SHARK' },
-            'Arindam': { nick: 'Heartbreak Kid', archetype: 'THE ALMOST-HERO' },
-            'Puneet': { nick: 'Mr. Consistent', archetype: 'THE BENCHWARMER' },
-            'Venky': { nick: 'Salah Syndicate', archetype: 'THE DONATION BOX' },
-            'Bharath': { nick: 'Heat Check Merchant', archetype: 'THE STREAK PLAYER' },
-            'Sagar': { nick: 'Chip Enthusiast', archetype: 'THE FIREWORK' },
-            'Gokul': { nick: 'Volatility FC', archetype: 'THE CHAOS MERCHANT' },
-            'Jalaj': { nick: 'Loyal Pedro Holder', archetype: 'THE BUS DRIVER' },
-            'Sandesh': { nick: 'Peak GW3', archetype: 'THE ROGUE' },
-            'Sarjan': { nick: 'Painful Pedro Enjoyer', archetype: 'THE LOYALIST' }
+            'Gokul': { nick: 'The Joker', archetype: 'CHAOS AGENT', character: 'The Joker', desc: 'Agent of Chaos', avatar: 'https://image.pollinations.ai/prompt/The%20Joker%20from%20Dark%20Knight%20chaotic%20cinematic%20lighting?width=200&height=200&seed=1&nologo=true' },
+            'Sarjan': { nick: 'Cooper', archetype: 'THE LOYALIST', character: 'Cooper (Interstellar)', desc: 'Loyal to the End', avatar: 'https://image.pollinations.ai/prompt/Matthew%20McConaughey%20as%20Cooper%20Interstellar%20cinematic%20lighting?width=200&height=200&seed=2&nologo=true' },
+            'Shubs': { nick: 'Gordon Gekko', archetype: 'THE SHARK', character: 'Gordon Gekko', desc: 'Greed is Good', avatar: 'https://image.pollinations.ai/prompt/Michael%20Douglas%20as%20Gordon%20Gekko%20Wall%20Street%20cinematic?width=200&height=200&seed=3&nologo=true' },
+            'Raghu': { nick: 'Christopher Nolan', archetype: 'THE DIRECTOR', character: 'The Director', desc: 'Controls the Narrative', avatar: 'https://image.pollinations.ai/prompt/Christopher%20Nolan%20directing%20movie%20cinematic%20lighting?width=200&height=200&seed=4&nologo=true' },
+            'Shashank': { nick: 'Tyler Durden', archetype: 'THE ANARCHIST', character: 'Tyler Durden', desc: 'Rejects the Template', avatar: 'https://image.pollinations.ai/prompt/Brad%20Pitt%20as%20Tyler%20Durden%20Fight%20Club%20cinematic?width=200&height=200&seed=5&nologo=true' },
+            'Rounak': { nick: 'Neo', archetype: 'THE CHOSEN ONE', character: 'Neo', desc: 'Bends the Matrix', avatar: 'https://image.pollinations.ai/prompt/Keanu%20Reeves%20as%20Neo%20The%20Matrix%20cinematic?width=200&height=200&seed=6&nologo=true' },
+            'Sukhpal': { nick: 'John Wick', archetype: 'THE ASSASSIN', character: 'John Wick', desc: 'Silent but Deadly', avatar: 'https://image.pollinations.ai/prompt/Keanu%20Reeves%20as%20John%20Wick%20cinematic%20lighting?width=200&height=200&seed=7&nologo=true' },
+            'Neeraj': { nick: 'Tony Stark', archetype: 'THE FUTURIST', character: 'Iron Man', desc: 'Always Innovating', avatar: 'https://image.pollinations.ai/prompt/Robert%20Downey%20Jr%20as%20Tony%20Stark%20cinematic%20lighting?width=200&height=200&seed=8&nologo=true' },
+            'Bharath': { nick: 'Rocky Balboa', archetype: 'THE FIGHTER', character: 'Rocky', desc: 'Takes Hits, Keeps Going', avatar: 'https://image.pollinations.ai/prompt/Sylvester%20Stallone%20as%20Rocky%20Balboa%20cinematic?width=200&height=200&seed=9&nologo=true' },
+            'Mayank': { nick: 'Harvey Dent', archetype: 'TWO-FACE', character: 'Two-Face', desc: 'Heads or Tails', avatar: 'https://image.pollinations.ai/prompt/Aaron%20Eckhart%20as%20Two%20Face%20Batman%20cinematic?width=200&height=200&seed=10&nologo=true' },
+            'Jalaj': { nick: 'Sisyphus', archetype: 'THE STRUGGLER', character: 'Sisyphus', desc: 'Pushing the Rock', avatar: 'https://image.pollinations.ai/prompt/Sisyphus%20pushing%20boulder%20mythology%20cinematic?width=200&height=200&seed=11&nologo=true' },
+            'Arindam': { nick: 'Charlie Brown', archetype: 'UNLUCKY', character: 'Charlie Brown', desc: 'Why me?', avatar: 'https://image.pollinations.ai/prompt/Charlie%20Brown%20Peanuts%203d%20cinematic%20lighting?width=200&height=200&seed=12&nologo=true' },
+            'Puneet': { nick: 'Captain America', archetype: 'RELIABLE', character: 'Captain America', desc: 'Can do this all day', avatar: 'https://image.pollinations.ai/prompt/Chris%20Evans%20as%20Captain%20America%20cinematic?width=200&height=200&seed=13&nologo=true' },
+            'Venky': { nick: 'Gatsby', archetype: 'THE PHILANTHROPIST', character: 'Gatsby', desc: 'Great Parties, Sad End', avatar: 'https://image.pollinations.ai/prompt/Leonardo%20DiCaprio%20as%20Jay%20Gatsby%20cinematic?width=200&height=200&seed=14&nologo=true' },
+            'Aniruddh': { nick: 'Magneto', archetype: 'THE MAGNET', character: 'Magneto', desc: 'Attracts Metal (Money)', avatar: 'https://image.pollinations.ai/prompt/Magneto%20X-Men%20cinematic%20lighting?width=200&height=200&seed=15&nologo=true' },
+            'Sandesh': { nick: 'Jack Sparrow', archetype: 'THE ROGUE', character: 'Jack Sparrow', desc: 'Savvy?', avatar: 'https://image.pollinations.ai/prompt/Johnny%20Depp%20as%20Jack%20Sparrow%20cinematic?width=200&height=200&seed=16&nologo=true' },
+            'Sagar': { nick: 'Rocket Raccoon', archetype: 'THE EXPLOSIVE', character: 'Rocket', desc: 'Small but Chaos', avatar: 'https://image.pollinations.ai/prompt/Rocket%20Raccoon%20Marvel%20cinematic%20lighting?width=200&height=200&seed=17&nologo=true' }
         };
 
         const gameData = {
@@ -299,38 +355,51 @@
             13: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 }, { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 }, { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 250 }, { name: 'Gokul', score: 40, captain: 'Haaland (BB1)', prize: 150 }, { name: 'Rounak', score: 39, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 27, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 17, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }] },
             14: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Rounak', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Shubs', score: 78, captain: 'Haaland', prize: 300 }, { name: 'Raghu', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Neeraj', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Arindam', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Gakpo', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 25, captain: 'João Pedro', prize: 0 }] },
             15: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 86, captain: 'Foden', chip: 'TC', prize: 600 }, { name: 'Shubs', score: 74, captain: 'Haaland', chip: 'FH', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 59, captain: 'Haaland', chip: 'WC', prize: 200 }, { name: 'Mayank', score: 59, captain: 'Haaland', chip: 'WC', prize: 200 }, { name: 'Arindam', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 53, captain: 'Mateta', prize: 0 }, { name: 'Bharath', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 43, captain: 'Palmer', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 35, captain: 'Haaland', prize: 0 }] },
-            16: {
+            16: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Rounak', score: 104, captain: 'Haaland', chip: 'BB', prize: 600 }, { name: 'Neeraj', score: 92, captain: 'Saka', chip: 'FH', prize: 400 }, { name: 'Sukhpal', score: 80, captain: 'Haaland', chip: 'WC', prize: 275 }, { name: 'Mayank', score: 80, captain: 'Haaland', chip: 'FH', prize: 275 }, { name: 'Raghu', score: 75, captain: 'Haaland', prize: 150 }, { name: 'Shashank', score: 74, captain: 'B.Fernandes', chip: 'BB', prize: 0 }, { name: 'Aniruddh', score: 73, captain: 'Haaland', chip: 'WC', prize: 0 }, { name: 'Shubs', score: 71, captain: 'Saka', prize: 0 }, { name: 'Arindam', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 59, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 51, captain: 'Thiago', chip: 'WC', prize: 0 }, { name: 'Jalaj', score: 51, captain: 'Palmer', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Mateta', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }] },
+            17: {
                 players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'],
                 pool: 1700,
                 prizes: [600, 400, 300, 250, 150],
                 results: [
-                    { name: 'Rounak', score: 104, captain: 'Haaland', chip: 'BB', prize: 600 },
-                    { name: 'Neeraj', score: 92, captain: 'Saka', chip: 'FH', prize: 400 },
-                    { name: 'Sukhpal', score: 80, captain: 'Haaland', chip: 'WC', prize: 275 },
-                    { name: 'Mayank', score: 80, captain: 'Haaland', chip: 'FH', prize: 275 },
-                    { name: 'Raghu', score: 75, captain: 'Haaland', prize: 150 },
-                    { name: 'Shashank', score: 74, captain: 'B.Fernandes', chip: 'BB', prize: 0 },
-                    { name: 'Aniruddh', score: 73, captain: 'Haaland', chip: 'WC', prize: 0 },
-                    { name: 'Shubs', score: 71, captain: 'Saka', prize: 0 },
-                    { name: 'Arindam', score: 62, captain: 'Haaland', prize: 0 },
-                    { name: 'Puneet', score: 61, captain: 'Haaland', prize: 0 },
-                    { name: 'Venky', score: 59, captain: 'Haaland', prize: 0 },
-                    { name: 'Bharath', score: 58, captain: 'Haaland', prize: 0 },
-                    { name: 'Sagar', score: 52, captain: 'Haaland', prize: 0 },
-                    { name: 'Gokul', score: 51, captain: 'Thiago', chip: 'WC', prize: 0 },
-                    { name: 'Jalaj', score: 51, captain: 'Palmer', prize: 0 },
-                    { name: 'Sandesh', score: 50, captain: 'Mateta', prize: 0 },
-                    { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }
+                    { name: 'Raghu', score: 103, captain: 'Haaland', chip: 'TC', prize: 500 },
+                    { name: 'Aniruddh', score: 103, captain: 'Haaland', chip: 'TC', prize: 500 },
+                    { name: 'Bharath', score: 92, captain: 'Haaland', chip: 'TC', prize: 300 },
+                    { name: 'Neeraj', score: 91, captain: 'Haaland', chip: 'TC', prize: 250 },
+                    { name: 'Mayank', score: 88, captain: 'Haaland', prize: 150 },
+                    { name: 'Jalaj', score: 83, captain: 'Haaland', chip: 'BB', prize: 0 },
+                    { name: 'Sukhpal', score: 79, captain: 'Haaland', chip: 'BB', prize: 0 },
+                    { name: 'Rounak', score: 77, captain: 'Haaland', prize: 0 },
+                    { name: 'Venky', score: 75, captain: 'Haaland', prize: 0 },
+                    { name: 'Shashank', score: 74, captain: 'Foden', chip: 'FH', prize: 0 },
+                    { name: 'Sagar', score: 74, captain: 'Haaland', prize: 0 },
+                    { name: 'Sandesh', score: 71, captain: 'Haaland', prize: 0 },
+                    { name: 'Arindam', score: 69, captain: 'Haaland', prize: 0 },
+                    { name: 'Shubs', score: 61, captain: 'Haaland', prize: 0 }, 
+                    { name: 'Puneet', score: 56, captain: 'Haaland', prize: 0 },
+                    { name: 'Gokul', score: 52, captain: 'Thiago', prize: 0 },
+                    { name: 'Sarjan', score: 47, captain: 'João Pedro', prize: 0 }
                 ]
             }
         };
 
-        let currentGW = 16;
+        let currentGW = 17;
+
+        function initSelector() {
+            const selector = document.getElementById('gwSelector');
+            let html = '';
+            for(let i=2; i<=17; i++) {
+                html += `<button class="gw-btn ${i === currentGW ? 'active' : ''}" onclick="showGW(${i})">GW ${i}</button>`;
+            }
+            selector.innerHTML = html;
+            setTimeout(() => selector.scrollLeft = selector.scrollWidth, 100);
+        }
 
         function showGW(gw) {
             currentGW = gw;
-            document.querySelectorAll('.gw-btn').forEach(btn => btn.classList.remove('active'));
-            if (event && event.target) { event.target.classList.add('active'); }
+            document.querySelectorAll('.gw-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText === `GW ${gw}`) btn.classList.add('active');
+            });
             updateBattle();
         }
 
@@ -345,6 +414,7 @@
 
         function getBadges(playerName, data, prevPositions, i) {
             let badges = '';
+            if(!data.results.length) return '';
             if (i === 0 || (data.results[i].score === data.results[0].score)) { badges += '<span class="badge-icon" title="The King: Weekly Winner">👑</span>'; }
             if (i === data.results.length - 1) { badges += '<span class="badge-icon" title="The Clown: Lowest Score">🤡</span>'; }
             if (data.results[i].score >= 100) { badges += '<span class="badge-icon" title="Century Club: 100+ Points">💯</span>'; }
@@ -356,7 +426,7 @@
             }
             if (data.results[i].prize > 0) {
                  const prevGW = gameData[currentGW - 1];
-                 if(prevGW) {
+                 if(prevGW && prevGW.results.length > 0) {
                      const prevResult = prevGW.results.find(p => p.name === playerName);
                      if(prevResult && prevResult.prize > 0) { badges += '<span class="badge-icon" title="Heater: Won in consecutive weeks">🔥</span>'; }
                  }
@@ -365,13 +435,27 @@
         }
 
         function updateBattle() {
-            const data = gameData[currentGW];
-            const spotlight = generateSpotlight(currentGW);
-            document.getElementById('spotlight').innerHTML = spotlight;
-            document.getElementById('poolAmount').textContent = data.pool;
-            document.getElementById('playerCount').textContent = data.players.length;
+            const data = gameData[currentGW] || { results: [], pool: 0, prizes: [], players: [] };
+            
+            // Spotlight logic
+            let story = seasonLore[`GW${currentGW}`];
+            if(!story) {
+                story = `GW${currentGW} Battle. The journey continues...`;
+            }
+            const spotlightHTML = `<div class="spotlight-card"><div class="spotlight-title"><span class="spotlight-emoji">🎮</span>GW ${currentGW}</div><div class="spotlight-story">${story}</div></div>`;
+            document.getElementById('spotlight').innerHTML = spotlightHTML;
+            
+            document.getElementById('poolAmount').textContent = data.pool || 0;
+            document.getElementById('playerCount').textContent = data.players ? data.players.length : 0;
             document.getElementById('currentGW').textContent = currentGW;
             
+            if(!data.results || data.results.length === 0) {
+                document.getElementById('leaderboard').innerHTML = '<div style="text-align:center; padding:20px; color:#a0aec0;">Data not recorded for this week.</div>';
+                document.getElementById('prizeList').innerHTML = '';
+                document.getElementById('banter').innerHTML = '';
+                return;
+            }
+
             const medals = ['🥇', '🥈', '🥉', '🎖️', '🏅'];
             const prizeHTML = data.prizes.map((prize, i) => `
                 <div class="prize"><div class="prize-emoji">${medals[i]}</div><div class="prize-amount">₹${prize}</div></div>
@@ -380,12 +464,11 @@
             
             const prevGW = gameData[currentGW - 1];
             const prevPositions = {};
-            if (prevGW) { prevGW.results.forEach((player, idx) => { prevPositions[player.name] = idx + 1; }); }
+            if (prevGW && prevGW.results) { prevGW.results.forEach((player, idx) => { prevPositions[player.name] = idx + 1; }); }
             
             const leaderboardHTML = data.results.map((player, i) => {
                 const rank = i + 1;
                 let rankClass = rank <= 3 ? `rank-${rank}` : (player.prize > 0 ? 'rank-other' : '');
-                const medals = ['🥇', '🥈', '🥉', '4', '5'];
                 let rankDisplay = rank <= 5 && player.prize > 0 ? (medals[rank-1] || rank) : rank;
                 let trendArrow = '';
                 if (prevPositions[player.name]) {
@@ -415,20 +498,10 @@
             document.getElementById('leaderboard').innerHTML = leaderboardHTML;
             updateBanter(currentGW);
         }
-        
-        function generateSpotlight(gw) {
-            const stories = {
-                14: { emoji: '🤝', title: 'Double Trouble at the Top!', story: '<span class="highlight">Gokul</span> and <span class="highlight">Rounak</span> share the crown with 82 points each! <span class="highlight">Raghu</span> and <span class="highlight">Neeraj</span> also split the 4th/5th prize, leaving <span class="highlight">Arindam</span> heartbroken just 1 point away from the cash.' },
-                15: { emoji: '🤯', title: 'Shashank Breaks the Game!', story: 'Just one week after a 14-point disaster, <span class="highlight">Shashank</span> returns with a legendary 86-point Triple Captain haul on Foden. <span class="highlight">Shubs</span> secures 2nd with a Free Hit, while <span class="highlight">Puneet</span> and <span class="highlight">Mayank</span> act as "Wildcard Twins," scoring identical 59s to split the last prize!' },
-                16: { emoji: '💯', title: 'The Century Club!', story: '<span class="highlight">Rounak</span> becomes the first manager to break the 100-point barrier (104 pts) with a perfectly timed Bench Boost! <span class="highlight">Neeraj</span> takes silver, while <span class="highlight">Sukhpal</span> and <span class="highlight">Mayank</span> split the bronze. <span class="highlight">Gokul</span> played a Wildcard to score... 51.' }
-            };
-            const story = stories[gw] || { emoji: '🎮', title: 'The Battle Continues!', story: 'Another spicy gameweek in the books.' };
-            return `<div class="spotlight-card"><div class="spotlight-title"><span class="spotlight-emoji">${story.emoji}</span>${story.title}</div><div class="spotlight-story">${story.story}</div></div>`;
-        }
 
         function updateBanter(gw) {
             const data = gameData[gw];
-            if (!data) return;
+            if (!data || !data.results || data.results.length === 0) return;
             const results = data.results;
             const lowest = results[results.length - 1];
             const nonPrize = results.filter(p => p.prize === 0);
@@ -438,11 +511,11 @@
             let complimentText = '';
             if (lowest) {
                 const meta = managerMeta[lowest.name] || {};
-                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} managed just ${lowest.score} points. 39 points in a week where someone scored 104 is a crime.`;
+                roastText = `${lowest.name}${meta.nick ? ` (${meta.nick})` : ''} managed just ${lowest.score} points.`;
             }
             if (bestNonPrize) {
                 const meta = managerMeta[bestNonPrize.name] || {};
-                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} dropped ${bestNonPrize.score} points—literally 1 point away from cash. He needs a hug immediately.`;
+                complimentText = `${bestNonPrize.name}${meta.nick ? ` (${meta.nick})` : ''} dropped ${bestNonPrize.score} points but won nothing.`;
             }
             document.getElementById('banter').innerHTML = `<div class="banter-section"><div class="banter-card banter-roast"><div class="banter-title">🔥 Roast of the Week</div><div class="banter-text">${roastText}</div></div><div class="banter-card banter-compliment"><div class="banter-title">💚 Clutch with No Cash</div><div class="banter-text">${complimentText}</div></div></div>`;
         }
@@ -451,8 +524,9 @@
             const earnings = {};
             Object.keys(gameData).forEach(gwNum => {
                 const gw = gameData[gwNum];
+                if (!gw.results) return;
                 gw.results.forEach(result => {
-                    if (gw.players.includes(result.name)) {
+                    if ((gw.players && gw.players.includes(result.name)) || result.name) {
                         if (!earnings[result.name]) { earnings[result.name] = { won: 0, played: 0, currentStreak: 0, topStreak: 0 }; }
                         earnings[result.name].played++;
                         if (result.prize > 0) {
@@ -475,15 +549,16 @@
 
         function updateStats() {
             const playerStats = {};
-            // Re-calc basic stats
             Object.values(gameData).forEach(gw => {
+                if(!gw.results) return;
                 gw.results.forEach((result, index) => {
-                    if (gw.players.includes(result.name)) {
-                        if (!playerStats[result.name]) { playerStats[result.name] = { games: 0, wins: 0, podiums: 0, scores: [], positions: [], earnings: 0, prizeCount: 0 }; }
+                    if ((gw.players && gw.players.includes(result.name)) || result.name) {
+                        if (!playerStats[result.name]) { playerStats[result.name] = { games: 0, wins: 0, podiums: 0, scores: [], positions: [], earnings: 0, prizeCount: 0, haalandCaps: 0 }; }
                         const stats = playerStats[result.name];
                         stats.games++;
                         stats.scores.push(result.score);
                         stats.positions.push(index + 1);
+                        if (result.captain && result.captain.includes("Haaland")) stats.haalandCaps++;
                         if (index === 0) stats.wins++;
                         if (index < 3) stats.podiums++;
                         if (result.prize > 0) {
@@ -494,7 +569,6 @@
                 });
             });
             
-            // NOTE: Adjusted filter to games >= 1 to ensure display even if history is incomplete
             const storiesHTML = Object.entries(managerMeta)
                 .filter(([name]) => playerStats[name] && playerStats[name].games >= 1)
                 .sort((a, b) => {
@@ -504,13 +578,20 @@
                 })
                 .map(([name, meta]) => {
                     const journey = seasonJourneys[name] || { journey: 'A quiet season so far.', signature: 'Unknown' };
-                    const gw16Story = gw16Stories[name] || 'Survived the week.';
+                    // Fix: Ensure a fallback if the specific GW story doesn't exist
+                    const gwStoryText = (gwStories[currentGW] && gwStories[currentGW][name]) ? gwStories[currentGW][name] : gwStories['default'];
                     const aiQuote = aiQuotes[name] || "No comment.";
                     const stats = playerStats[name];
                     const bestRank = Math.min(...stats.positions);
                     const worstRank = Math.max(...stats.positions);
                     
-                    // Calculate net logic for pill
+                    const templatePct = Math.round((stats.haalandCaps / stats.games) * 100);
+                    const recentScores = stats.scores.slice(-3);
+                    const avgRecent = recentScores.length ? Math.round(recentScores.reduce((a,b)=>a+b,0)/recentScores.length) : 0;
+                    const formWidth = Math.min(100, (avgRecent / 100) * 100);
+                    const volatility = worstRank - bestRank;
+                    const volatilityWidth = Math.min(100, (volatility / 16) * 100);
+
                     const net = stats.earnings - (stats.games * 100);
                     const pillClass = net >= 0 ? 'in-profit' : 'in-loss';
                     const pillText = net >= 0 ? `+₹${net}` : `-₹${Math.abs(net)}`;
@@ -518,36 +599,54 @@
                     return `
                         <div class="player-story-card">
                             <div class="archetype-badge">${meta.archetype}</div>
-                            <div class="story-header">
-                                <div>
-                                    <div class="story-player">${name} <span class="manager-nick">“${meta.nick}”</span></div>
+                            <div class="story-header-section">
+                                <div class="avatar-container">
+                                    <img src="${meta.avatar}" class="avatar-img" alt="${meta.character}">
+                                </div>
+                                <div class="header-info">
+                                    <div class="story-player">${name}</div>
+                                    <div class="manager-nick">${meta.character}</div>
+                                    <div class="character-ref">"${meta.desc}"</div>
                                     <div class="wallet-pill ${pillClass}">${pillText}</div>
                                 </div>
                             </div>
                             
-                            <div class="story-quote">"${aiQuote}"</div>
+                            <div class="story-content">
+                                <div class="story-quote">"${aiQuote}"</div>
 
-                            <div class="story-section">
-                                <div class="story-label">⚡ GW16 Report</div>
-                                <div class="story-text">"${gw16Story}"</div>
-                            </div>
+                                <div class="scout-report">
+                                    <div class="stat-row">
+                                        <div class="stat-label">🧠 Template %</div>
+                                        <div class="stat-track"><div class="stat-val template" style="width: ${templatePct}%"></div></div>
+                                        <div class="stat-number">${templatePct}%</div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <div class="stat-label">🔥 Form</div>
+                                        <div class="stat-track"><div class="stat-val form" style="width: ${formWidth}%"></div></div>
+                                        <div class="stat-number">${avgRecent}</div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <div class="stat-label">⚡ Volatility</div>
+                                        <div class="stat-track"><div class="stat-val volatility" style="width: ${volatilityWidth}%"></div></div>
+                                        <div class="stat-number">${volatility}</div>
+                                    </div>
+                                </div>
 
-                            <div class="story-section">
-                                <div class="story-label">📖 Season Arc</div>
-                                <div class="story-text">"${journey.journey}"</div>
-                            </div>
+                                <div class="story-section">
+                                    <div class="story-label">⚡ GW${currentGW} Report</div>
+                                    <div class="story-text">"${gwStoryText}"</div>
+                                </div>
 
-                            <div class="story-stat-row">
-                                <div class="story-stat">📈 Best: ${bestRank}</div>
-                                <div class="story-stat">📉 Worst: ${worstRank}</div>
-                                <div class="story-stat">⭐ Move: ${journey.signature}</div>
+                                <div class="story-section">
+                                    <div class="story-label">📖 Season Arc</div>
+                                    <div class="story-text">"${journey.journey}"</div>
+                                </div>
                             </div>
                         </div>
                     `;
                 }).join('');
             document.getElementById('playerStories').innerHTML = storiesHTML;
             
-            // Lore
             const loreHTML = Object.entries(seasonLore).map(([gw, text]) => {
                 return `
                     <div class="lore-entry">
@@ -557,8 +656,9 @@
                 `;
             }).join('');
             document.getElementById('seasonLoreList').innerHTML = loreHTML;
-
-            const entries = Object.entries(playerStats);
+            
+            updateRivalries();
+             const entries = Object.entries(playerStats);
             if (!entries.length) return;
             const mostWins = [...entries].sort((a, b) => b[1].wins - a[1].wins)[0];
             const peakPerformance = [...entries].map(([name, stats]) => [name, { ...stats, maxScore: Math.max(...stats.scores) }]).sort((a, b) => b[1].maxScore - a[1].maxScore)[0];
@@ -589,77 +689,37 @@
         }
 
         function updateRivalries() {
-            // Helper: Get Net Earnings for a player
-            function getNet(player) {
-                let played = 0, won = 0;
+             function h2h(a, b) {
+                let aWins = 0, bWins = 0, ties = 0, meetings = 0;
                 Object.values(gameData).forEach(gw => {
-                    const res = gw.results.find(r => r.name === player);
-                    if(res) { played++; won += res.prize; }
+                     if (!gw.results || !gw.players.includes(a) || !gw.players.includes(b)) return;
+                    const positions = {};
+                    gw.results.forEach((res, idx) => positions[res.name] = idx + 1);
+                    if (positions[a] && positions[b]) {
+                        meetings++;
+                        if (positions[a] < positions[b]) aWins++; else if (positions[b] < positions[a]) bWins++; else ties++;
+                    }
                 });
-                return won - (played * 100);
+                return { aWins, bWins, ties, meetings };
             }
-
-            const players = Object.keys(managerMeta);
-            
-            // 1. Dynamic: Neck-and-Neck (Smallest gap in Net Earnings)
-            const netScores = players.map(p => ({ name: p, net: getNet(p) })).sort((a, b) => b.net - a.net);
-            let p1 = netScores[0], p2 = netScores[1], minDiff = Infinity;
-            
-            // Find closest pair that isn't just 0 vs 0
-            for(let i=0; i<netScores.length-1; i++) {
-                const diff = Math.abs(netScores[i].net - netScores[i+1].net);
-                if(diff < minDiff && (netScores[i].net !== 0 || netScores[i+1].net !== 0)) {
-                    minDiff = diff;
-                    p1 = netScores[i];
-                    p2 = netScores[i+1];
-                }
-            }
-
-            // 2. Dynamic: The Massacre (Biggest score diff this week)
-            const currentResults = gameData[currentGW].results;
-            const topScore = currentResults[0];
-            const lowScore = currentResults[currentResults.length-1];
-            const scoreDiff = topScore.score - lowScore.score;
-
-            // 3. The Gatekeeper (5th place vs 6th place)
-            const prize5 = currentResults.find((r, i) => i === 4); // 5th place
-            const noPrize6 = currentResults.find((r, i) => i === 5); // 6th place
-            const gateDiff = prize5.score - noPrize6.score;
-
+             // Using static pairs for now as they are popular, can switch back to dynamic if preferred
+            const rv1 = h2h('Raghu', 'Venky');
+            const rv2 = h2h('Bharath', 'Gokul');
+            let shubsGames = 0, shubsWinnings = 0;
+            Object.values(gameData).forEach(gw => {
+                if (!gw.results || !gw.players.includes('Shubs')) return;
+                const entry = gw.results.find(r => r.name === 'Shubs');
+                if (entry) { shubsGames++; shubsWinnings += entry.prize; }
+            });
             const rivalryHTML = `
-                <div class="rivalry-card">
-                    <div class="rivalry-header">⚡ The Neck-and-Neck (Net Earnings)</div>
-                    <div class="rivalry-names">
-                        <span>${p1.name} (₹${p1.net})</span>
-                        <span class="rivalry-vs">vs</span>
-                        <span>${p2.name} (₹${p2.net})</span>
-                    </div>
-                    <div class="rivalry-stat">Gap: Only ₹${minDiff}! One gameweek flips this.</div>
-                </div>
-
-                <div class="rivalry-card">
-                    <div class="rivalry-header">💀 The Massacre (GW${currentGW})</div>
-                    <div class="rivalry-names">
-                        <span>${topScore.name} (${topScore.score}pts)</span>
-                        <span class="rivalry-vs">crushed</span>
-                        <span>${lowScore.name} (${lowScore.score}pts)</span>
-                    </div>
-                    <div class="rivalry-stat">Gap: ${scoreDiff} points. A complete demolition job.</div>
-                </div>
-
-                <div class="rivalry-card">
-                    <div class="rivalry-header">🚪 The Gatekeeper (Prize vs No Prize)</div>
-                    <div class="rivalry-names">
-                        <span>${prize5.name} (${prize5.score}pts)</span>
-                        <span class="rivalry-vs">denied</span>
-                        <span>${noPrize6.name} (${noPrize6.score}pts)</span>
-                    </div>
-                    <div class="rivalry-stat">Gap: ${gateDiff} point(s). ${noPrize6.name} will be losing sleep over this.</div>
-                </div>
+                <div class="rivalry-card"><div class="rivalry-header">Founders Derby: Raghu vs Venky</div><div class="rivalry-names"><span>Raghu</span><span class="rivalry-vs">${rv1.aWins} - ${rv1.bWins}</span><span>Venky</span></div><div class="riv-desc">Raghu leads. The gap widens after GW17.</div></div>
+                <div class="rivalry-card"><div class="rivalry-header">Chaos Classico: Bharath vs Gokul</div><div class="rivalry-names"><span>Bharath</span><span class="rivalry-vs">${rv2.aWins} - ${rv2.bWins}</span><span>Gokul</span></div><div class="riv-desc">Bharath takes this round (3rd vs 19th).</div></div>
+                <div class="rivalry-card"><div class="rivalry-header">Shubs vs The House</div><div class="rivalry-names"><span>Invested</span><span class="rivalry-vs">₹${shubsGames*100} vs ₹${shubsWinnings}</span><span>Won</span></div><div class="riv-desc">Shubs is officially up! The house is losing.</div></div>
             `;
             document.getElementById('rivalries').innerHTML = rivalryHTML;
         }
 
+        initSelector();
         updateBattle();
     </script>
 </body>
