@@ -125,6 +125,7 @@
         .narrative-badge { font-size: 0.65rem; font-weight: 800; color: var(--success); text-transform: uppercase; letter-spacing: 1px; }
         .narrative-title { color: var(--scapia-orange); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
         .narrative-text { color: #d1d1d1; line-height: 1.6; font-size: 0.95rem; font-family: 'Georgia', serif; }
+        .narrative-hl { color: white; font-weight: 700; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;}
 
         .bounty-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
@@ -174,6 +175,14 @@
         .arc-active .line { background: var(--scapia-orange); }
         .step-title { font-size: 0.7rem; color: #666; text-transform: uppercase; font-weight: 700; }
         .step-desc { font-size: 0.9rem; color: #ddd; line-height: 1.4; }
+        
+        /* FORM GUIDE */
+        .form-guide { padding: 0 20px 20px 20px; display: flex; gap: 5px; align-items: center; }
+        .form-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-right: 10px; font-weight: 700; }
+        .form-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .form-win { background: var(--gold); box-shadow: 0 0 5px var(--gold); }
+        .form-money { background: var(--success); }
+        .form-loss { background: #333; }
 
         /* LEDGER TAB */
         .ledger-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -207,7 +216,7 @@
 <div class="container">
     <header class="show-header">
         <div class="show-logo">SCAPIA FPL</div>
-        <div class="episode-title">Season 1 // Episode <span id="headerGW">18</span></div>
+        <div class="episode-title">Season 1 // Episode <span id="headerGW">21</span></div>
     </header>
 
     <nav class="episode-nav" id="gwSelector"></nav>
@@ -262,9 +271,9 @@
 </div>
 
 <script>
-    const currentGW = 18;
+    const currentGW = 21;
     
-    // NARRATIVE DB
+    // RICH NARRATIVE DB
     const gwSummaries = {
         2: "GW2: The Pilot. Neeraj claims first blood (61 pts). Sandesh's differential gamble on Ødegaard leaves him at the bottom.",
         3: "GW3: The Sandesh Peak. Sandesh redeems himself with a benchmark 83 pts. The 'Wood' captainers blockade the mid-table.",
@@ -282,10 +291,22 @@
         15: "GW15: The Foden Masterclass. Shashank TC's Foden for 86 points. A stroke of genius.",
         16: "GW16: The Century Club. Rounak smashes 104 points with a Bench Boost. Neeraj chased hard with 92.",
         17: "GW17: The Thai-Theater Pact. Raghu and Aniruddh synchronized for a massive 103-point summit.",
-        18: "GW18: The Hangover. Reality bit hard. Raghu proved dominance with a back-to-back win (71 pts). Chips wasted in the mud."
+        18: "GW18: The Hangover. Reality bit hard. Raghu proved dominance with a back-to-back win (71 pts). Chips wasted in the mud.",
+        19: `
+        <span class="narrative-hl">THE UNDERDOG UPRISING</span>
+        <p>A script flip of epic proportions. The league's "forgotten men"—Sandesh and Jalaj—emerged from the basement to split the top prize with 58 pts each, proving that even the marooned can find treasure. Meanwhile, Raghu played his Free Hit in a display of hubris, only to crash with 31 points. A warning to the gods: the mortals are revolting.</p>
+        `,
+        20: `
+        <span class="narrative-hl">SYSTEM RESTORE</span>
+        <p>Order is restored. Rounak returned to the throne with a crushing 75-point haul, cementing his status as the high-ceiling king. But the real story was the formation of the "Elite Block"—Gokul and Bharath locked out the podium, widening the gap between the haves and the have-nots. The mid-table is becoming a graveyard.</p>
+        `,
+        21: `
+        <span class="narrative-hl">THE JOKER'S KINGDOM</span>
+        <p>Gokul is no longer just an agent of chaos; he is the ruler. A third win (71 pts) secures his MVP status. Bharath's stubborn loyalty to Ekitiké finally paid dividends (69 pts). At the bottom, a horror movie unfolded: Sarjan scored 15 points. A score so low it requires a forensic investigation.</p>
+        `
     };
 
-    // CHARACTERS - Using Pollinations AI for consistent, high-fidelity cinematic portraits
+    // CHARACTERS
     const managerMeta = {
         'Raghu': { role: 'The Godfather', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Vito%20Corleone%20Godfather%20marlon%20brando%20tuxedo%20rose%20dark%20moody%20cinematic%20lighting%20realistic%208k?width=300&height=300&nologo=true', quote: "I'm going to make him an offer he can't refuse." },
         'Neeraj': { role: 'Tony Stark', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Tony%20Stark%20Robert%20Downey%20Jr%20Iron%20Man%20suit%20luxury%20lab%20futuristic%20lighting%20realistic%208k?width=300&height=300&nologo=true', quote: "Genius, billionaire, playboy, philanthropist." },
@@ -309,88 +330,88 @@
     const seasonJourneys = {
         'Raghu': { 
             act1: "THE ORIGIN: A background figure in the early episodes, quietly amassing team value while the main characters fought for scraps. He was patient, calculating, and waiting for his moment.", 
-            act2: "THE CONFLICT: Emerged as a serious threat in GW14, but the league ignored him. Then came the 'Red Wedding' of GW17—a 103-point Triple Captain bomb that silenced the doubters.", 
-            act3: "CURRENT STATE: The Don. Following up his massive GW17 with a back-to-back win in GW18 using Bench Boost. He no longer competes with the league; he rules it from the shadows." 
+            act2: "THE CONFLICT: Exploded onto the scene with a 103-point Triple Captain bomb in GW17 and a win in GW18. He looked untouchable.", 
+            act3: "CURRENT STATE: The Hubris. He played a Free Hit in GW19 that scored a miserable 31 points. He learned that even the Godfather can bleed." 
         },
         'Neeraj': { 
-            act1: "THE ORIGIN: Stark Industries established dominance immediately. He built a suit of pure efficiency in GW2 (First Blood), signaling that he wasn't here to play games, but to engineer wins.", 
-            act2: "THE CONFLICT: While chaos reigned in the mid-season and others panicked over injuries, he simply automated his returns. He refused to leave the top 5, becoming the league's inevitable constant.", 
-            act3: "CURRENT STATE: The Monopoly. With back-to-back cash finishes in GW17 & 18, he has effectively privatized the prize pool. He treats the league like his personal ATM." 
+            act1: "THE ORIGIN: Stark Industries established dominance immediately. He built a suit of pure efficiency in GW2 (First Blood), signaling that he wasn't here to play games.", 
+            act2: "THE CONFLICT: Automated his returns through the winter. He refused to leave the top 5, becoming the league's inevitable constant.", 
+            act3: "CURRENT STATE: Power Failure. GW19-21 saw a dip in output. The arc reactor is flickering (59 pts in GW21 was a recovery), but he is still sitting on a mountain of cash." 
         },
         'Jalaj': { 
-            act1: "THE ORIGIN: A struggling protagonist pushing a boulder up a hill, week after week, looking for a break that never came.", 
-            act2: "THE CONFLICT: The cruelest plot twist of the season. In GW17, he finally reached the summit with a massive 83 points on Bench Boost... only to find out it wasn't enough for a prize. ₹0 won.", 
-            act3: "CURRENT STATE: Rock Bottom. The boulder rolled back down in GW18. He played his Triple Captain chip for a tragic 42 points. A Shakespearean tragedy in real-time." 
+            act1: "THE ORIGIN: A struggling protagonist pushing a boulder up a hill, looking for a break that never came. The tragedy of the season.", 
+            act2: "THE CONFLICT: In GW17, he hit 83 points and won nothing. In GW18, his Triple Captain failed. He was at rock bottom.", 
+            act3: "CURRENT STATE: Redemption. In GW19, he finally reached the summit, tying for 1st place with 58 points. The curse is broken. Science, bitch!" 
         },
         'Venky': { 
-            act1: "THE ORIGIN: The Great Gatsby of the league. Threw the biggest party of the season in GW4 with a Salah captaincy that dazzled everyone.", 
-            act2: "THE CONFLICT: The party ended, but the spending didn't. He kept buying premium assets and hosting lavish game weeks, but the guests (points) stopped showing up.", 
-            act3: "CURRENT STATE: The Great Depression. He played his Free Hit card in GW18 in a desperate attempt to revive the glory days, but it flopped. The mansion is now empty." 
+            act1: "THE ORIGIN: The Great Gatsby. Threw the biggest party of the season in GW4 with a Salah captaincy that dazzled everyone.", 
+            act2: "THE CONFLICT: The mansion went empty for months. He kept buying premium assets, but the points stopped showing up.", 
+            act3: "CURRENT STATE: The Party's Back. He used his Bench Boost in GW19 to take 3rd, and cashed again in GW20 & GW21. The lights are back on at West Egg." 
         },
         'Shashank': { 
-            act1: "THE ORIGIN: The anarchist who refused to buy Haaland when the entire world bowed to him. He was laughed at, ridiculed, and ignored.", 
-            act2: "THE CONFLICT: Vindicated in GW15 with a legendary Foden Triple Captain that broke the template and shattered the status quo.", 
-            act3: "CURRENT STATE: Project Mayhem. In a week where everyone relied on chips to survive, he took 3rd place in GW18 using nothing but vibes. He is winning the war of ideas." 
+            act1: "THE ORIGIN: The anarchist who refused to buy Haaland. He was laughed at, ridiculed, and ignored.", 
+            act2: "THE CONFLICT: Vindicated in GW15 with a legendary Foden Triple Captain that broke the template.", 
+            act3: "CURRENT STATE: Project Mayhem. Staying consistent with differentials like Wirtz and Foden. He isn't winning every week, but he's watching the template crumble with a smile." 
         },
         'Gokul': { 
-            act1: "THE ORIGIN: An agent of chaos. Scored a league-breaking 95 points in GW7 just to prove that logic is optional and rules are for other people.", 
-            act2: "THE CONFLICT: Crashed to last place in GW17, seemingly written out of the script as a one-hit wonder.", 
-            act3: "CURRENT STATE: The Punchline. He played a Free Hit in GW18 with Thiago as captain... and finished 4th. You cannot kill what you cannot understand." 
+            act1: "THE ORIGIN: An agent of chaos. Scored a league-breaking 95 points in GW7 just to prove that logic is optional.", 
+            act2: "THE CONFLICT: Was written off as a one-hit wonder mid-season.", 
+            act3: "CURRENT STATE: The Takeover. Since GW18, he has gone 4th -> 2nd -> 1st. He conquered GW21 with 71 points. The Joker is now running Gotham." 
         },
         'Rounak': { 
-            act1: "THE ORIGIN: Asleep in the pod for the first 10 episodes, a background NPC in everyone else's story.", 
-            act2: "THE CONFLICT: Took the Red Pill in GW16. He woke up and smashed the century barrier with 104 points, seeing the code of the Matrix for the first time.", 
-            act3: "CURRENT STATE: System Failure. The agents found him in GW18. He crashed back to reality with 36 points. The Matrix has him again." 
+            act1: "THE ORIGIN: Asleep in the pod for the first 10 episodes, a background NPC.", 
+            act2: "THE CONFLICT: Took the Red Pill in GW16 (104 pts). Crashed in GW18.", 
+            act3: "CURRENT STATE: The One. He rebooted the system in GW20 with a massive 75-point win. He is volatile, dangerous, and impossible to predict." 
         },
         'Puneet': { 
-            act1: "THE ORIGIN: The reliable soldier of Gondor. Always in the fight, never the star, but holding the line.", 
-            act2: "THE CONFLICT: Held the line through the difficult winter campaign, taking arrows but staying standing.", 
-            act3: "CURRENT STATE: KIA. He deployed the Free Hit nuke in GW18 to save himself, but it backfired. He blew himself up and finished in last place. The horn of Gondor is broken." 
+            act1: "THE ORIGIN: The reliable soldier of Gondor. Always in the fight, never the star.", 
+            act2: "THE CONFLICT: Blew himself up with a failed Free Hit in GW18, finishing last. We thought he was KIA.", 
+            act3: "CURRENT STATE: Return of the King. He clawed his way back to the podium in GW21 (3rd place, 65 pts). Gondor stands." 
         },
         'Sukhpal': { 
-            act1: "THE ORIGIN: A silent professional. Executed a perfect contract hit in GW10 (93 pts) without saying a word.", 
-            act2: "THE CONFLICT: Remained unseen for weeks, collecting small bounties from the shadows while others made noise.", 
-            act3: "CURRENT STATE: Survival. His Triple Captain failed in GW18, but his survival instincts kicked in. He scraped into the money positions. Hard to kill." 
+            act1: "THE ORIGIN: A silent professional. Executed a perfect contract hit in GW10 (93 pts).", 
+            act2: "THE CONFLICT: Remained unseen for weeks, collecting small bounties from the shadows.", 
+            act3: "CURRENT STATE: The Boogeyman. Consistent returns in GW20 and GW21. He never leads the pack, but he's always right behind you." 
         },
         'Aniruddh': { 
             act1: "THE ORIGIN: Discovered he had a mutant ability to attract money regardless of his actual score.", 
-            act2: "THE CONFLICT: Reached peak power in GW17, matching Raghu for the win and proving his magnetism was no fluke.", 
-            act3: "CURRENT STATE: Power Loss. He tried to use a Free Hit to generate a magnetic field in GW18, but the metal didn't move. A rare powerless week." 
+            act2: "THE CONFLICT: Matched Raghu for the win in GW17. The magnetism was real.", 
+            act3: "CURRENT STATE: Stable Magnetic Field. Cash finishes in GW20 and GW21. He is the most financially efficient mutant in the league." 
         },
         'Bharath': { 
-            act1: "THE ORIGIN: The underdog who took heavy hits in the early rounds, stumbling but never falling.", 
-            act2: "THE CONFLICT: Found his eye of the tiger in GW8 with a massive win that put the heavyweight champions on notice.", 
-            act3: "CURRENT STATE: On the Ropes. Took a beating in GW18, scoring poorly. But he's still standing in the corner, waiting for the bell." 
+            act1: "THE ORIGIN: The underdog who took heavy hits in the early rounds.", 
+            act2: "THE CONFLICT: Found his eye of the tiger in GW8, but struggled in the winter.", 
+            act3: "CURRENT STATE: Ekitiké's Corner. He refused to drop Ekitiké, and it paid off. 3rd in GW20, 2nd in GW21. He is punching above his weight class again." 
         },
         'Mayank': { 
             act1: "THE ORIGIN: A man of two minds. Flip a coin: Heads he wins, tails he loses.", 
-            act2: "THE CONFLICT: Won GW13 with a terrible score because everyone else was worse. Luck or genius?", 
-            act3: "CURRENT STATE: Breaking Even. A quiet week in GW18. The coin landed on its edge." 
+            act2: "THE CONFLICT: Won GW13 with a terrible score. Pure luck.", 
+            act3: "CURRENT STATE: The Coin Edge. Middling scores in GW19-21 using differentials like Woltemade and Bowen. The coin is spinning, but not landing." 
         },
         'Shubs': { 
-            act1: "THE ORIGIN: The Wall Street shark looking for liquidity in a volatile market.", 
-            act2: "THE CONFLICT: Made a killing in the mid-season bull market, engaging in hostile takeovers of the leaderboard.", 
-            act3: "CURRENT STATE: Market Correction. A rare loss in GW18. But he's still holding strong assets and waiting for the bounce." 
+            act1: "THE ORIGIN: The Wall Street shark looking for liquidity.", 
+            act2: "THE CONFLICT: Made a killing in the mid-season bull market.", 
+            act3: "CURRENT STATE: Holding the Bag. Recent weeks have been average. He's collecting small dividends (GW20 prize), but the big merger hasn't happened." 
         },
         'Sarjan': { 
             act1: "THE ORIGIN: A believer looking for the truth (and points from João Pedro).", 
-            act2: "THE CONFLICT: The truth is out there, but the points aren't. He has been searching the skies for weeks.", 
-            act3: "CURRENT STATE: Still Believing. Another week, another blank. But he refuses to stop looking for the mothership." 
+            act2: "THE CONFLICT: The truth is out there, but the points aren't.", 
+            act3: "CURRENT STATE: Abduction. In GW21, he vanished with a terrifying 15 points. The aliens finally took him." 
         },
         'Arindam': { 
             act1: "THE ORIGIN: A comedy of errors. A good player trapped in a bad narrative.", 
-            act2: "THE CONFLICT: Constantly finishing just outside the money, the punchline to a joke nobody is telling.", 
-            act3: "CURRENT STATE: The Bad Joke. Activated his Wildcard in GW18... and nothing happened. The audience isn't laughing anymore." 
+            act2: "THE CONFLICT: Constantly finishing just outside the money.", 
+            act3: "CURRENT STATE: The Punchline. He used his Triple Captain in GW19... for 43 points. The audience is uncomfortable." 
         },
         'Sagar': { 
             act1: "THE ORIGIN: Explosive, dangerous, but totally unpredictable.", 
-            act2: "THE CONFLICT: Blew up the entire league in GW10 with a chaotic haul.", 
-            act3: "CURRENT STATE: Out of Ammo. A quiet exit in GW18. He's reloading for the sequel." 
+            act2: "THE CONFLICT: Blew up the entire league in GW10.", 
+            act3: "CURRENT STATE: Regeneration Mode. Quietly sitting mid-table in GW19-21. Healing up for the next explosion." 
         },
         'Sandesh': { 
             act1: "THE ORIGIN: Sailed the high seas early on, plundering points with ease.", 
-            act2: "THE CONFLICT: Shipwrecked in the mid-season storm. The crew has abandoned ship.", 
-            act3: "CURRENT STATE: Marooned. Drifting on a raft with 38 points. He's drinking rum and waiting for a rescue." 
+            act2: "THE CONFLICT: Shipwrecked in the mid-season storm. Drifting on a raft for weeks.", 
+            act3: "CURRENT STATE: Land Ho! He found treasure in GW19, tying for the win (58 pts). Captain Jack is back at the helm." 
         }
     };
 
@@ -434,6 +455,75 @@
                 { name: 'Rounak', score: 36, captain: 'Haaland', prize: 0 },
                 { name: 'Puneet', score: 36, captain: 'Haaland', chip: 'FH', prize: 0 }
             ] 
+        },
+        19: { 
+            pool: 1700, 
+            prizes: [500, 500, 300, 250, 150], 
+            results: [
+                { name: 'Sandesh', score: 58, captain: 'Haaland', prize: 500 },
+                { name: 'Jalaj', score: 58, captain: 'Haaland', prize: 500 },
+                { name: 'Venky', score: 57, captain: 'Haaland', chip: 'BB', prize: 300 },
+                { name: 'Bharath', score: 44, captain: 'Ekitiké', prize: 250 },
+                { name: 'Arindam', score: 43, captain: 'Haaland', chip: 'TC', prize: 150 },
+                { name: 'Puneet', score: 40, captain: 'Haaland', chip: 'TC', prize: 0 },
+                { name: 'Sagar', score: 39, captain: 'Haaland', prize: 0 },
+                { name: 'Sukhpal', score: 38, captain: 'Haaland', chip: 'FH', prize: 0 },
+                { name: 'Shashank', score: 37, captain: 'Wirtz', prize: 0 },
+                { name: 'Neeraj', score: 34, captain: 'Haaland', prize: 0 },
+                { name: 'Gokul', score: 33, captain: 'Thiago', prize: 0 },
+                { name: 'Aniruddh', score: 32, captain: 'Haaland', prize: 0 },
+                { name: 'Sarjan', score: 32, captain: 'João Pedro', prize: 0 },
+                { name: 'Raghu', score: 31, captain: 'Haaland', chip: 'FH', prize: 0 },
+                { name: 'Mayank', score: 31, captain: 'Woltemade', prize: 0 },
+                { name: 'Shubs', score: 30, captain: 'Haaland', chip: 'BB', prize: 0 },
+                { name: 'Rounak', score: 24, captain: 'Haaland', prize: 0 }
+            ]
+        },
+        20: { 
+            pool: 1700, 
+            prizes: [600, 400, 300, 250, 50, 50, 50], 
+            results: [
+                { name: 'Rounak', score: 75, captain: 'Haaland', prize: 600 },
+                { name: 'Gokul', score: 59, captain: 'Haaland', prize: 400 },
+                { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 300 },
+                { name: 'Puneet', score: 53, captain: 'Haaland', prize: 250 },
+                { name: 'Shubs', score: 52, captain: 'Haaland', prize: 50 },
+                { name: 'Venky', score: 52, captain: 'Haaland', prize: 50 },
+                { name: 'Aniruddh', score: 52, captain: 'Haaland', prize: 50 },
+                { name: 'Sukhpal', score: 50, captain: 'Haaland', prize: 0 },
+                { name: 'Shashank', score: 50, captain: 'Foden', prize: 0 },
+                { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 },
+                { name: 'Sarjan', score: 46, captain: 'João Pedro', prize: 0 },
+                { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 },
+                { name: 'Mayank', score: 41, captain: 'Bowen', prize: 0 },
+                { name: 'Neeraj', score: 33, captain: 'Haaland', prize: 0 },
+                { name: 'Jalaj', score: 30, captain: 'Haaland', prize: 0 },
+                { name: 'Raghu', score: 27, captain: 'Haaland', prize: 0 },
+                { name: 'Arindam', score: 27, captain: 'Haaland', prize: 0 }
+            ]
+        },
+        21: { 
+            pool: 1700, 
+            prizes: [600, 400, 300, 250, 150], 
+            results: [
+                { name: 'Gokul', score: 71, captain: 'Haaland', prize: 600 },
+                { name: 'Bharath', score: 69, captain: 'Ekitiké', prize: 400 },
+                { name: 'Puneet', score: 65, captain: 'Haaland', prize: 300 },
+                { name: 'Venky', score: 62, captain: 'Haaland', prize: 250 },
+                { name: 'Neeraj', score: 59, captain: 'Haaland', prize: 150 },
+                { name: 'Sukhpal', score: 57, captain: 'Haaland', prize: 0 },
+                { name: 'Rounak', score: 57, captain: 'Haaland', prize: 0 },
+                { name: 'Aniruddh', score: 57, captain: 'Haaland', prize: 0 },
+                { name: 'Shubs', score: 54, captain: 'Haaland', prize: 0 },
+                { name: 'Raghu', score: 51, captain: 'Haaland', prize: 0 },
+                { name: 'Mayank', score: 50, captain: 'Woltemade', prize: 0 },
+                { name: 'Sandesh', score: 49, captain: 'Haaland', prize: 0 },
+                { name: 'Jalaj', score: 49, captain: 'Haaland', prize: 0 },
+                { name: 'Sagar', score: 45, captain: 'Haaland', prize: 0 },
+                { name: 'Shashank', score: 41, captain: 'Foden', prize: 0 },
+                { name: 'Arindam', score: 41, captain: 'Haaland', prize: 0 },
+                { name: 'Sarjan', score: 15, captain: 'João Pedro', prize: 0 }
+            ]
         }
     };
 
@@ -449,7 +539,7 @@
     function renderGWSelector() {
         const container = document.getElementById('gwSelector');
         let html = '';
-        for (let i = 2; i <= 18; i++) {
+        for (let i = 2; i <= 21; i++) {
             html += `<button class="ep-btn ${i === currentGW ? 'active' : ''}" onclick="loadEpisode(${i})">Episode ${i}</button>`;
         }
         container.innerHTML = html;
@@ -480,7 +570,7 @@
         const totalScore = data.results.reduce((acc, curr) => acc + curr.score, 0);
         document.getElementById('avgScore').innerText = Math.round(totalScore / data.results.length);
 
-        const medals = ['🥇', '🥈', '🥉', '🎖️', '🎖️'];
+        const medals = ['🥇', '🥈', '🥉', '🎖️', '🎖️', '🎖️', '🎖️'];
         let prizeHtml = '';
         data.prizes.forEach((p, i) => {
             prizeHtml += `<div class="prize-pill">${medals[i]} ₹${p}</div>`;
@@ -508,11 +598,39 @@
         document.getElementById('leaderboardList').innerHTML = lbHtml;
     }
 
+    function getPlayerForm(name) {
+        // Get last 5 weeks form (Win/Money/Loss)
+        const form = [];
+        const recentGWs = [21, 20, 19, 18, 17];
+        
+        recentGWs.forEach(gw => {
+            const gd = gameData[gw];
+            if(gd) {
+                const res = gd.results.find(r => r.name === name);
+                if(res) {
+                    if(res.prize > 0 && res === gd.results[0]) form.push('win');
+                    else if(res.prize > 0) form.push('money');
+                    else form.push('loss');
+                }
+            }
+        });
+        return form;
+    }
+
     function renderStories() {
         const container = document.getElementById('storyList');
         let html = '';
         for (const [name, meta] of Object.entries(managerMeta)) {
             const arc = seasonJourneys[name] || { act1: '...', act2: '...', act3: '...' };
+            
+            // Build Form Guide
+            const form = getPlayerForm(name);
+            let formHtml = '';
+            form.forEach(f => {
+                const colorClass = f === 'win' ? 'form-win' : (f === 'money' ? 'form-money' : 'form-loss');
+                formHtml += `<div class="form-dot ${colorClass}"></div>`;
+            });
+
             html += `
             <div class="char-card">
                 <div class="char-header">
@@ -521,6 +639,10 @@
                         <div style="font-weight:800; font-size:1.1rem;">${name}</div>
                         <div class="char-role">${meta.role}</div>
                     </div>
+                </div>
+                <div class="form-guide">
+                    <span class="form-label">Recent Form</span>
+                    ${formHtml}
                 </div>
                 <div class="char-quote">"${meta.quote}"</div>
                 <div class="char-arc">
