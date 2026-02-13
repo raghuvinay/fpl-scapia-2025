@@ -3,613 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scapia FPL - Season 1</title>
+    <title>Scapia FPL: The Director's Cut</title>
     <style>
         :root {
-            --bg-dark: #141414;
-            --bg-card: #1f1f1f;
-            --bg-hover: #333333;
-            --scapia-orange: #FF6B35;
-            --text-main: #ffffff;
-            --text-muted: #b3b3b3;
-            --success: #46d369;
-            --danger: #f34242;
+            --bg-dark: #050505;
+            --bg-panel: #111;
+            --primary: #FF6B35;
             --gold: #FFD700;
+            --text-main: #eee;
+            --text-muted: #777;
+            --success: #4CAF50;
+            --danger: #FF5252;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
-            padding-bottom: 50px;
-            -webkit-font-smoothing: antialiased;
+            padding: 15px;
+            padding-bottom: 80px;
         }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
 
         /* HEADER */
-        .show-header {
-            text-align: center;
-            padding: 30px 0 20px 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-        }
-        
-        .show-logo {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--scapia-orange);
-            letter-spacing: -1px;
-            text-shadow: 0 4px 10px rgba(255, 107, 53, 0.4);
-            margin-bottom: 5px;
-        }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .logo { font-size: 2.5rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; text-transform: uppercase; }
+        .tagline { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; }
 
-        .episode-title {
-            color: var(--text-muted);
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        /* NAVIGATION */
-        .episode-nav {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 10px 0 20px 0;
-            scrollbar-width: none;
-        }
-        .episode-nav::-webkit-scrollbar { display: none; }
-
-        .ep-btn {
-            background: var(--bg-card);
-            color: var(--text-muted);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 16px;
-            border-radius: 4px;
-            white-space: nowrap;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
+        /* NAVIGATION - Episode Selector */
+        .gw-selector { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; }
+        .gw-selector::-webkit-scrollbar { display: none; }
+        .gw-btn { 
+            padding: 8px 16px; 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            color: #888; 
+            border-radius: 4px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            white-space: nowrap; 
+            cursor: pointer; 
             transition: all 0.2s;
         }
-        .ep-btn:hover { background: var(--bg-hover); color: white; }
-        .ep-btn.active {
-            background: var(--scapia-orange);
-            color: black;
-            border-color: var(--scapia-orange);
-            box-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
-        }
+        .gw-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
 
-        .nav-tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 5px;
-            margin-bottom: 25px;
-            background: #000;
-            padding: 5px;
-            border-radius: 8px;
+        /* TABS */
+        .tabs { display: flex; border-bottom: 2px solid #222; margin-bottom: 20px; }
+        .tab { 
+            flex: 1; 
+            padding: 15px; 
+            background: transparent; 
+            border: none; 
+            color: #666; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
         }
-        .nav-tab {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 12px 5px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: 0.3s;
-        }
-        .nav-tab.active {
-            color: white;
-            border-bottom: 2px solid var(--scapia-orange);
-        }
+        .tab.active { color: #fff; border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
 
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
+        .content { display: none; animation: fadeIn 0.4s ease; }
+        .content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* THE BATTLE TAB */
-        .narrative-block {
-            background: linear-gradient(90deg, #201a1a 0%, var(--bg-card) 100%);
-            border-left: 4px solid var(--scapia-orange);
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 30px;
+        /* SPOTLIGHT / NARRATIVE */
+        .spotlight-card { 
+            background: linear-gradient(180deg, rgba(255,107,53,0.15) 0%, rgba(0,0,0,0) 100%); 
+            border: 1px solid rgba(255,107,53,0.3); 
+            border-radius: 8px; 
+            padding: 25px; 
+            margin-bottom: 25px; 
+            text-align: center; 
         }
-        .narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .narrative-badge { font-size: 0.65rem; font-weight: 800; color: var(--success); text-transform: uppercase; letter-spacing: 1px; }
-        .narrative-title { color: var(--scapia-orange); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
-        .narrative-text { color: #d1d1d1; line-height: 1.6; font-size: 0.95rem; font-family: 'Georgia', serif; }
-        .narrative-hl { color: white; font-weight: 700; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;}
+        .spotlight-title { font-size: 0.9rem; font-weight: 900; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .spotlight-story { font-size: 1.05rem; line-height: 1.5; color: #fff; font-family: 'Georgia', serif; font-style: italic; }
 
-        .bounty-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 30px;
+        /* PRIZE CARD */
+        .prize-card { background: var(--bg-panel); border: 1px solid #333; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 25px; }
+        .pool-val { font-size: 2.5rem; font-weight: 800; color: #fff; letter-spacing: -1px; }
+        .pool-meta { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .prizes-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .prize-pill { background: #222; border: 1px solid #444; color: var(--gold); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
+
+        /* LEADERBOARD */
+        .player-row { 
+            display: flex; 
+            align-items: center; 
+            padding: 14px; 
+            background: var(--bg-panel); 
+            margin-bottom: 5px; 
+            border-left: 3px solid transparent; 
         }
-        .bounty-amount { font-size: 4rem; font-weight: 900; color: white; letter-spacing: -2px; margin: 10px 0; }
-        .bounty-meta { display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; margin-top: 15px; }
-        .meta-item { text-align: center; }
-        .meta-val { font-weight: 700; font-size: 1.2rem; display: block; }
-        .meta-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .prize-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .prize-pill { background: rgba(255,215,0,0.15); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
-
-        .player-row { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
-        .player-row:hover { background: var(--bg-hover); }
-        .player-row.winner { background: linear-gradient(90deg, rgba(255, 107, 53, 0.2), transparent); border-left: 3px solid var(--scapia-orange); }
-        .rank-num { font-size: 1.5rem; font-weight: 900; color: #444; width: 40px; margin-right: 10px; }
-        .rank-1 { color: var(--gold); }
-        .rank-2 { color: #C0C0C0; }
-        .rank-3 { color: #CD7F32; }
+        .player-row.winner { background: #1a1a1a; border-left-color: var(--gold); }
+        .rank { width: 30px; font-weight: 700; color: #555; font-size: 0.85rem; }
         .p-info { flex: 1; }
-        .p-name { font-weight: 700; font-size: 1.1rem; }
-        .p-cap { font-size: 0.8rem; color: var(--text-muted); }
-        .chip { padding: 2px 5px; border-radius: 3px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #000; display:inline-block; margin-left:5px;}
-        .chip-TC { background: #E50914; color: white;} .chip-BB { background: #3498db; } .chip-FH { background: #e67e22; } .chip-WC { background: #2ecc71; }
-        .p-score { text-align: right; }
-        .score-val { font-size: 1.3rem; font-weight: 700; }
-        .money-val { font-size: 0.8rem; color: var(--success); font-weight: 600; }
+        .p-name { font-weight: 700; font-size: 0.95rem; color: #fff; }
+        .p-captain { font-size: 0.75rem; color: #888; margin-top: 2px; }
+        .p-chip { font-size: 0.6rem; background: var(--primary); color: #000; padding: 1px 5px; border-radius: 3px; margin-left: 5px; font-weight: 800; }
+        .p-score { font-weight: 700; font-size: 1.1rem; text-align: right; }
+        .p-prize { font-size: 0.75rem; color: var(--success); display: block; text-align: right; font-weight: 600; }
 
-        /* THE CAST TAB */
-        .character-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .char-card { background: var(--bg-card); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #333; }
-        .char-header { padding: 20px; display: flex; align-items: center; gap: 15px; background: linear-gradient(to right, rgba(255,255,255,0.05), transparent); }
-        .char-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #000; border: 2px solid var(--scapia-orange); box-shadow: 0 0 15px rgba(255, 107, 53, 0.3); }
-        .char-role { font-size: 0.75rem; color: var(--scapia-orange); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
-        .char-quote { padding: 15px 20px; font-style: italic; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Georgia', serif; font-size: 0.95rem; }
-        .char-arc { padding: 20px; }
-        .arc-step { display: flex; gap: 15px; margin-bottom: 15px; }
-        .step-line { display: flex; flex-direction: column; align-items: center; }
-        .dot { width: 10px; height: 10px; background: #444; border-radius: 50%; margin-top: 5px; }
-        .line { width: 2px; height: 100%; background: #444; flex: 1; min-height: 20px; }
-        .arc-active .dot { background: var(--scapia-orange); box-shadow: 0 0 8px var(--scapia-orange); }
-        .arc-active .line { background: var(--scapia-orange); }
-        .step-title { font-size: 0.7rem; color: #666; text-transform: uppercase; font-weight: 700; }
-        .step-desc { font-size: 0.9rem; color: #ddd; line-height: 1.4; }
-        
-        /* FORM GUIDE */
-        .form-guide { padding: 0 20px 20px 20px; display: flex; gap: 5px; align-items: center; }
-        .form-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-right: 10px; font-weight: 700; }
-        .form-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .form-win { background: var(--gold); box-shadow: 0 0 5px var(--gold); }
+        /* THE CAST / STORIES */
+        .profile-card { 
+            background: var(--bg-panel); 
+            border: 1px solid #2a2a2a; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            overflow: hidden; 
+        }
+        .profile-header { 
+            display: flex; 
+            gap: 15px; 
+            padding: 20px; 
+            border-bottom: 1px solid #222;
+            background: linear-gradient(90deg, rgba(255,107,53,0.05), transparent);
+        }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #333; background: #222; }
+        .profile-meta { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .role-badge { font-size: 0.6rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .real-name { font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .char-name { font-size: 0.8rem; color: #777; font-style: italic; }
+
+        .story-body { padding: 15px 20px 20px; }
+        .arc-box { margin-bottom: 12px; }
+        .arc-label { font-size: 0.65rem; color: #555; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+        .arc-text { font-size: 0.85rem; line-height: 1.5; color: #ccc; }
+        .latest-update { 
+            background: rgba(255,107,53,0.1); 
+            padding: 12px; 
+            border-radius: 6px; 
+            border-left: 2px solid var(--primary);
+            font-size: 0.85rem;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .char-quote { font-style: italic; color: #666; font-size: 0.8rem; margin-bottom: 12px; }
+
+        .form-guide { display: flex; align-items: center; gap: 6px; padding: 0 20px 10px; }
+        .form-label { font-size: 0.6rem; color: #555; text-transform: uppercase; font-weight: 700; margin-right: 4px; }
+        .form-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .form-win { background: var(--gold); }
         .form-money { background: var(--success); }
         .form-loss { background: #333; }
 
-        /* LEDGER TAB */
-        .ledger-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .ledger-table th { text-align: left; padding: 12px; color: #666; font-size: 0.7rem; text-transform: uppercase; border-bottom: 1px solid #333; }
-        .ledger-table td { padding: 15px 12px; border-bottom: 1px solid #222; font-size: 0.95rem; }
+        /* LORE */
+        .lore-entry { padding: 15px; border-bottom: 1px solid #222; }
+        .lore-gw { color: var(--primary); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
+        .lore-title { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 5px; }
+        .lore-desc { color: #888; font-size: 0.9rem; line-height: 1.5; }
+
+        /* LEDGER */
+        .ledger-table { width: 100%; border-collapse: collapse; }
+        .ledger-table th { text-align: left; padding: 12px; color: #555; font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid #333; }
+        .ledger-table td { padding: 12px; border-bottom: 1px solid #222; font-size: 0.9rem; }
         .net-pos { color: var(--success); }
         .net-neg { color: var(--danger); }
-
-        /* BOX OFFICE TAB */
+        
+        .section-header { margin: 20px 0 15px; font-size: 1rem; text-transform: uppercase; color: #fff; letter-spacing: 1px; font-weight: 800; border-left: 3px solid var(--primary); padding-left: 10px; }
+        
+        /* BOX OFFICE */
         .awards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .award-card { 
             background: #111; 
             padding: 15px; 
             border-left: 3px solid var(--gold); 
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 110px;
+            border-radius: 4px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            min-height: 110px; 
         }
         .award-info h4 { color: var(--gold); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; font-weight: 800; letter-spacing: 0.5px; }
         .award-info p { color: #888; font-size: 0.75rem; line-height: 1.3; }
         .award-winner { margin-top: 15px; text-align: right; }
         .award-winner-name { color: white; font-weight: 700; font-size: 1.1rem; }
-        .award-winner-stat { color: var(--scapia-orange); font-family: monospace; font-size: 0.85rem; }
+        .award-winner-stat { color: var(--primary); font-family: monospace; font-size: 0.85rem; }
 
+        .sub-label { margin-bottom: 10px; font-size: 0.75rem; color: #555; text-transform: uppercase; font-weight: 700; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header class="show-header">
-        <div class="show-logo">SCAPIA FPL</div>
-        <div class="episode-title">Season 1 // Episode <span id="headerGW">21</span></div>
+    <header class="header">
+        <div class="logo">SCAPIA FPL</div>
+        <div class="tagline">Season 1: The Director's Cut</div>
     </header>
 
-    <nav class="episode-nav" id="gwSelector"></nav>
+    <div class="gw-selector" id="gwSelector"></div>
 
-    <nav class="nav-tabs">
-        <button class="nav-tab active" onclick="switchTab('battle', this)">The Battle</button>
-        <button class="nav-tab" onclick="switchTab('cast', this)">The Cast</button>
-        <button class="nav-tab" onclick="switchTab('ledger', this)">The Ledger</button>
-        <button class="nav-tab" onclick="switchTab('boxoffice', this)">Box Office</button>
-    </nav>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('battle', this)">The Battle</button>
+        <button class="tab" onclick="switchTab('cast', this)">The Cast</button>
+        <button class="tab" onclick="switchTab('lore', this)">Season Lore</button>
+        <button class="tab" onclick="switchTab('ledger', this)">The Ledger</button>
+        <button class="tab" onclick="switchTab('boxoffice', this)">Box Office</button>
+    </div>
 
-    <section id="battle" class="tab-content active">
-        <div id="narrativeArea"></div>
-        <div class="bounty-card">
-            <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:2px; color:#888;">Weekly Bounty</div>
-            <div class="bounty-amount">₹<span id="poolAmount">--</span></div>
-            <div class="prize-pills" id="prizeList"></div>
-            <div class="bounty-meta">
-                <div class="meta-item"><span class="meta-val" id="playerCount">--</span><span class="meta-lbl">Players</span></div>
-                <div class="meta-item"><span class="meta-val">₹100</span><span class="meta-lbl">Buy-in</span></div>
-                <div class="meta-item"><span class="meta-val" id="avgScore">--</span><span class="meta-lbl">Avg Score</span></div>
-            </div>
+    <div id="battle" class="content active">
+        <div id="spotlight"></div>
+        
+        <div class="prize-card">
+            <div class="pool-meta">GW <span id="currentGW">--</span> Prize Pool</div>
+            <div class="pool-val">₹<span id="poolAmount">1700</span></div>
+            <div class="prizes-row" id="prizeList"></div>
         </div>
-        <div style="margin-bottom: 15px; font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px;">Weekly Standings</div>
-        <div id="leaderboardList"></div>
-    </section>
 
-    <section id="cast" class="tab-content">
-        <div class="character-grid" id="storyList"></div>
-    </section>
+        <div class="sub-label">Weekly Standings</div>
+        <div id="leaderboard"></div>
+    </div>
 
-    <section id="ledger" class="tab-content">
+    <div id="cast" class="content">
+        <div id="playerStories"></div>
+    </div>
+
+    <div id="lore" class="content">
+        <div class="section-header">Episode Guide</div>
+        <div id="seasonLoreList"></div>
+    </div>
+
+    <div id="ledger" class="content">
+        <div class="section-header">Financials</div>
         <table class="ledger-table">
             <thead>
                 <tr>
-                    <th>Player</th>
-                    <th style="text-align:right">Games</th>
+                    <th>Manager</th>
+                    <th style="text-align:right">Played</th>
                     <th style="text-align:right">Won</th>
-                    <th style="text-align:right">Net P/L</th>
+                    <th style="text-align:right">Net</th>
                 </tr>
             </thead>
             <tbody id="ledgerList"></tbody>
         </table>
-    </section>
+    </div>
 
-    <section id="boxoffice" class="tab-content">
+    <div id="boxoffice" class="content">
         <div style="margin-bottom:20px">
-            <h3 style="color:var(--scapia-orange); text-transform:uppercase; font-size:0.9rem; letter-spacing:1px; margin-bottom:15px;">Critics' Choice Awards</h3>
+            <div class="section-header">Critics' Choice Awards</div>
             <div class="awards-grid" id="awardsList"></div>
         </div>
-    </section>
+    </div>
 </div>
 
 <script>
-    const currentGW = 21;
+    // ---------------------------------------------------
+    // 1. DATABASE
+    // ---------------------------------------------------
     
-    // RICH NARRATIVE DB
-    const gwSummaries = {
-        2: "GW2: The Pilot. Neeraj claims first blood (61 pts). Sandesh's differential gamble on Ødegaard leaves him at the bottom.",
-        3: "GW3: The Sandesh Peak. Sandesh redeems himself with a benchmark 83 pts. The 'Wood' captainers blockade the mid-table.",
-        4: "GW4: The Salah Syndicate. Venky proves there is life beyond Haaland, taking gold with Salah (77 pts).",
-        5: "GW5: The Socialist Week. A massive 5-way prize split proves the league is tight. Mayank sneaks a win.",
-        6: "GW6: The Chaos Begins. Gokul starts his ascent with a win. Low scoring week; survival was the only goal.",
-        7: "GW7: The Nuclear Option. Gokul drops a season-high 95 points. The gap was so large it ended the contest by Saturday.",
-        8: "GW8: Heater Check. Bharath dominates with 90 points. The story was the 'Haaland vs Pedro' war.",
-        9: "GW9: Differential Day. Shashank wins with Mbeumo captain (69 pts), proving following the herd is for sheep.",
-        10: "GW10: The Statement. Sukhpal drops a massive 93-point haul out of nowhere.",
-        11: "GW11: The Trench War. Aniruddh wins with just 49 points. A brutal week where 'surviving' was the only victory.",
-        12: "GW12: The Shark Attacks. Shubs takes the win (61 pts). A standard week, but the Shark squeezed out value.",
-        13: "GW13: The Chip Massacre. Multiple Triple Captains fail. Mayank wins with 47 points.",
-        14: "GW14: The Great Split. A unique tie for 1st (Gokul/Rounak) creates a payout anomaly.",
-        15: "GW15: The Foden Masterclass. Shashank TC's Foden for 86 points. A stroke of genius.",
-        16: "GW16: The Century Club. Rounak smashes 104 points with a Bench Boost. Neeraj chased hard with 92.",
-        17: "GW17: The Thai-Theater Pact. Raghu and Aniruddh synchronized for a massive 103-point summit.",
-        18: "GW18: The Hangover. Reality bit hard. Raghu proved dominance with a back-to-back win (71 pts). Chips wasted in the mud.",
-        19: `
-        <span class="narrative-hl">THE UNDERDOG UPRISING</span>
-        <p>A script flip of epic proportions. The league's "forgotten men"—Sandesh and Jalaj—emerged from the basement to split the top prize with 58 pts each, proving that even the marooned can find treasure. Meanwhile, Raghu played his Free Hit in a display of hubris, only to crash with 31 points. A warning to the gods: the mortals are revolting.</p>
-        `,
-        20: `
-        <span class="narrative-hl">SYSTEM RESTORE</span>
-        <p>Order is restored. Rounak returned to the throne with a crushing 75-point haul, cementing his status as the high-ceiling king. But the real story was the formation of the "Elite Block"—Gokul and Bharath locked out the podium, widening the gap between the haves and the have-nots. The mid-table is becoming a graveyard.</p>
-        `,
-        21: `
-        <span class="narrative-hl">THE JOKER'S KINGDOM</span>
-        <p>Gokul is no longer just an agent of chaos; he is the ruler. A third win (71 pts) secures his MVP status. Bharath's stubborn loyalty to Ekitiké finally paid dividends (69 pts). At the bottom, a horror movie unfolded: Sarjan scored 15 points. A score so low it requires a forensic investigation.</p>
-        `
+    const seasonLore = {
+        "2": "The Pilot: Neeraj claims first blood (61 pts). Sandesh's differential gamble leaves him at the bottom.",
+        "3": "The Sandesh Peak: Sandesh redeems himself with a benchmark 83 pts. The 'Wood' captainers blockade the mid-table.",
+        "4": "The Salah Syndicate: Venky proves there is life beyond Haaland, taking gold with Salah.",
+        "5": "The Grind: Mayank edges ahead with 63 points in a tight contest.",
+        "6": "The Haaland Consensus: Everyone captains Haaland. Gokul wins the mirror match (68 pts).",
+        "7": "The Nuclear Option: Gokul drops a season-high 95 points. The gap was so large it ended the contest by Saturday.",
+        "8": "Heater Check: Bharath dominates with 90 points. The story was the 'Haaland vs Pedro' war.",
+        "9": "The Anarchist Strikes: Shashank takes gold with Mbeumo captaincy (69 pts).",
+        "10": "The Statement: Sukhpal drops a massive 93-point haul out of nowhere.",
+        "11": "Low Tide: Aniruddh wins a brutal gameweek with just 49 points.",
+        "12": "Shark Attack: Shubs takes first place with 61 points. Haaland dominance continues.",
+        "13": "The Chip Massacre: Multiple Triple Captains fail; Mayank wins with 47.",
+        "14": "The Double Feature: Gokul and Rounak tie at 82 points for the top spot.",
+        "15": "The Foden Masterclass: Shashank Triple Captains Foden for a massive 86-point haul.",
+        "16": "The Century Club: Rounak smashes 104 points with a Bench Boost.",
+        "17": "The Thai-Theater Pact: Raghu and Aniruddh tie for 1st with 103 points each!",
+        "18": "The Director's Cut: Raghu wins back-to-back. Rounak crashes from 1st to last.",
+        "19": "The Rebellion: The underdogs (Sandesh & Jalaj) rise up to split the gold (58 pts).",
+        "20": "The Resurrection: Rounak rises from the dead (last place) to win with 75 points.",
+        "21": "The Chaos Theory: Gokul (The Joker) proves chaos wins (71 pts). Sarjan drifts into space.",
+        "22": "Hipster's Paradise: Shashank wins a low-scoring tactical battle (57 pts).",
+        "23": "The Believer: Sarjan finally wins! The Loyalist takes gold with 58 pts.",
+        "24": "The Jackpot: Mayank (Two-Face) destroys the field with 86 points.",
+        "25": "Sisyphus Summit: Jalaj pushes the rock to the top again for his second win (76 pts)."
     };
 
-    // CHARACTERS
     const managerMeta = {
-        'Raghu': { role: 'The Godfather', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Vito%20Corleone%20Godfather%20marlon%20brando%20tuxedo%20rose%20dark%20moody%20cinematic%20lighting%20realistic%208k?width=300&height=300&nologo=true', quote: "I'm going to make him an offer he can't refuse." },
-        'Neeraj': { role: 'Tony Stark', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Tony%20Stark%20Robert%20Downey%20Jr%20Iron%20Man%20suit%20luxury%20lab%20futuristic%20lighting%20realistic%208k?width=300&height=300&nologo=true', quote: "Genius, billionaire, playboy, philanthropist." },
-        'Shashank': { role: 'Tyler Durden', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Tyler%20Durden%20Brad%20Pitt%20Fight%20Club%20red%20jacket%20sunglasses%20gritty%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "The template is a prison. Break free." },
-        'Gokul': { role: 'The Joker', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20The%20Joker%20Heath%20Ledger%20makeup%20chaotic%20purple%20suit%20dark%20knight%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "Captain Thiago on Free Hit. Why so serious?" },
-        'Sukhpal': { role: 'John Wick', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20John%20Wick%20Keanu%20Reeves%20black%20suit%20rain%20neon%20city%20lights%20tactical%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "People keep asking if I'm back..." },
-        'Rounak': { role: 'Neo', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Neo%20The%20Matrix%20Keanu%20Reeves%20sunglasses%20black%20trench%20coat%20digital%20rain%20background%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "I know Kung Fu. (And how to score 100 points)." },
-        'Jalaj': { role: 'Jesse Pinkman', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Jesse%20Pinkman%20Aaron%20Paul%20Breaking%20Bad%20yellow%20hazmat%20suit%20distressed%20desert%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "I keep getting beaten down. Where's my money?" },
-        'Venky': { role: 'Jay Gatsby', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Jay%20Gatsby%20Leonardo%20DiCaprio%20tuxedo%20champagne%20glass%20art%20deco%20party%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "I threw all my chips on the table. The party is over." },
-        'Puneet': { role: 'Boromir', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Boromir%20Sean%20Bean%20Lord%20of%20the%20Rings%20armor%20medieval%20gondor%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "One does not simply Free Hit into last place." },
-        'Aniruddh': { role: 'Magneto', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Magneto%20Michael%20Fassbender%20helmet%20red%20armor%20floating%20metal%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "I can control the metal (prize money), mostly." },
-        'Bharath': { role: 'Rocky Balboa', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Rocky%20Balboa%20Sylvester%20Stallone%20boxing%20ring%20bruised%20sweat%20determination%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "It ain't about how hard you hit. It's about how hard you get hit." },
-        'Mayank': { role: 'Two-Face', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Two-Face%20Harvey%20Dent%20Batman%20split%20face%20suit%20coin%20dark%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "Heads I win. Tails I... break even." },
-        'Shubs': { role: 'Gordon Gekko', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Gordon%20Gekko%20Michael%20Douglas%20Wall%20Street%20expensive%20suit%20brick%20phone%20office%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "Greed, for lack of a better word, is good." },
-        'Sarjan': { role: 'Fox Mulder', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Fox%20Mulder%20X-Files%20David%20Duchovny%20suit%20flashlight%20dark%20forest%20mystery%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "I want to believe (in João Pedro)." },
-        'Arindam': { role: 'Arthur Fleck', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Arthur%20Fleck%20Joker%20Joaquin%20Phoenix%20clown%20makeup%20red%20suit%20dancing%20stairs%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "All I have are negative thoughts (and scores)." },
-        'Sagar': { role: 'Deadpool', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Deadpool%20Ryan%20Reynolds%20red%20mask%20tactical%20suit%20swords%20explosions%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "Maximum effort. Minimum returns." },
-        'Sandesh': { role: 'Jack Sparrow', avatar: 'https://image.pollinations.ai/prompt/portrait%20of%20Captain%20Jack%20Sparrow%20Johnny%20Depp%20pirate%20hat%20dreadlocks%20ocean%20ship%20cinematic%20realistic%208k?width=300&height=300&nologo=true', quote: "You have heard of me. But I have no money." }
+        'Raghu': { role: 'THE DIRECTOR', char: 'Christopher Nolan', avatar: '', quote: "I'm going to make him an offer he can't refuse." },
+        'Neeraj': { role: 'THE FUTURIST', char: 'Iron Man', avatar: '', quote: "Genius, billionaire, playboy, philanthropist." },
+        'Shashank': { role: 'THE ANARCHIST', char: 'Tyler Durden', avatar: '', quote: "The template is a prison. Break free." },
+        'Gokul': { role: 'CHAOS AGENT', char: 'The Joker', avatar: '', quote: "Captain Thiago on Free Hit. Why so serious?" },
+        'Sukhpal': { role: 'THE ASSASSIN', char: 'John Wick', avatar: '', quote: "People keep asking if I'm back..." },
+        'Rounak': { role: 'THE CHOSEN ONE', char: 'Neo', avatar: '', quote: "I know Kung Fu. (And how to score 100 points)." },
+        'Jalaj': { role: 'THE STRUGGLER', char: 'Sisyphus', avatar: '', quote: "I keep getting beaten down. Where's my money?" },
+        'Venky': { role: 'THE PHILANTHROPIST', char: 'Jay Gatsby', avatar: '', quote: "I threw all my chips on the table. The party is over." },
+        'Puneet': { role: 'RELIABLE', char: 'Captain America', avatar: '', quote: "One does not simply Free Hit into last place." },
+        'Aniruddh': { role: 'THE MAGNET', char: 'Magneto', avatar: '', quote: "I can control the metal (prize money), mostly." },
+        'Bharath': { role: 'THE FIGHTER', char: 'Rocky Balboa', avatar: '', quote: "It ain't about how hard you hit. It's about how hard you get hit." },
+        'Mayank': { role: 'THE GAMBLER', char: 'Two-Face', avatar: '', quote: "Heads I win. Tails I... break even." },
+        'Shubs': { role: 'THE SHARK', char: 'Gordon Gekko', avatar: '', quote: "Greed, for lack of a better word, is good." },
+        'Sarjan': { role: 'THE ASTRONAUT', char: 'Cooper', avatar: '', quote: "I want to believe (in João Pedro)." },
+        'Arindam': { role: 'UNLUCKY', char: 'Charlie Brown', avatar: '', quote: "All I have are negative thoughts (and scores)." },
+        'Sagar': { role: 'THE RACCOON', char: 'Rocket', avatar: '', quote: "Maximum effort. Minimum returns." },
+        'Sandesh': { role: 'PIRATE', char: 'Jack Sparrow', avatar: '', quote: "You have heard of me. But I have no money." }
+    };
+
+    const gwStories = {
+        '25': { 'Jalaj': "WINNER! Sisyphus has conquered the mountain again! 76 points.", 'Puneet': "2nd Place. Captain America returns with a vengeance (74 pts).", 'Rounak': "3rd Place. The Chosen One is consistently elite (73 pts)." },
+        '24': { 'Mayank': "WINNER! The Coin landed HEADS. A massive 86 points for Two-Face.", 'Rounak': "2nd Place. 84 points. A huge score that would win any other week." },
+        '23': { 'Sarjan': "WINNER! The Truth is Here! Sarjan (58 pts) finally wins a gameweek.", 'Venky': "2nd Place. The Great Gatsby hosted a great party (56 pts)." },
+        '22': { 'Shashank': "WINNER! In a low-scoring war, the Anarchist wins with just 57 pts.", 'Rounak': "2nd Place. Neo dodged the bullets (54 pts)." }
     };
 
     const seasonJourneys = {
-        'Raghu': { 
-            act1: "THE ORIGIN: A background figure in the early episodes, quietly amassing team value while the main characters fought for scraps. He was patient, calculating, and waiting for his moment.", 
-            act2: "THE CONFLICT: Exploded onto the scene with a 103-point Triple Captain bomb in GW17 and a win in GW18. He looked untouchable.", 
-            act3: "CURRENT STATE: The Hubris. He played a Free Hit in GW19 that scored a miserable 31 points. He learned that even the Godfather can bleed." 
-        },
-        'Neeraj': { 
-            act1: "THE ORIGIN: Stark Industries established dominance immediately. He built a suit of pure efficiency in GW2 (First Blood), signaling that he wasn't here to play games.", 
-            act2: "THE CONFLICT: Automated his returns through the winter. He refused to leave the top 5, becoming the league's inevitable constant.", 
-            act3: "CURRENT STATE: Power Failure. GW19-21 saw a dip in output. The arc reactor is flickering (59 pts in GW21 was a recovery), but he is still sitting on a mountain of cash." 
-        },
-        'Jalaj': { 
-            act1: "THE ORIGIN: A struggling protagonist pushing a boulder up a hill, looking for a break that never came. The tragedy of the season.", 
-            act2: "THE CONFLICT: In GW17, he hit 83 points and won nothing. In GW18, his Triple Captain failed. He was at rock bottom.", 
-            act3: "CURRENT STATE: Redemption. In GW19, he finally reached the summit, tying for 1st place with 58 points. The curse is broken. Science, bitch!" 
-        },
-        'Venky': { 
-            act1: "THE ORIGIN: The Great Gatsby. Threw the biggest party of the season in GW4 with a Salah captaincy that dazzled everyone.", 
-            act2: "THE CONFLICT: The mansion went empty for months. He kept buying premium assets, but the points stopped showing up.", 
-            act3: "CURRENT STATE: The Party's Back. He used his Bench Boost in GW19 to take 3rd, and cashed again in GW20 & GW21. The lights are back on at West Egg." 
-        },
-        'Shashank': { 
-            act1: "THE ORIGIN: The anarchist who refused to buy Haaland. He was laughed at, ridiculed, and ignored.", 
-            act2: "THE CONFLICT: Vindicated in GW15 with a legendary Foden Triple Captain that broke the template.", 
-            act3: "CURRENT STATE: Project Mayhem. Staying consistent with differentials like Wirtz and Foden. He isn't winning every week, but he's watching the template crumble with a smile." 
-        },
-        'Gokul': { 
-            act1: "THE ORIGIN: An agent of chaos. Scored a league-breaking 95 points in GW7 just to prove that logic is optional.", 
-            act2: "THE CONFLICT: Was written off as a one-hit wonder mid-season.", 
-            act3: "CURRENT STATE: The Takeover. Since GW18, he has gone 4th -> 2nd -> 1st. He conquered GW21 with 71 points. The Joker is now running Gotham." 
-        },
-        'Rounak': { 
-            act1: "THE ORIGIN: Asleep in the pod for the first 10 episodes, a background NPC.", 
-            act2: "THE CONFLICT: Took the Red Pill in GW16 (104 pts). Crashed in GW18.", 
-            act3: "CURRENT STATE: The One. He rebooted the system in GW20 with a massive 75-point win. He is volatile, dangerous, and impossible to predict." 
-        },
-        'Puneet': { 
-            act1: "THE ORIGIN: The reliable soldier of Gondor. Always in the fight, never the star.", 
-            act2: "THE CONFLICT: Blew himself up with a failed Free Hit in GW18, finishing last. We thought he was KIA.", 
-            act3: "CURRENT STATE: Return of the King. He clawed his way back to the podium in GW21 (3rd place, 65 pts). Gondor stands." 
-        },
-        'Sukhpal': { 
-            act1: "THE ORIGIN: A silent professional. Executed a perfect contract hit in GW10 (93 pts).", 
-            act2: "THE CONFLICT: Remained unseen for weeks, collecting small bounties from the shadows.", 
-            act3: "CURRENT STATE: The Boogeyman. Consistent returns in GW20 and GW21. He never leads the pack, but he's always right behind you." 
-        },
-        'Aniruddh': { 
-            act1: "THE ORIGIN: Discovered he had a mutant ability to attract money regardless of his actual score.", 
-            act2: "THE CONFLICT: Matched Raghu for the win in GW17. The magnetism was real.", 
-            act3: "CURRENT STATE: Stable Magnetic Field. Cash finishes in GW20 and GW21. He is the most financially efficient mutant in the league." 
-        },
-        'Bharath': { 
-            act1: "THE ORIGIN: The underdog who took heavy hits in the early rounds.", 
-            act2: "THE CONFLICT: Found his eye of the tiger in GW8, but struggled in the winter.", 
-            act3: "CURRENT STATE: Ekitiké's Corner. He refused to drop Ekitiké, and it paid off. 3rd in GW20, 2nd in GW21. He is punching above his weight class again." 
-        },
-        'Mayank': { 
-            act1: "THE ORIGIN: A man of two minds. Flip a coin: Heads he wins, tails he loses.", 
-            act2: "THE CONFLICT: Won GW13 with a terrible score. Pure luck.", 
-            act3: "CURRENT STATE: The Coin Edge. Middling scores in GW19-21 using differentials like Woltemade and Bowen. The coin is spinning, but not landing." 
-        },
-        'Shubs': { 
-            act1: "THE ORIGIN: The Wall Street shark looking for liquidity.", 
-            act2: "THE CONFLICT: Made a killing in the mid-season bull market.", 
-            act3: "CURRENT STATE: Holding the Bag. Recent weeks have been average. He's collecting small dividends (GW20 prize), but the big merger hasn't happened." 
-        },
-        'Sarjan': { 
-            act1: "THE ORIGIN: A believer looking for the truth (and points from João Pedro).", 
-            act2: "THE CONFLICT: The truth is out there, but the points aren't.", 
-            act3: "CURRENT STATE: Abduction. In GW21, he vanished with a terrifying 15 points. The aliens finally took him." 
-        },
-        'Arindam': { 
-            act1: "THE ORIGIN: A comedy of errors. A good player trapped in a bad narrative.", 
-            act2: "THE CONFLICT: Constantly finishing just outside the money.", 
-            act3: "CURRENT STATE: The Punchline. He used his Triple Captain in GW19... for 43 points. The audience is uncomfortable." 
-        },
-        'Sagar': { 
-            act1: "THE ORIGIN: Explosive, dangerous, but totally unpredictable.", 
-            act2: "THE CONFLICT: Blew up the entire league in GW10.", 
-            act3: "CURRENT STATE: Regeneration Mode. Quietly sitting mid-table in GW19-21. Healing up for the next explosion." 
-        },
-        'Sandesh': { 
-            act1: "THE ORIGIN: Sailed the high seas early on, plundering points with ease.", 
-            act2: "THE CONFLICT: Shipwrecked in the mid-season storm. Drifting on a raft for weeks.", 
-            act3: "CURRENT STATE: Land Ho! He found treasure in GW19, tying for the win (58 pts). Captain Jack is back at the helm." 
-        }
+        'Jalaj': { act1: "Pushing a boulder.", act2: "Heartbreak in GW17.", act3: "Redemption. Winning GW19 & GW25. Sisyphus has conquered the mountain." },
+        'Mayank': { act1: "Flipping coins.", act2: "Lucky win GW13.", act3: "Jackpot. Massive 86 point win in GW24. The Gambler is hot." },
+        'Sarjan': { act1: "Drifting in space.", act2: "Believing in Pedro.", act3: "Contact. Finally landed a win in GW23. Belief paid off." },
+        'Shashank': { act1: "Anarchist.", act2: "Foden TC glory.", act3: "Grinding. Won GW22 in a low-scoring war. Proving versatility." },
+        'Rounak': { act1: "Asleep.", act2: "Century Club.", act3: "Rollercoaster. Won GW20 after coming last in GW18. Volatile." },
+        'Raghu': { act1: "Building.", act2: "Dominating winter.", act3: "Consistent power. Still directing the show from the top tables." },
+        'Neeraj': { act1: "Efficiency.", act2: "Automated returns.", act3: "Printing money. Cashed in GW23, 24, 25 consecutively." },
+        'Venky': { act1: "Donating.", act2: "Empty mansion.", act3: "Open for business. Back-to-back podiums in GW22 & 23." },
+        'Sukhpal': { act1: "Silent.", act2: "GW10 explosion.", act3: "The Shadow. Sneaking into 5th place ties in GW23 & 24." },
+        'Gokul': { act1: "Chaos.", act2: "Silence.", act3: "Resurgence. Won GW21. The Joker is still dangerous." },
+        'Sandesh': { act1: "Sailing.", act2: "Shipwrecked.", act3: "Treasure found. Shock win in GW19. Still floating." },
+        'Bharath': { act1: "Punching.", act2: "Resting.", act3: "Fighting back. Podium finishes in GW20, 21, 25." },
+        'Puneet': { act1: "Reliable.", act2: "Free Hit disaster.", act3: "Shield repaired. 2nd place in GW25." },
+        'Aniruddh': { act1: "Magnetic.", act2: "GW17 peak.", act3: "Flickering. Still grabbing small prizes but needs a recharge." },
+        'Shubs': { act1: "Shark.", act2: "Feeding frenzy.", act3: "Nibbling. Small payout in GW24." },
+        'Arindam': { act1: "Unlucky.", act2: "Almost.", act3: "Tragic. Missed out again in GW24 & 25." },
+        'Sagar': { act1: "Explosive.", act2: "Dud.", act3: "Out of ammo. Needs a supply drop." }
     };
 
-    // GAME DATA
+    // ---------------------------------------------------
+    // 2. FULL DATA ARCHIVE (GW2 - GW25)
+    // ---------------------------------------------------
     const gameData = {
-        2: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Raghu', 'Mayank', 'Puneet'], pool: 1100, prizes: [600, 400, 100], results: [{ name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 }, { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 }, { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 }, { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 }, { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 }, { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 }, { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 }, { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }] },
-        3: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh'], pool: 1400, prizes: [700, 400, 200, 100], results: [{ name: 'Sandesh', score: 83, captain: 'João Pedro', prize: 700 }, { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 }, { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 }, { name: 'Sarjan', score: 64, captain: 'João Pedro', prize: 150 }, { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 53, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 }, { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 }, { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 }, { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }] },
-        4: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'], pool: 1500, prizes: [700, 450, 250, 100], results: [{ name: 'Venky', score: 77, captain: 'Salah', prize: 700 }, { name: 'Raghu', score: 73, captain: 'Haaland', prize: 450 }, { name: 'Sukhpal', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Puneet', score: 66, captain: 'Haaland', prize: 100 }, { name: 'Arindam', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 63, captain: 'João Pedro', prize: 0 }, { name: 'Rounak', score: 63, captain: 'João Pedro', prize: 0 }, { name: 'Aniruddh', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 62, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 60, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 58, captain: 'Salah', prize: 0 }, { name: 'Shubs', score: 55, captain: 'Salah', prize: 0 }, { name: 'Gokul', score: 53, captain: 'Kudus', prize: 0 }, { name: 'Mayank', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 41, captain: 'Ekitiké', prize: 0 }] },
-        5: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam'], pool: 1500, prizes: [500, 400, 300, 200, 100], results: [{ name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 }, { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 }, { name: 'Venky', score: 51, captain: 'Salah', prize: 0 }, { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 47, captain: 'João Pedro', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 44, captain: 'João Pedro', prize: 0 }, { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 }, { name: 'Rounak', score: 38, captain: 'João Pedro', prize: 0 }] },
-        6: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 68, captain: 'Haaland', prize: 600 }, { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 250 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 150 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 29, captain: 'João Pedro', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 }, { name: 'Jalaj', score: 26, captain: 'João Pedro', prize: 0 }, { name: 'Bharath', score: 24, captain: 'João Pedro', prize: 0 }, { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }] },
-        7: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 }, { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 }, { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 48, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 47, captain: 'João Pedro', prize: 0 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 0 }] },
-        8: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 }, { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 }, { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 }, { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 }, { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 68, captain: 'João Pedro (FH)', prize: 0 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 }, { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Jalaj', score: 37, captain: 'João Pedro', prize: 0 }] },
-        9: { players: ['Venky', 'Shubs', 'Bharath', 'Sukhpal', 'Gokul', 'Neeraj', 'Sandesh', 'Shashank', 'Sarjan', 'Raghu', 'Mayank', 'Puneet', 'Rounak', 'Aniruddh', 'Arindam', 'Sagar', 'Jalaj'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 }, { name: 'Bharath', score: 68, captain: 'João Pedro', prize: 400 }, { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 }, { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 }, { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Jalaj', score: 57, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 44, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 }, { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 37, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 }, { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 }, { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }] },
-        10: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 }, { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 }, { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 82, captain: 'Haaland (BB1)', prize: 250 }, { name: 'Sagar', score: 81, captain: 'Haaland (FH1)', prize: 150 }, { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 }, { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 64, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 62, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }] },
-        11: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 }, { name: 'Jalaj', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Sandesh', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 }, { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 }, { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 }, { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }] },
-        12: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 }, { name: 'Rounak', score: 48, captain: 'Haaland (FH1)', prize: 250 }, { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 }, { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Haaland (BB1)', prize: 0 }, { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 35, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 }, { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 32, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 }, { name: 'Jalaj', score: 27, captain: 'João Pedro', prize: 0 }] },
-        13: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 }, { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 }, { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 250 }, { name: 'Gokul', score: 40, captain: 'Haaland (BB1)', prize: 150 }, { name: 'Rounak', score: 39, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 27, captain: 'Haaland (TC1)', prize: 0 }, { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 17, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }] },
-        14: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Rounak', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Shubs', score: 78, captain: 'Haaland', prize: 300 }, { name: 'Raghu', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Neeraj', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Arindam', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Gakpo', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 25, captain: 'João Pedro', prize: 0 }] },
-        15: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 86, captain: 'Foden', chip: 'TC', prize: 600 }, { name: 'Shubs', score: 74, captain: 'Haaland', chip: 'FH', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 59, captain: 'Haaland', chip: 'WC', prize: 200 }, { name: 'Mayank', score: 59, captain: 'Haaland', chip: 'WC', prize: 200 }, { name: 'Arindam', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 53, captain: 'Mateta', prize: 0 }, { name: 'Bharath', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 43, captain: 'Palmer', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 35, captain: 'Haaland', prize: 0 }] },
-        16: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Rounak', score: 104, captain: 'Haaland', chip: 'BB', prize: 600 }, { name: 'Neeraj', score: 92, captain: 'Saka', chip: 'FH', prize: 400 }, { name: 'Sukhpal', score: 80, captain: 'Haaland', chip: 'WC', prize: 275 }, { name: 'Mayank', score: 80, captain: 'Haaland', chip: 'FH', prize: 275 }, { name: 'Raghu', score: 75, captain: 'Haaland', prize: 150 }, { name: 'Shashank', score: 74, captain: 'B.Fernandes', chip: 'BB', prize: 0 }, { name: 'Aniruddh', score: 73, captain: 'Haaland', chip: 'WC', prize: 0 }, { name: 'Shubs', score: 71, captain: 'Saka', prize: 0 }, { name: 'Arindam', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 59, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 51, captain: 'Thiago', chip: 'WC', prize: 0 }, { name: 'Jalaj', score: 51, captain: 'Palmer', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Mateta', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }] },
-        17: { players: ['Shashank','Bharath','Raghu','Sukhpal','Venky','Sagar','Jalaj','Arindam','Puneet','Rounak','Sandesh','Mayank','Neeraj','Sarjan','Shubs','Aniruddh','Gokul'], pool: 1700, prizes: [600, 400, 300, 250, 150], results: [ { name: 'Raghu', score: 103, captain: 'Haaland', chip: 'TC', prize: 500 }, { name: 'Aniruddh', score: 103, captain: 'Haaland', chip: 'TC', prize: 500 }, { name: 'Bharath', score: 92, captain: 'Haaland', chip: 'TC', prize: 300 }, { name: 'Neeraj', score: 91, captain: 'Haaland', chip: 'TC', prize: 250 }, { name: 'Mayank', score: 88, captain: 'Haaland', prize: 150 }, { name: 'Jalaj', score: 83, captain: 'Haaland', chip: 'BB', prize: 0 }, { name: 'Sukhpal', score: 79, captain: 'Haaland', chip: 'BB', prize: 0 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 74, captain: 'Foden', chip: 'FH', prize: 0 }, { name: 'Sagar', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 52, captain: 'Thiago', prize: 0 }, { name: 'Sarjan', score: 47, captain: 'João Pedro', prize: 0 } ] },
-        18: { 
-            pool: 1700,
-            prizes: [600, 400, 300, 200, 200], 
-            results: [
-                { name: 'Raghu', score: 71, captain: 'Haaland', chip: 'BB', prize: 600 },
-                { name: 'Neeraj', score: 65, captain: 'Haaland', chip: 'BB', prize: 400 },
-                { name: 'Shashank', score: 64, captain: 'Saka', prize: 300 },
-                { name: 'Sukhpal', score: 54, captain: 'Haaland', chip: 'TC', prize: 200 },
-                { name: 'Gokul', score: 54, captain: 'Thiago', chip: 'FH', prize: 200 },
-                { name: 'Aniruddh', score: 52, captain: 'Haaland', chip: 'FH', prize: 0 },
-                { name: 'Arindam', score: 47, captain: 'Haaland', chip: 'WC', prize: 0 },
-                { name: 'Venky', score: 44, captain: 'Haaland', chip: 'FH', prize: 0 },
-                { name: 'Mayank', score: 43, captain: 'Haaland', prize: 0 },
-                { name: 'Bharath', score: 43, captain: 'Ekitiké', prize: 0 },
-                { name: 'Sagar', score: 43, captain: 'Haaland', prize: 0 },
-                { name: 'Jalaj', score: 42, captain: 'Haaland', chip: 'TC', prize: 0 },
-                { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 },
-                { name: 'Shubs', score: 39, captain: 'Haaland', prize: 0 },
-                { name: 'Sandesh', score: 38, captain: 'Haaland', prize: 0 },
-                { name: 'Rounak', score: 36, captain: 'Haaland', prize: 0 },
-                { name: 'Puneet', score: 36, captain: 'Haaland', chip: 'FH', prize: 0 }
-            ] 
-        },
-        19: { 
-            pool: 1700, 
-            prizes: [500, 500, 300, 250, 150], 
-            results: [
-                { name: 'Sandesh', score: 58, captain: 'Haaland', prize: 500 },
-                { name: 'Jalaj', score: 58, captain: 'Haaland', prize: 500 },
-                { name: 'Venky', score: 57, captain: 'Haaland', chip: 'BB', prize: 300 },
-                { name: 'Bharath', score: 44, captain: 'Ekitiké', prize: 250 },
-                { name: 'Arindam', score: 43, captain: 'Haaland', chip: 'TC', prize: 150 },
-                { name: 'Puneet', score: 40, captain: 'Haaland', chip: 'TC', prize: 0 },
-                { name: 'Sagar', score: 39, captain: 'Haaland', prize: 0 },
-                { name: 'Sukhpal', score: 38, captain: 'Haaland', chip: 'FH', prize: 0 },
-                { name: 'Shashank', score: 37, captain: 'Wirtz', prize: 0 },
-                { name: 'Neeraj', score: 34, captain: 'Haaland', prize: 0 },
-                { name: 'Gokul', score: 33, captain: 'Thiago', prize: 0 },
-                { name: 'Aniruddh', score: 32, captain: 'Haaland', prize: 0 },
-                { name: 'Sarjan', score: 32, captain: 'João Pedro', prize: 0 },
-                { name: 'Raghu', score: 31, captain: 'Haaland', chip: 'FH', prize: 0 },
-                { name: 'Mayank', score: 31, captain: 'Woltemade', prize: 0 },
-                { name: 'Shubs', score: 30, captain: 'Haaland', chip: 'BB', prize: 0 },
-                { name: 'Rounak', score: 24, captain: 'Haaland', prize: 0 }
-            ]
-        },
-        20: { 
-            pool: 1700, 
-            prizes: [600, 400, 300, 250, 50, 50, 50], 
-            results: [
-                { name: 'Rounak', score: 75, captain: 'Haaland', prize: 600 },
-                { name: 'Gokul', score: 59, captain: 'Haaland', prize: 400 },
-                { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 300 },
-                { name: 'Puneet', score: 53, captain: 'Haaland', prize: 250 },
-                { name: 'Shubs', score: 52, captain: 'Haaland', prize: 50 },
-                { name: 'Venky', score: 52, captain: 'Haaland', prize: 50 },
-                { name: 'Aniruddh', score: 52, captain: 'Haaland', prize: 50 },
-                { name: 'Sukhpal', score: 50, captain: 'Haaland', prize: 0 },
-                { name: 'Shashank', score: 50, captain: 'Foden', prize: 0 },
-                { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 },
-                { name: 'Sarjan', score: 46, captain: 'João Pedro', prize: 0 },
-                { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 },
-                { name: 'Mayank', score: 41, captain: 'Bowen', prize: 0 },
-                { name: 'Neeraj', score: 33, captain: 'Haaland', prize: 0 },
-                { name: 'Jalaj', score: 30, captain: 'Haaland', prize: 0 },
-                { name: 'Raghu', score: 27, captain: 'Haaland', prize: 0 },
-                { name: 'Arindam', score: 27, captain: 'Haaland', prize: 0 }
-            ]
-        },
-        21: { 
-            pool: 1700, 
-            prizes: [600, 400, 300, 250, 150], 
-            results: [
-                { name: 'Gokul', score: 71, captain: 'Haaland', prize: 600 },
-                { name: 'Bharath', score: 69, captain: 'Ekitiké', prize: 400 },
-                { name: 'Puneet', score: 65, captain: 'Haaland', prize: 300 },
-                { name: 'Venky', score: 62, captain: 'Haaland', prize: 250 },
-                { name: 'Neeraj', score: 59, captain: 'Haaland', prize: 150 },
-                { name: 'Sukhpal', score: 57, captain: 'Haaland', prize: 0 },
-                { name: 'Rounak', score: 57, captain: 'Haaland', prize: 0 },
-                { name: 'Aniruddh', score: 57, captain: 'Haaland', prize: 0 },
-                { name: 'Shubs', score: 54, captain: 'Haaland', prize: 0 },
-                { name: 'Raghu', score: 51, captain: 'Haaland', prize: 0 },
-                { name: 'Mayank', score: 50, captain: 'Woltemade', prize: 0 },
-                { name: 'Sandesh', score: 49, captain: 'Haaland', prize: 0 },
-                { name: 'Jalaj', score: 49, captain: 'Haaland', prize: 0 },
-                { name: 'Sagar', score: 45, captain: 'Haaland', prize: 0 },
-                { name: 'Shashank', score: 41, captain: 'Foden', prize: 0 },
-                { name: 'Arindam', score: 41, captain: 'Haaland', prize: 0 },
-                { name: 'Sarjan', score: 15, captain: 'João Pedro', prize: 0 }
-            ]
-        }
+        2: { pool: 1100, prizes: [600, 400, 100], results: [{ name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 }, { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 }, { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 }, { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 }, { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 }, { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 }, { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 }, { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }] },
+        3: { pool: 1400, prizes: [700, 400, 200, 100], results: [{ name: 'Sandesh', score: 83, captain: 'João Pedro', prize: 700 }, { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 }, { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 }, { name: 'Sarjan', score: 64, captain: 'João Pedro', prize: 150 }, { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 53, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 }, { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 }, { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 }, { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }] },
+        4: { pool: 1500, prizes: [700, 450, 250, 100], results: [{ name: 'Venky', score: 77, captain: 'Salah', prize: 700 }, { name: 'Raghu', score: 73, captain: 'Haaland', prize: 450 }, { name: 'Sukhpal', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Puneet', score: 66, captain: 'Haaland', prize: 100 }, { name: 'Arindam', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 63, captain: 'João Pedro', prize: 0 }, { name: 'Rounak', score: 63, captain: 'João Pedro', prize: 0 }, { name: 'Aniruddh', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 62, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 60, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 58, captain: 'Salah', prize: 0 }, { name: 'Shubs', score: 55, captain: 'Salah', prize: 0 }, { name: 'Gokul', score: 53, captain: 'Kudus', prize: 0 }, { name: 'Mayank', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 41, captain: 'Ekitiké', prize: 0 }] },
+        5: { pool: 1500, prizes: [500, 400, 300, 200, 100], results: [{ name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 }, { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 }, { name: 'Venky', score: 51, captain: 'Salah', prize: 0 }, { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 47, captain: 'João Pedro', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 44, captain: 'João Pedro', prize: 0 }, { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 }, { name: 'Rounak', score: 38, captain: 'João Pedro', prize: 0 }] },
+        6: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 68, captain: 'Haaland', prize: 600 }, { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 250 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 150 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 29, captain: 'João Pedro', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 }, { name: 'Jalaj', score: 26, captain: 'João Pedro', prize: 0 }, { name: 'Bharath', score: 24, captain: 'João Pedro', prize: 0 }, { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }] },
+        7: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 }, { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 }, { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 48, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 47, captain: 'João Pedro', prize: 0 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 0 }] },
+        8: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 }, { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 }, { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 }, { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 }, { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 68, captain: 'João Pedro (FH)', prize: 0 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 }, { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Jalaj', score: 37, captain: 'João Pedro', prize: 0 }] },
+        9: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 }, { name: 'Bharath', score: 68, captain: 'João Pedro', prize: 400 }, { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 }, { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 }, { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Jalaj', score: 57, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 44, captain: 'João Pedro', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 }, { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 37, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 }, { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 }, { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }] },
+        10: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 }, { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 }, { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 82, captain: 'Haaland (BB)', prize: 250 }, { name: 'Sagar', score: 81, captain: 'Haaland (FH)', prize: 150 }, { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 }, { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 64, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 62, captain: 'João Pedro', prize: 0 }, { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }] },
+        11: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 }, { name: 'Jalaj', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 50 }, { name: 'Sandesh', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 }, { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 }, { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 }, { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }] },
+        12: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 }, { name: 'Rounak', score: 48, captain: 'Haaland (FH)', prize: 250 }, { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 }, { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Haaland (BB)', prize: 0 }, { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 35, captain: 'Haaland (TC)', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 }, { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 32, captain: 'Haaland (TC)', prize: 0 }, { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 }, { name: 'Jalaj', score: 27, captain: 'João Pedro', prize: 0 }] },
+        13: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 }, { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 }, { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 }, { name: 'Sarjan', score: 41, captain: 'João Pedro', prize: 250 }, { name: 'Gokul', score: 40, captain: 'Haaland (BB)', prize: 150 }, { name: 'Rounak', score: 39, captain: 'Haaland (TC)', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 27, captain: 'Haaland (TC)', prize: 0 }, { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 17, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }] },
+        14: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Rounak', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Shubs', score: 78, captain: 'Haaland', prize: 300 }, { name: 'Raghu', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Neeraj', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Arindam', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Gakpo', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'João Pedro', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 25, captain: 'João Pedro', prize: 0 }] },
+        15: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 86, captain: 'Foden (TC)', prize: 600 }, { name: 'Shubs', score: 74, captain: 'Haaland (FH)', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 59, captain: 'Haaland (WC)', prize: 200 }, { name: 'Mayank', score: 59, captain: 'Haaland (WC)', prize: 200 }, { name: 'Arindam', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 53, captain: 'Mateta', prize: 0 }, { name: 'Bharath', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 43, captain: 'Palmer', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 35, captain: 'Haaland', prize: 0 }] },
+        16: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Rounak', score: 104, captain: 'Haaland (BB)', prize: 600 }, { name: 'Neeraj', score: 92, captain: 'Saka (FH)', prize: 400 }, { name: 'Sukhpal', score: 80, captain: 'Haaland (WC)', prize: 275 }, { name: 'Mayank', score: 80, captain: 'Haaland (FH)', prize: 275 }, { name: 'Raghu', score: 75, captain: 'Haaland', prize: 150 }, { name: 'Shashank', score: 74, captain: 'B.Fernandes (BB)', prize: 0 }, { name: 'Aniruddh', score: 73, captain: 'Haaland (WC)', prize: 0 }, { name: 'Shubs', score: 71, captain: 'Saka', prize: 0 }, { name: 'Arindam', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 59, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 51, captain: 'Thiago (WC)', prize: 0 }, { name: 'Jalaj', score: 51, captain: 'Palmer', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Mateta', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'João Pedro', prize: 0 }] },
+        17: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Raghu', score: 103, captain: 'Haaland (TC)', prize: 500 }, { name: 'Aniruddh', score: 103, captain: 'Haaland (TC)', prize: 500 }, { name: 'Bharath', score: 92, captain: 'Haaland (TC)', prize: 300 }, { name: 'Neeraj', score: 91, captain: 'Haaland (TC)', prize: 250 }, { name: 'Mayank', score: 88, captain: 'Haaland', prize: 150 }, { name: 'Jalaj', score: 83, captain: 'Haaland (BB)', prize: 0 }, { name: 'Sukhpal', score: 79, captain: 'Haaland (BB)', prize: 0 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 74, captain: 'Foden (FH)', prize: 0 }, { name: 'Sagar', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 52, captain: 'Thiago', prize: 0 }, { name: 'Sarjan', score: 47, captain: 'João Pedro', prize: 0 }] },
+        18: { pool: 1700, prizes: [600, 400, 300, 200, 200], results: [{ name: 'Raghu', score: 71, captain: 'Haaland (BB)', prize: 600 }, { name: 'Neeraj', score: 65, captain: 'Haaland (BB)', prize: 400 }, { name: 'Shashank', score: 64, captain: 'Saka', prize: 300 }, { name: 'Sukhpal', score: 54, captain: 'Haaland (TC)', prize: 200 }, { name: 'Gokul', score: 54, captain: 'Thiago (FH)', prize: 200 }, { name: 'Aniruddh', score: 52, captain: 'Haaland (FH)', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland (WC)', prize: 0 }, { name: 'Venky', score: 44, captain: 'Haaland (FH)', prize: 0 }, { name: 'Bharath', score: 43, captain: 'Ekitiké', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 42, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'João Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 36, captain: 'Haaland (FH)', prize: 0 }] },
+        19: { pool: 1700, prizes: [500, 500, 300, 250, 150], results: [{ name: 'Sandesh', score: 58, captain: 'Haaland', prize: 500 }, { name: 'Jalaj', score: 58, captain: 'Haaland', prize: 500 }, { name: 'Venky', score: 57, captain: 'Haaland (BB)', prize: 300 }, { name: 'Bharath', score: 44, captain: 'Ekitiké', prize: 250 }, { name: 'Arindam', score: 43, captain: 'Haaland (TC)', prize: 150 }, { name: 'Puneet', score: 40, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sagar', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland (FH)', prize: 0 }, { name: 'Shashank', score: 37, captain: 'Wirtz', prize: 0 }, { name: 'Neeraj', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 33, captain: 'Thiago', prize: 0 }, { name: 'Aniruddh', score: 32, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 32, captain: 'João Pedro', prize: 0 }, { name: 'Raghu', score: 31, captain: 'Haaland (FH)', prize: 0 }, { name: 'Mayank', score: 31, captain: 'Woltemade', prize: 0 }, { name: 'Shubs', score: 30, captain: 'Haaland (BB)', prize: 0 }, { name: 'Rounak', score: 24, captain: 'Haaland', prize: 0 }] },
+        20: { pool: 1700, prizes: [600, 400, 300, 250, 50, 50, 50], results: [{ name: 'Rounak', score: 75, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 59, captain: 'Haaland', prize: 400 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 300 }, { name: 'Puneet', score: 53, captain: 'Haaland', prize: 250 }, { name: 'Shubs', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Venky', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Aniruddh', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Sukhpal', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 50, captain: 'Foden', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 46, captain: 'João Pedro', prize: 0 }, { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 41, captain: 'Bowen', prize: 0 }, { name: 'Neeraj', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 27, captain: 'Haaland', prize: 0 }] },
+        21: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 71, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 69, captain: 'Ekitiké', prize: 400 }, { name: 'Puneet', score: 65, captain: 'Haaland', prize: 300 }, { name: 'Venky', score: 62, captain: 'Haaland', prize: 250 }, { name: 'Neeraj', score: 59, captain: 'Haaland', prize: 150 }, { name: 'Sukhpal', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 51, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 50, captain: 'Woltemade', prize: 0 }, { name: 'Sandesh', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 41, captain: 'Foden', prize: 0 }, { name: 'Arindam', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 15, captain: 'João Pedro', prize: 0 }] },
+        22: { pool: 1700, prizes: [600, 400, 275, 275, 150], results: [{ name: 'Shashank', score: 57, captain: 'Fernandes', prize: 600 }, { name: 'Rounak', score: 54, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 53, captain: 'Haaland (BB)', prize: 275 }, { name: 'Sarjan', score: 53, captain: 'Pedro', prize: 275 }, { name: 'Jalaj', score: 45, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 30, captain: 'Ekitiké', prize: 0 }, { name: 'Arindam', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 28, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 26, captain: 'Haaland', prize: 0 }] },
+        23: { pool: 1700, prizes: [600, 400, 300, 250, 75, 75], results: [{ name: 'Sarjan', score: 58, captain: 'Pedro', prize: 600 }, { name: 'Venky', score: 56, captain: 'Haaland (TC)', prize: 400 }, { name: 'Aniruddh', score: 54, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 49, captain: 'Haaland (BB)', prize: 250 }, { name: 'Sukhpal', score: 48, captain: 'Haaland', prize: 75 }, { name: 'Neeraj', score: 48, captain: 'Haaland', prize: 75 }, { name: 'Raghu', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 47, captain: 'Fernandes', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 35, captain: 'Haaland (TC)', prize: 0 }, { name: 'Arindam', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 24, captain: 'Haaland', prize: 0 }] },
+        24: { pool: 1700, prizes: [600, 400, 300, 250, 50, 50, 50], results: [{ name: 'Mayank', score: 86, captain: 'Fernandes (BB)', prize: 600 }, { name: 'Rounak', score: 84, captain: 'Haaland (BB)', prize: 400 }, { name: 'Raghu', score: 79, captain: 'Haaland', prize: 300 }, { name: 'Jalaj', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 50 }, { name: 'Neeraj', score: 64, captain: 'Pedro', prize: 50 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 50 }, { name: 'Shashank', score: 63, captain: 'Fernandes', prize: 0 }, { name: 'Venky', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 62, captain: 'Pedro', prize: 0 }, { name: 'Sagar', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 38, captain: 'Haaland', prize: 0 }] },
+        25: { pool: 1700, prizes: [600, 400, 300, 200, 200], results: [{ name: 'Jalaj', score: 76, captain: 'Haaland', prize: 600 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 73, captain: 'Fernandes', prize: 300 }, { name: 'Bharath', score: 72, captain: 'Fernandes', prize: 200 }, { name: 'Neeraj', score: 72, captain: 'Fernandes', prize: 200 }, { name: 'Gokul', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 61, captain: 'Watkins', prize: 0 }, { name: 'Sagar', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 54, captain: 'Fernandes', prize: 0 }, { name: 'Mayank', score: 53, captain: 'Wilson', prize: 0 }, { name: 'Arindam', score: 36, captain: 'Haaland', prize: 0 }] }
     };
 
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        if(tabId === 'ledger') calculateLedger();
-        if(tabId === 'boxoffice') calculateComplexAwards();
+    // ---------------------------------------------------
+    // 3. APPLICATION LOGIC
+    // ---------------------------------------------------
+    
+    let currentGW = 25;
+
+    function initSelector() {
+        const selector = document.getElementById('gwSelector');
+        let html = '';
+        for (let i = 2; i <= 25; i++) {
+            html += `<button class="gw-btn ${i === currentGW ? 'active' : ''}" data-gw="${i}" onclick="showGW(${i})">Ep ${i}</button>`;
+        }
+        selector.innerHTML = html;
+        setTimeout(() => selector.scrollLeft = selector.scrollWidth, 100);
     }
 
-    function renderGWSelector() {
-        const container = document.getElementById('gwSelector');
-        let html = '';
-        for (let i = 2; i <= 21; i++) {
-            html += `<button class="ep-btn ${i === currentGW ? 'active' : ''}" onclick="loadEpisode(${i})">Episode ${i}</button>`;
-        }
-        container.innerHTML = html;
-        setTimeout(() => container.scrollLeft = container.scrollWidth, 100);
+    function showGW(gw) {
+        currentGW = gw;
+        document.querySelectorAll('.gw-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.gw) === gw);
+        });
+        loadEpisode(gw);
+        renderStories();
+    }
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
     }
 
     function loadEpisode(gw) {
         const data = gameData[gw];
         if (!data) return;
 
-        document.getElementById('headerGW').innerText = gw;
-        document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
-        const activeBtn = Array.from(document.querySelectorAll('.ep-btn')).find(b => b.innerText === `Episode ${gw}`);
-        if(activeBtn) activeBtn.classList.add('active');
+        document.getElementById('currentGW').innerText = gw;
+        document.getElementById('poolAmount').innerText = data.pool;
 
-        document.getElementById('narrativeArea').innerHTML = `
-            <div class="narrative-block">
-                <div class="narrative-header">
-                    <span class="narrative-badge">New Episode</span>
-                    <span class="narrative-title">The Narrative</span>
-                </div>
-                <div class="narrative-text">${gwSummaries[gw]}</div>
+        // Spotlight narrative
+        const loreText = seasonLore[String(gw)] || `GW${gw}: ${data.results[0].name} claims the victory!`;
+        const parts = loreText.includes(': ') ? loreText.split(': ') : ['Recap', loreText];
+        document.getElementById('spotlight').innerHTML = `
+            <div class="spotlight-card">
+                <div class="spotlight-title">${parts[0]}</div>
+                <div class="spotlight-story">${parts.slice(1).join(': ')}</div>
             </div>
         `;
 
-        document.getElementById('poolAmount').innerText = data.pool;
-        document.getElementById('playerCount').innerText = data.results.length;
-        const totalScore = data.results.reduce((acc, curr) => acc + curr.score, 0);
-        document.getElementById('avgScore').innerText = Math.round(totalScore / data.results.length);
-
+        // Prizes
         const medals = ['🥇', '🥈', '🥉', '🎖️', '🎖️', '🎖️', '🎖️'];
         let prizeHtml = '';
         data.prizes.forEach((p, i) => {
-            prizeHtml += `<div class="prize-pill">${medals[i]} ₹${p}</div>`;
+            prizeHtml += `<div class="prize-pill">${medals[i] || '•'} ₹${p}</div>`;
         });
         document.getElementById('prizeList').innerHTML = prizeHtml;
 
+        // Leaderboard
         let lbHtml = '';
         data.results.forEach((r, i) => {
-            const isWinner = r.prize > 0;
-            const rankClass = i < 3 ? `rank-${i+1}` : '';
-            const chipHtml = r.chip ? `<span class="chip chip-${r.chip}">${r.chip}</span>` : '';
+            const isWin = r.prize > 0;
             lbHtml += `
-            <div class="player-row ${isWinner ? 'winner' : ''}">
-                <div class="rank-num ${rankClass}">${i+1}</div>
+            <div class="player-row ${isWin ? 'winner' : ''}">
+                <div class="rank">${i + 1}</div>
                 <div class="p-info">
                     <div class="p-name">${r.name}</div>
-                    <div class="p-cap">⚡ ${r.captain} ${chipHtml}</div>
+                    <div class="p-captain">⚡ ${r.captain}</div>
                 </div>
                 <div class="p-score">
-                    <div class="score-val">${r.score}</div>
-                    ${r.prize > 0 ? `<div class="money-val">+₹${r.prize}</div>` : ''}
+                    ${r.score}
+                    ${r.prize > 0 ? `<span class="p-prize">+₹${r.prize}</span>` : ''}
                 </div>
             </div>`;
         });
-        document.getElementById('leaderboardList').innerHTML = lbHtml;
+        document.getElementById('leaderboard').innerHTML = lbHtml;
     }
 
     function getPlayerForm(name) {
-        // Get last 5 weeks form (Win/Money/Loss)
         const form = [];
-        const recentGWs = [21, 20, 19, 18, 17];
-        
+        const recentGWs = [25, 24, 23, 22, 21];
         recentGWs.forEach(gw => {
             const gd = gameData[gw];
-            if(gd) {
+            if (gd) {
                 const res = gd.results.find(r => r.name === name);
-                if(res) {
-                    if(res.prize > 0 && res === gd.results[0]) form.push('win');
-                    else if(res.prize > 0) form.push('money');
+                if (res) {
+                    if (res.prize > 0 && gd.results[0].name === name) form.push('win');
+                    else if (res.prize > 0) form.push('money');
                     else form.push('loss');
                 }
             }
@@ -617,13 +452,34 @@
         return form;
     }
 
+    function getInitials(name) {
+        return name.charAt(0).toUpperCase();
+    }
+
     function renderStories() {
-        const container = document.getElementById('storyList');
+        const container = document.getElementById('playerStories');
+        const currentRes = gameData[currentGW] ? [...gameData[currentGW].results] : [];
+        const managerOrder = currentRes.length > 0 ? currentRes.map(r => r.name) : Object.keys(managerMeta);
+
         let html = '';
-        for (const [name, meta] of Object.entries(managerMeta)) {
+        managerOrder.forEach(name => {
+            const meta = managerMeta[name];
+            if (!meta) return;
             const arc = seasonJourneys[name] || { act1: '...', act2: '...', act3: '...' };
-            
-            // Build Form Guide
+
+            // Weekly story
+            let weeklyText = "A quiet week.";
+            if (gwStories[String(currentGW)] && gwStories[String(currentGW)][name]) {
+                weeklyText = gwStories[String(currentGW)][name];
+            } else {
+                const res = currentRes.find(r => r.name === name);
+                if (res) {
+                    weeklyText = res.prize > 0
+                        ? `Secured a payout with ${res.score} points. Strong performance.`
+                        : `Finished with ${res.score} points. Just missed the cut.`;
+                }
+            }
+
             const form = getPlayerForm(name);
             let formHtml = '';
             form.forEach(f => {
@@ -632,50 +488,47 @@
             });
 
             html += `
-            <div class="char-card">
-                <div class="char-header">
-                    <img src="${meta.avatar}" class="char-avatar">
-                    <div>
-                        <div style="font-weight:800; font-size:1.1rem;">${name}</div>
-                        <div class="char-role">${meta.role}</div>
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="avatar" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:var(--primary);">${getInitials(name)}</div>
+                    <div class="profile-meta">
+                        <div class="role-badge">${meta.role}</div>
+                        <div class="real-name">${name}</div>
+                        <div class="char-name">as ${meta.char}</div>
                     </div>
                 </div>
                 <div class="form-guide">
-                    <span class="form-label">Recent Form</span>
+                    <span class="form-label">Form</span>
                     ${formHtml}
                 </div>
-                <div class="char-quote">"${meta.quote}"</div>
-                <div class="char-arc">
-                    <div class="arc-step">
-                        <div class="step-line"><div class="dot"></div><div class="line"></div></div>
-                        <div class="step-content">
-                            <div class="step-title">Origin</div>
-                            <div class="step-desc">${arc.act1}</div>
-                        </div>
+                <div class="story-body">
+                    <div class="latest-update">
+                        <div style="font-size:0.6rem; opacity:0.7; margin-bottom:4px;">⚡ EPISODE ${currentGW}</div>
+                        ${weeklyText}
                     </div>
-                    <div class="arc-step">
-                        <div class="step-line"><div class="dot"></div><div class="line"></div></div>
-                        <div class="step-content">
-                            <div class="step-title">Conflict</div>
-                            <div class="step-desc">${arc.act2}</div>
-                        </div>
+                    <div class="char-quote">"${meta.quote}"</div>
+                    <div class="arc-box">
+                        <div class="arc-label">Origin</div>
+                        <div class="arc-text">${arc.act1}</div>
                     </div>
-                    <div class="arc-step arc-active">
-                        <div class="step-line"><div class="dot"></div></div>
-                        <div class="step-content">
-                            <div class="step-title" style="color:var(--scapia-orange)">Current State</div>
-                            <div class="step-desc" style="color:white">${arc.act3}</div>
-                        </div>
+                    <div class="arc-box">
+                        <div class="arc-label">Conflict</div>
+                        <div class="arc-text">${arc.act2}</div>
+                    </div>
+                    <div class="arc-box">
+                        <div class="arc-label" style="color:var(--primary)">Current State</div>
+                        <div class="arc-text" style="color:#fff">${arc.act3}</div>
                     </div>
                 </div>
             </div>`;
-        }
+        });
         container.innerHTML = html;
     }
 
     function calculateLedger() {
         const ledger = {};
         Object.keys(managerMeta).forEach(p => ledger[p] = { name: p, played: 0, won: 0 });
+
         Object.values(gameData).forEach(gw => {
             gw.results.forEach(res => {
                 if (ledger[res.name]) {
@@ -684,90 +537,103 @@
                 }
             });
         });
-        const sortedLedger = Object.values(ledger).sort((a, b) => (b.won - (b.played * 100)) - (a.won - (a.played * 100)));
+
+        const sortedLedger = Object.values(ledger).sort((a, b) => (b.won - b.played * 100) - (a.won - a.played * 100));
         let html = '';
         sortedLedger.forEach(p => {
             const net = p.won - (p.played * 100);
             const netClass = net >= 0 ? 'net-pos' : 'net-neg';
-            html += `<tr><td style="font-weight:700">${p.name}</td><td style="text-align:right; color:#888;">${p.played}</td><td style="text-align:right; color:var(--gold);">₹${p.won}</td><td style="text-align:right" class="${netClass}">${net >= 0 ? '+' : ''}₹${net}</td></tr>`;
+            html += `<tr>
+                <td style="font-weight:700">${p.name}</td>
+                <td style="text-align:right; color:#888;">${p.played}</td>
+                <td style="text-align:right; color:var(--gold);">₹${p.won}</td>
+                <td style="text-align:right" class="${netClass}">${net >= 0 ? '+' : ''}₹${net}</td>
+            </tr>`;
         });
         document.getElementById('ledgerList').innerHTML = html;
     }
 
-    function calculateComplexAwards() {
+    function calculateAwards() {
         const playerStats = {};
-        Object.keys(managerMeta).forEach(p => playerStats[p] = { name: p, podiums: 0, wins: 0, maxScoreNoPrize: 0, ranks: [], totalScore: 0, games: 0, minWinScore: 999 });
+        Object.keys(managerMeta).forEach(p => playerStats[p] = {
+            name: p, podiums: 0, wins: 0, maxScoreNoPrize: 0,
+            ranks: [], totalScore: 0, games: 0, minWinScore: 999
+        });
 
         Object.values(gameData).forEach(gw => {
             gw.results.forEach((res, index) => {
                 const s = playerStats[res.name];
-                if(s) {
+                if (s) {
                     s.games++;
                     s.totalScore += res.score;
                     s.ranks.push(index + 1);
-                    if(index === 0) s.wins++;
-                    if(index < 3) s.podiums++;
-                    if(res.prize === 0 && res.score > s.maxScoreNoPrize) s.maxScoreNoPrize = res.score;
-                    if(res.prize > 0 && res.score < s.minWinScore) s.minWinScore = res.score;
+                    if (index === 0) s.wins++;
+                    if (index < 3) s.podiums++;
+                    if (res.prize === 0 && res.score > s.maxScoreNoPrize) s.maxScoreNoPrize = res.score;
+                    if (res.prize > 0 && res.score < s.minWinScore) s.minWinScore = res.score;
                 }
             });
         });
 
-        let leo = { name: '-', val: 0 }; // DiCaprio
-        let critic = { name: '-', val: 0 }; // Critics Choice
-        let twist = { name: '-', val: 0 }; // Shyamalan
-        let method = { name: '-', val: 999 }; // Method Actor (Low Variance)
-        let bay = { name: '-', val: 0 }; // Michael Bay (High total)
-        let bmovie = { name: '-', val: 999 }; // B-Movie (Low score win)
+        let leo = { name: '-', val: 0 };
+        let critic = { name: '-', val: 0 };
+        let bay = { name: '-', val: 0 };
+        let bmovie = { name: '-', val: 999 };
 
         Object.values(playerStats).forEach(p => {
-            if(p.podiums > 0) { const metric = p.podiums - p.wins; if(metric > leo.val) leo = { name: p.name, val: metric }; }
-            if(p.maxScoreNoPrize > critic.val) critic = { name: p.name, val: p.maxScoreNoPrize };
-            if(p.ranks.length > 2) {
-                const maxR = Math.max(...p.ranks);
-                const minR = Math.min(...p.ranks);
-                const diff = maxR - minR;
-                if(diff > twist.val) twist = { name: p.name, val: diff };
-                if(diff < method.val) method = { name: p.name, val: diff };
-            }
-            if(p.totalScore > bay.val) bay = { name: p.name, val: p.totalScore };
-            if(p.minWinScore < 999 && p.minWinScore < bmovie.val) bmovie = { name: p.name, val: p.minWinScore };
+            const bridesmaid = p.podiums - p.wins;
+            if (bridesmaid > leo.val) leo = { name: p.name, val: bridesmaid };
+            if (p.maxScoreNoPrize > critic.val) critic = { name: p.name, val: p.maxScoreNoPrize };
+            if (p.totalScore > bay.val) bay = { name: p.name, val: p.totalScore };
+            if (p.minWinScore < 999 && p.minWinScore < bmovie.val) bmovie = { name: p.name, val: p.minWinScore };
         });
 
-        const awardsHtml = `
+        document.getElementById('awardsList').innerHTML = `
             <div class="award-card">
-                <div class="award-info"><h4>The Leonardo DiCaprio</h4><p>Always the bridesmaid. Most Top 3 finishes without taking the Gold.</p></div>
+                <div class="award-info"><h4>The Leonardo DiCaprio</h4><p>Always the bridesmaid. Most Top 3 finishes without taking Gold.</p></div>
                 <div class="award-winner"><div class="award-winner-name">${leo.name}</div><div class="award-winner-stat">${leo.val} Silver/Bronzes</div></div>
             </div>
             <div class="award-card">
-                <div class="award-info"><h4>The Critics' Choice</h4><p>Highest box office opening (score) that completely missed the profit.</p></div>
+                <div class="award-info"><h4>The Critics' Choice</h4><p>Highest score that completely missed the profit.</p></div>
                 <div class="award-winner"><div class="award-winner-name">${critic.name}</div><div class="award-winner-stat">${critic.val} Pts (₹0 Won)</div></div>
-            </div>
-            <div class="award-card">
-                <div class="award-info"><h4>The Shyamalan Twist</h4><p>Most unpredictable plot. Biggest gap between best and worst rank.</p></div>
-                <div class="award-winner"><div class="award-winner-name">${twist.name}</div><div class="award-winner-stat">Swing of ${twist.val} Places</div></div>
-            </div>
-            <div class="award-card">
-                <div class="award-info"><h4>The Method Actor</h4><p>Stays in character. Most consistent ranking range (Lowest Variance).</p></div>
-                <div class="award-winner"><div class="award-winner-name">${method.name}</div><div class="award-winner-stat">Range of ${method.val} Places</div></div>
             </div>
             <div class="award-card">
                 <div class="award-info"><h4>The Michael Bay</h4><p>Maximum explosions. Highest cumulative score across all episodes.</p></div>
                 <div class="award-winner"><div class="award-winner-name">${bay.name}</div><div class="award-winner-stat">${bay.val} Total Pts</div></div>
             </div>
             <div class="award-card">
-                <div class="award-info"><h4>The B-Movie Hit</h4><p>Low budget, big return. Lowest score that still won a cash prize.</p></div>
+                <div class="award-info"><h4>The B-Movie Hit</h4><p>Low budget, big return. Lowest score that still won a prize.</p></div>
                 <div class="award-winner"><div class="award-winner-name">${bmovie.name}</div><div class="award-winner-stat">Won with ${bmovie.val} Pts</div></div>
             </div>
         `;
-        document.getElementById('awardsList').innerHTML = awardsHtml;
     }
 
-    renderGWSelector();
-    loadEpisode(currentGW);
-    renderStories();
-    calculateLedger();
+    function updateSeasonLore() {
+        let html = '';
+        Object.keys(seasonLore).sort((a, b) => parseInt(b) - parseInt(a)).forEach(gw => {
+            const content = seasonLore[gw];
+            const parts = content.includes(': ') ? content.split(': ') : ['Recap', content];
+            html += `
+                <div class="lore-entry">
+                    <div class="lore-gw">Episode ${gw}</div>
+                    <div class="lore-title">${parts[0]}</div>
+                    <div class="lore-desc">${parts.slice(1).join(': ')}</div>
+                </div>`;
+        });
+        document.getElementById('seasonLoreList').innerHTML = html;
+    }
 
+    // ---------------------------------------------------
+    // INIT
+    // ---------------------------------------------------
+    document.addEventListener("DOMContentLoaded", function () {
+        initSelector();
+        loadEpisode(25);
+        renderStories();
+        calculateLedger();
+        calculateAwards();
+        updateSeasonLore();
+    });
 </script>
 </body>
 </html>
