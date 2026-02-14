@@ -2,694 +2,1059 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scapia FPL: The Director's Cut</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Scapia FPL — The Director's Cut</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,700;1,9..40,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,900;1,600;1,900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0a0a;
-            --bg-panel: #141414;
-            --primary: #CC5500; /* Burnt Orange */
-            --gold: #FFBF00; /* Warm Amber */
-            --success: #6b8e23; /* Muted Sage */
-            --danger: #8b0000; /* Deep Blood Red */
-            --text-main: #e0e0e0;
-            --text-muted: #888888;
-            --border-faint: #222;
+            --cream: #F5F0E1;
+            --cream-dark: #E8E0CC;
+            --pink: #F0B8C8;
+            --pink-deep: #D4849A;
+            --mustard: #D4A017;
+            --mustard-light: #F0D060;
+            --teal: #007F80;
+            --teal-light: #1BA5A5;
+            --espresso: #3D2B1F;
+            --espresso-light: #5C4033;
+            --sand: #D2C8A8;
+            --paper: #FAF6EE;
+            --rust: #B85C38;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            padding: 20px;
-            padding-bottom: 100px;
-            position: relative;
+            font-family: 'Newsreader', Georgia, serif;
+            background: var(--cream);
+            color: var(--espresso);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Film Grain Overlay */
+        /* Paper texture overlay */
         body::before {
             content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
         }
 
-        .container { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--cream); }
+        ::-webkit-scrollbar-thumb { background: var(--sand); border-radius: 3px; }
 
-        /* HEADER */
-        .header { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-faint); }
-        .logo { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: #fff; letter-spacing: -1px; text-transform: uppercase; }
-        .logo span { color: var(--primary); }
-        .tagline { font-family: 'DM Sans', sans-serif; color: var(--gold); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; font-weight: 700; }
+        .container { max-width: 480px; margin: 0 auto; padding: 0 0 100px; position: relative; z-index: 1; }
 
-        /* FILM STRIP NAVIGATION */
-        .gw-selector { 
-            display: flex; gap: 15px; margin-bottom: 30px; overflow-x: auto; padding: 15px 10px; 
-            scrollbar-width: none; border-top: 2px dashed #333; border-bottom: 2px dashed #333;
-            background: rgba(0,0,0,0.5);
+        /* ─── HEADER ─── */
+        .header {
+            text-align: center; padding: 32px 20px 24px;
+            background: linear-gradient(180deg, var(--paper) 0%, var(--cream) 100%);
+            border-bottom: 2px solid var(--espresso);
+            position: relative;
+        }
+        .header::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; right: 0; height: 2px;
+            background: var(--espresso);
+        }
+        .header-label {
+            font-family: 'DM Sans', sans-serif; font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 0.35em; text-transform: uppercase; color: var(--teal);
+            margin-bottom: 4px;
+        }
+        .logo {
+            font-family: 'Newsreader', serif; font-size: 2rem; font-weight: 800;
+            letter-spacing: -0.5px; color: var(--espresso); text-transform: uppercase;
+            line-height: 1;
+        }
+        .logo span { color: var(--rust); }
+        .header-rule {
+            width: 40px; height: 2px; margin: 10px auto;
+            background: var(--mustard);
+        }
+        .season-sub {
+            font-family: 'Instrument Serif', serif; font-style: italic;
+            font-size: 0.85rem; color: var(--espresso-light); opacity: 0.7;
+        }
+
+        /* ─── GW SELECTOR ─── */
+        .gw-selector {
+            display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto; scrollbar-width: none;
+            background: var(--paper);
+            border-bottom: 1px solid var(--sand);
         }
         .gw-selector::-webkit-scrollbar { display: none; }
-        .gw-btn { 
-            padding: 8px 20px; background: transparent; border: 1px solid #444; 
-            color: #666; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; 
-            font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; transition: all 0.4s ease; min-width: max-content;
+        .gw-btn {
+            padding: 4px 12px; background: transparent;
+            border: 1.5px solid var(--sand); color: var(--espresso-light);
+            font-family: 'DM Sans', sans-serif; font-size: 0.6rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+            text-transform: uppercase; letter-spacing: 0.05em;
         }
-        .gw-btn:hover { color: #fff; border-color: #888; }
-        .gw-btn.active { background: var(--text-main); color: var(--bg-dark); border-color: var(--text-main); font-weight: 900; }
-
-        /* TABS */
-        .tabs { display: flex; border-bottom: 1px solid var(--border-faint); margin-bottom: 30px; }
-        .tab { 
-            flex: 1; padding: 15px; background: transparent; border: none; 
-            color: #555; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; 
-            letter-spacing: 2px; cursor: pointer; transition: 0.4s ease; 
+        .gw-btn:hover { border-color: var(--espresso-light); color: var(--espresso); }
+        .gw-btn.active {
+            border-color: var(--teal); color: var(--teal);
+            background: rgba(0,127,128,0.06);
         }
-        .tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); margin-bottom: -1px; }
 
-        /* CONTENT & ANIMATIONS */
-        .content { display: none; opacity: 0; transform: translateY(10px); }
-        .content.active { display: block; animation: slowReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes slowReveal { to { opacity: 1; transform: translateY(0); } }
-
-        /* LAYER 1: COLD OPEN (SCREENPLAY STYLE) */
-        .scene-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-faint); padding-bottom: 10px; }
-        .scene-int { color: var(--text-muted); font-family: monospace; text-transform: uppercase; font-size: 0.8rem; }
-        .scene-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; font-weight: 900; }
-        
-        .script-body { font-family: 'Lora', serif; font-size: 1.15rem; line-height: 1.8; color: #ccc; margin-bottom: 30px; }
-        .script-body p { margin-bottom: 15px; }
-        .script-body p:first-child::first-letter { color: var(--primary); font-family: 'Playfair Display', serif; font-size: 3.5rem; float: left; margin-right: 8px; line-height: 1; }
-
-        /* LAYER 3: SUBPLOT STATS */
-        .subplot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .stat-box { background: var(--bg-panel); border: 1px solid var(--border-faint); padding: 15px; border-left: 2px solid var(--primary); }
-        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; font-weight: 700; margin-bottom: 5px; }
-        .stat-value { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; }
-        
-        .prize-pool-box { border-left-color: var(--gold); background: rgba(255, 191, 0, 0.05); }
-        .prizes-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-        .prize-pill { background: rgba(0,0,0,0.8); border: 1px solid #444; color: var(--gold); padding: 3px 8px; font-size: 0.75rem; font-family: monospace; }
-
-        /* LAYER 2: LEADERBOARD & MICRO-STORIES */
-        .cast-list-header { font-family: 'Playfair Display', serif; font-size: 1.5rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; color: #fff; }
-        
-        .player-row { 
-            background: var(--bg-panel); border: 1px solid var(--border-faint); 
-            margin-bottom: 10px; transition: 0.3s ease; position: relative; overflow: hidden;
+        /* ─── BOTTOM NAV ─── */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+            background: var(--paper);
+            border-top: 2px solid var(--espresso);
+            display: flex; justify-content: center; max-width: 480px; margin: 0 auto;
         }
-        .player-row.winner { border-left: 3px solid var(--gold); }
-        .player-main { display: flex; align-items: center; padding: 15px; }
-        
-        .rank { width: 40px; font-family: 'Playfair Display', serif; font-weight: 900; color: #555; font-size: 1.2rem; }
-        .winner .rank { color: var(--gold); }
-        
-        .p-info { flex: 1; }
-        .p-name { font-weight: 700; font-size: 1.1rem; color: #fff; font-family: 'Playfair Display', serif; letter-spacing: 0.5px; }
-        .p-meta { font-size: 0.75rem; color: #888; margin-top: 4px; display: flex; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;}
-        .p-cap { color: var(--text-main); }
-        
-        .p-score { font-family: 'DM Sans', sans-serif; font-weight: 900; font-size: 1.4rem; text-align: right; line-height: 1; }
-        .p-prize { font-size: 0.7rem; color: var(--success); display: block; text-align: right; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;}
-
-        /* Expandable Micro-Story */
-        .micro-story { background: #000; padding: 12px 15px 12px 55px; font-family: 'Lora', serif; font-size: 0.9rem; color: #aaa; font-style: italic; border-top: 1px dashed #222; }
-
-        /* THE CAST / POSTERS */
-        .poster-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        .character-poster { 
-            background: var(--bg-panel); border: 1px solid #222; 
-            display: flex; flex-direction: column; overflow: hidden; position: relative;
+        .nav-btn {
+            flex: 1; padding: 10px 4px 14px; background: none; border: none;
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            cursor: pointer; transition: all 0.2s; position: relative;
+            color: var(--espresso-light); opacity: 0.5;
         }
-        .poster-header { 
-            display: flex; align-items: center; gap: 20px; padding: 25px; 
-            background: linear-gradient(to bottom, #1a1a1a, var(--bg-panel));
-            border-bottom: 1px solid #222;
+        .nav-btn.active { opacity: 1; color: var(--teal); }
+        .nav-btn.active::before {
+            content: ''; position: absolute; top: -2px; left: 20%; right: 20%;
+            height: 2px; background: var(--teal);
         }
-        
-        /* Monogram Rings */
-        .monogram-container { position: relative; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .monogram-ring { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; padding: 3px; background: conic-gradient(#444 0%, #222 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .form-hot .monogram-ring { background: conic-gradient(var(--gold) 0%, var(--primary) 50%, #222 100%); }
-        .form-cold .monogram-ring { background: conic-gradient(#555 0%, #111 100%); }
-        .monogram { width: 60px; height: 60px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: #fff; }
-
-        .char-titles { flex: 1; }
-        .char-role { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 5px; }
-        .char-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: #fff; line-height: 1; }
-        .char-actor { font-size: 0.85rem; color: #777; font-family: 'Lora', serif; font-style: italic; margin-top: 5px; }
-        
-        .char-quote { padding: 20px 25px; border-bottom: 1px solid #222; font-family: 'Playfair Display', serif; font-style: italic; color: #fff; font-size: 1.1rem; border-left: 3px solid var(--primary); background: #000; }
-        
-        .arc-container { padding: 25px; }
-        .arc-act { margin-bottom: 20px; }
-        .arc-act:last-child { margin-bottom: 0; }
-        .act-label { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 8px; display: block; }
-        .act-text { font-family: 'Lora', serif; font-size: 0.95rem; line-height: 1.6; color: #bbb; }
-        .act-text.current { color: #fff; }
-
-        /* LEDGER */
-        .ledger-table { width: 100%; border-collapse: collapse; font-family: 'DM Sans', sans-serif; }
-        .ledger-table th { text-align: left; padding: 15px; color: #777; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #333; font-weight: 800; }
-        .ledger-table td { padding: 15px; border-bottom: 1px solid #222; font-size: 1rem; color: #eee; }
-        .ledger-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; }
-        .net-pos { color: var(--success); font-family: monospace; font-size: 1.1rem; }
-        .net-neg { color: var(--danger); font-family: monospace; font-size: 1.1rem; }
-
-        /* BOX OFFICE AWARDS */
-        .awards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .award-card { background: #000; padding: 25px; border: 1px solid #222; text-align: center; position: relative; overflow: hidden; }
-        .award-card::before { content: "🏆"; position: absolute; top: -15px; right: -15px; font-size: 5rem; opacity: 0.05; }
-        .award-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); margin-bottom: 10px; font-weight: 900; }
-        .award-desc { font-family: 'Lora', serif; font-size: 0.85rem; color: #777; font-style: italic; margin-bottom: 20px; line-height: 1.4; }
-        .award-winner-name { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: #fff; }
-        .award-stat { font-size: 0.8rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-top: 5px; }
-
-        /* FILM BURN EFFECT */
-        .film-burn {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(204,85,0,0.8) 0%, rgba(10,10,10,1) 100%);
-            z-index: 10000; opacity: 0; pointer-events: none; mix-blend-mode: screen;
+        .nav-btn .material-icons { font-size: 20px; }
+        .nav-btn span:last-child {
+            font-family: 'DM Sans', sans-serif; font-size: 0.5rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
         }
-        .burn-active { animation: burnAnim 0.4s ease-out; }
-        @keyframes burnAnim { 0% { opacity: 0; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } 100% { opacity: 0; transform: scale(1); } }
 
+        /* ─── CONTENT ─── */
+        .content { display: none; }
+        .content.active { display: block; animation: curtainUp 0.4s ease; }
+        @keyframes curtainUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── THE BATTLE (Tab 1) ─── */
+        .cold-open {
+            text-align: center; padding: 24px 20px 20px;
+            background: var(--paper);
+            border-bottom: 1px solid var(--sand);
+        }
+        .cold-open-slug {
+            font-family: 'Courier Prime', monospace; font-size: 0.6rem;
+            color: var(--teal); text-transform: uppercase; letter-spacing: 0.25em;
+            margin-bottom: 6px;
+        }
+        .cold-open-title {
+            font-family: 'Newsreader', serif; font-size: 1.6rem; font-weight: 700;
+            color: var(--espresso); line-height: 1.15; margin-bottom: 14px;
+        }
+        .cold-open-body {
+            font-size: 0.95rem; line-height: 1.7; color: var(--espresso-light);
+            text-align: left; padding: 0 4px;
+        }
+        .cold-open-body p { margin-bottom: 12px; }
+        .cold-open-body p:first-child::first-letter {
+            font-family: 'Newsreader', serif; font-size: 2.8rem; float: left;
+            line-height: 0.8; margin-right: 6px; margin-top: 4px;
+            color: var(--rust); font-weight: 700;
+        }
+
+        /* Prize Diorama */
+        .prize-diorama {
+            display: flex; justify-content: center; gap: 0;
+            margin: 16px; border: 2px solid var(--espresso);
+            position: relative;
+        }
+        .prize-diorama::after {
+            content: ''; position: absolute; inset: 3px;
+            border: 1px solid var(--espresso); pointer-events: none;
+        }
+        .prize-cell {
+            flex: 1; padding: 14px 8px; text-align: center;
+            border-right: 1px solid var(--sand);
+            background: var(--paper);
+        }
+        .prize-cell:last-child { border-right: none; }
+        .prize-cell-label {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            text-transform: uppercase; letter-spacing: 0.15em;
+            color: var(--espresso-light); opacity: 0.6; margin-bottom: 4px;
+        }
+        .prize-cell-val {
+            font-family: 'Newsreader', serif; font-size: 1.1rem;
+            font-weight: 700; color: var(--espresso);
+        }
+        .prize-cell-val.gold { color: var(--mustard); }
+
+        /* Subplot Cards */
+        .subplot-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px; margin-bottom: 16px; }
+        .subplot-item {
+            background: var(--paper); border: 1.5px solid var(--sand);
+            padding: 10px; text-align: center;
+        }
+        .subplot-title {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            text-transform: uppercase; letter-spacing: 0.15em;
+            color: var(--teal); margin-bottom: 6px;
+        }
+        .subplot-content { font-size: 0.8rem; color: var(--espresso); }
+        .subplot-content .highlight { color: var(--mustard); font-weight: 700; }
+
+        /* Section Title */
+        .section-title {
+            font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.25em; color: var(--teal);
+            text-align: center; padding: 14px 16px 10px;
+        }
+
+        /* Ensemble Gallery — Diorama Cards */
+        .player-row {
+            margin: 0 16px 8px; background: var(--paper);
+            border: 1.5px solid var(--sand); transition: all 0.2s;
+            position: relative;
+        }
+        .player-row.winner {
+            border-color: var(--mustard);
+            box-shadow: inset 3px 0 0 var(--mustard);
+        }
+        .row-main { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; }
+        .rank {
+            width: 24px; font-family: 'Courier Prime', monospace; font-weight: 700;
+            color: var(--sand); font-size: 0.85rem; flex-shrink: 0;
+        }
+        .winner .rank { color: var(--mustard); }
+        .p-info { flex: 1; min-width: 0; }
+        .p-name {
+            font-family: 'DM Sans', sans-serif; font-weight: 700;
+            color: var(--espresso); font-size: 0.85rem;
+        }
+        .p-role {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .p-cap {
+            font-family: 'Courier Prime', monospace; font-size: 0.55rem;
+            color: var(--espresso-light); opacity: 0.5; margin-top: 1px;
+        }
+        .p-right { text-align: right; flex-shrink: 0; }
+        .p-score {
+            font-family: 'Courier Prime', monospace; font-weight: 700;
+            font-size: 0.95rem; color: var(--espresso);
+        }
+        .p-prize {
+            font-family: 'Courier Prime', monospace; font-size: 0.55rem;
+            color: var(--teal); font-weight: 700;
+        }
+
+        .micro-story {
+            max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s ease;
+            background: var(--cream); font-style: italic; font-size: 0.8rem;
+            color: var(--espresso-light); line-height: 1.5;
+            padding: 0 12px 0 36px; border-top: 0 solid var(--sand);
+        }
+        .player-row.expanded .micro-story {
+            max-height: 160px; padding: 10px 12px 10px 36px;
+            border-top: 1px solid var(--sand);
+        }
+
+        /* ─── THE CAST (Tab 2) ─── */
+        .poster-grid { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 0 16px; }
+
+        .poster {
+            background: var(--paper); border: 2px solid var(--espresso);
+            position: relative; text-align: center;
+        }
+        .poster::after {
+            content: ''; position: absolute; inset: 3px;
+            border: 1px solid var(--espresso); pointer-events: none;
+        }
+        .poster-head {
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px; text-align: left;
+            border-bottom: 1px solid var(--sand);
+        }
+        .monogram {
+            width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Newsreader', serif; font-size: 1.2rem; font-weight: 800;
+            color: var(--paper); background: var(--espresso);
+            border: 2px solid var(--espresso);
+        }
+        .monogram.hot {
+            background: var(--mustard); color: var(--espresso);
+            border-color: var(--mustard);
+        }
+        .poster-meta h3 {
+            font-family: 'Newsreader', serif; font-size: 1.05rem;
+            font-weight: 700; color: var(--espresso);
+        }
+        .poster-meta .role-tag {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            color: var(--teal); text-transform: uppercase; letter-spacing: 0.15em;
+        }
+        .poster-meta .char-tag {
+            font-family: 'Instrument Serif', serif; font-style: italic;
+            font-size: 0.75rem; color: var(--espresso-light); opacity: 0.6;
+        }
+        .poster-quote {
+            padding: 12px 16px; font-family: 'Instrument Serif', serif;
+            font-style: italic; color: var(--espresso-light); font-size: 0.85rem;
+            border-bottom: 1px solid var(--sand); background: rgba(0,127,128,0.03);
+        }
+        .form-strip {
+            display: flex; gap: 4px; padding: 10px 16px;
+            border-bottom: 1px solid var(--sand); align-items: center;
+            justify-content: center;
+        }
+        .form-label {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            color: var(--espresso-light); opacity: 0.5; text-transform: uppercase;
+            letter-spacing: 0.1em; margin-right: 6px;
+        }
+        .form-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sand); }
+        .form-dot.w { background: var(--teal); }
+        .form-dot.l { background: var(--cream-dark); border: 1px solid var(--sand); }
+
+        .poster-arc { padding: 14px 16px; position: relative; z-index: 1; }
+        .arc-step { margin-bottom: 10px; }
+        .arc-step:last-child { margin-bottom: 0; }
+        .arc-head {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            color: var(--espresso-light); opacity: 0.5; text-transform: uppercase;
+            letter-spacing: 0.15em; margin-bottom: 3px;
+        }
+        .arc-head.final { color: var(--mustard); opacity: 1; }
+        .arc-txt { font-size: 0.8rem; color: var(--espresso-light); line-height: 1.5; }
+        .arc-txt.active { color: var(--espresso); }
+
+        /* ─── SEASON LORE (Tab 3) ─── */
+        .lore-episode {
+            margin: 0 16px 24px; padding: 16px;
+            background: var(--paper); border: 1.5px solid var(--sand);
+            text-align: center;
+        }
+        .lore-episode:last-child { margin-bottom: 0; }
+        .lore-ep-num {
+            font-family: 'Courier Prime', monospace; font-size: 0.55rem;
+            color: var(--teal); text-transform: uppercase; letter-spacing: 0.25em;
+            margin-bottom: 4px;
+        }
+        .lore-ep-title {
+            font-family: 'Newsreader', serif; font-size: 1.2rem; font-weight: 700;
+            color: var(--espresso); margin-bottom: 4px; line-height: 1.15;
+        }
+        .lore-ep-winner {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            color: var(--espresso-light); opacity: 0.5;
+            text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+        }
+        .lore-ep-body {
+            font-size: 0.85rem; line-height: 1.65; color: var(--espresso-light);
+            text-align: left;
+        }
+        .lore-ep-body p { margin-bottom: 10px; }
+        .lore-ep-stats {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+            margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--sand);
+        }
+        .lore-stat {
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            color: var(--espresso-light); opacity: 0.5; text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .lore-stat strong { color: var(--espresso); opacity: 1; }
+
+        /* ─── BOX OFFICE (Tab 4) ─── */
+        .ledger-wrap { padding: 0 16px; }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left; padding: 8px 10px;
+            font-family: 'Courier Prime', monospace; font-size: 0.5rem;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--espresso-light); opacity: 0.5;
+            border-bottom: 2px solid var(--espresso);
+        }
+        td {
+            padding: 8px 10px; border-bottom: 1px solid var(--sand);
+            font-size: 0.8rem;
+        }
+        .net-pos { color: var(--teal); font-family: 'Courier Prime', monospace; font-weight: 700; }
+        .net-neg { color: var(--rust); font-family: 'Courier Prime', monospace; font-weight: 700; }
+
+        .award-card {
+            margin: 0 16px 8px; background: var(--paper);
+            border: 1.5px solid var(--sand); padding: 14px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .aw-L h4 {
+            font-family: 'Newsreader', serif; font-weight: 700;
+            color: var(--mustard); font-size: 0.95rem; margin-bottom: 2px;
+        }
+        .aw-L p { font-size: 0.75rem; color: var(--espresso-light); font-style: italic; opacity: 0.6; }
+        .aw-R { text-align: right; }
+        .aw-name { font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--espresso); font-size: 0.95rem; }
+        .aw-stat { font-family: 'Courier Prime', monospace; font-size: 0.6rem; color: var(--teal); }
+
+        /* ─── FLASH ─── */
+        .flash { position: fixed; inset: 0; background: var(--cream); opacity: 0; pointer-events: none; z-index: 10000; }
+        .flash-active { animation: flashAnim 0.2s ease-out; }
+        @keyframes flashAnim { 0% { opacity: 0.3; } 100% { opacity: 0; } }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 380px) {
+            .cold-open-title { font-size: 1.3rem; }
+            .logo { font-size: 1.7rem; }
+        }
+        @media (min-width: 481px) {
+            .container { border-left: 2px solid var(--espresso); border-right: 2px solid var(--espresso); }
+            .bottom-nav { border-left: 2px solid var(--espresso); border-right: 2px solid var(--espresso); }
+        }
     </style>
 </head>
 <body>
-
-<div class="film-burn" id="filmBurn"></div>
-
+<div class="flash" id="flashFx"></div>
 <div class="container">
     <header class="header">
-        <div class="logo">Scapia<span>FPL</span></div>
-        <div class="tagline">Season 1: The Director's Cut</div>
+        <div class="header-label">A Scapia Production</div>
+        <div class="logo">Scapia <span>FPL</span></div>
+        <div class="header-rule"></div>
+        <div class="season-sub">The Director's Cut (2024–25)</div>
     </header>
-
     <div class="gw-selector" id="gwSelector"></div>
-
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab('battle', this)">The Episode</button>
-        <button class="tab" onclick="switchTab('cast', this)">Dramatis Personae</button>
-        <button class="tab" onclick="switchTab('ledger', this)">Box Office Returns</button>
-        <button class="tab" onclick="switchTab('awards', this)">Critics' Choice</button>
-    </div>
-
-    <div id="battle" class="content active">
-        <div class="scene-header">
-            <span class="scene-int">INT. SCAPIA LEAGUE - GAMEWEEK <span id="hdrGw"></span></span>
-            <div class="scene-title" id="hdrTitle">The Title</div>
-        </div>
-        <div class="script-body" id="scriptBody"></div>
-
-        <div class="subplot-grid" id="subplotGrid"></div>
-
-        <div class="cast-list-header">The Weekly Cast</div>
-        <div id="leaderboard"></div>
-    </div>
-
-    <div id="cast" class="content">
-        <div class="poster-grid" id="playerStories"></div>
-    </div>
-
-    <div id="ledger" class="content">
-        <div class="cast-list-header">Financial Ledgers</div>
-        <table class="ledger-table">
-            <thead>
-                <tr>
-                    <th>Manager</th>
-                    <th style="text-align:right">Played</th>
-                    <th style="text-align:right">Gross</th>
-                    <th style="text-align:right">Net Profit</th>
-                </tr>
-            </thead>
-            <tbody id="ledgerList"></tbody>
-        </table>
-    </div>
-
-    <div id="awards" class="content">
-        <div class="cast-list-header">End of Season Awards</div>
-        <div class="awards-grid" id="awardsList"></div>
-    </div>
+    <div id="battle" class="content active"></div>
+    <div id="cast" class="content"></div>
+    <div id="lore" class="content"></div>
+    <div id="ledger" class="content"></div>
 </div>
-
+<nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" onclick="switchTab('battle',this)">
+        <span class="material-icons">visibility</span>
+        <span>Battle</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('cast',this)">
+        <span class="material-icons">theater_comedy</span>
+        <span>Cast</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('lore',this)">
+        <span class="material-icons">history_edu</span>
+        <span>Archives</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('ledger',this)">
+        <span class="material-icons">account_balance</span>
+        <span>Ledger</span>
+    </button>
+</nav>
 <script>
-    // ==========================================
-    // 1. DATA DICTIONARIES (THE LORE)
-    // ==========================================
-    
-    // The Reimagined Characters
-    const managerMeta = {
-        'Gokul': { role: 'CHAOS AGENT', char: 'The Joker', quote: "Introduce a little anarchy. Upset the established template." },
-        'Jalaj': { role: 'THE STRUGGLER', char: 'Sisyphus', quote: "The rock rolls down, but I will push it back up the mountain." },
-        'Rounak': { role: 'THE CHOSEN ONE', char: 'Neo', quote: "I know Kung Fu. And I know how to score 100 points." },
-        'Shashank': { role: 'THE ANARCHIST', char: 'Tyler Durden', quote: "The template is a prison. Reject the Haaland armband. Break free." },
-        'Raghu': { role: 'THE DIRECTOR', char: 'Christopher Nolan', quote: "You have to build the squad meticulously. Inception level planning." },
-        'Neeraj': { role: 'THE FUTURIST', char: 'Tony Stark', quote: "Genius, billionaire, playboy, differential-picker." },
-        'Sukhpal': { role: 'THE ASSASSIN', char: 'John Wick', quote: "People keep asking if I'm back. Yeah, I'm thinking I'm back." },
-        'Venky': { role: 'THE PHILANTHROPIST', char: 'Jay Gatsby', quote: "I threw the biggest parties, played all my chips, and watched the green light." },
-        'Mayank': { role: 'THE GAMBLER', char: 'Harvey Dent', quote: "You either die a differential, or live long enough to see yourself become the template." },
-        'Bharath': { role: 'THE FIGHTER', char: 'Rocky Balboa', quote: "It ain't about how hard you hit. It's about how many red arrows you can take and keep moving forward." },
-        'Sarjan': { role: 'THE ASTRONAUT', char: 'Cooper', quote: "I drifted into the void for 20 weeks, but I always believed in the data." },
-        'Sandesh': { role: 'THE PIRATE', char: 'Jack Sparrow', quote: "Not all treasure is silver and gold, mate. But in this league, it mostly is." },
-        'Puneet': { role: 'THE CENTURION', char: 'Maximus', quote: "What we do in life echoes in eternity. I will have my vengeance, in this GW or the next." },
-        'Aniruddh': { role: 'THE TRICKSTER', char: 'Loki', quote: "I have been falling for thirty minutes! Yet somehow, I land in the prize money." },
-        'Arindam': { role: 'THE CURSED', char: 'Bruce Banner', quote: "That's my secret, Cap. I'm always on a red arrow." },
-        'Sagar': { role: 'THE COMET', char: 'Icarus', quote: "I flew too close to the sun in Gameweek 10. The wax melted." },
-        'Shubs': { role: 'THE BROKER', char: 'Littlefinger', quote: "Chaos isn't a pit. Chaos is a ladder." }
-    };
 
-    // Deep 3-Act Arcs for the Dramatis Personae
-    const seasonJourneys = {
-        'Jalaj': { act1: "The early weeks were a brutal lesson in physics. Every differential picked was a rock pushed up a hill, only to roll back down via blank gameweeks and injuries.", act2: "Heartbreak struck in the mid-season. Sitting on the precipice of victory, late Sunday goals repeatedly dashed his hopes, leaving him stranded at the bottom of the ledger.", act3: "But Sisyphus smiled. A shocking victory in Episode 19 broke the curse, followed by a monumental 76-point triumph in the finale. The mountain was finally conquered." },
-        'Mayank': { act1: "Operating entirely on coin flips. Early season was marked by chaotic transfers and volatile captaincy choices. Sometimes it paid off, mostly it burned.", act2: "A lucky victory in Episode 13 righted the ship, proving that when the variance swings in The Gambler's favor, the house always loses.", act3: "He hit the absolute jackpot in Episode 24. A massive 86-point masterclass utilizing the Bench Boost left the entire league bankrupt in his wake." },
-        'Sarjan': { act1: "Detached from the rest of the pack, drifting aimlessly in the vacuum of the lower ranks. Every transfer felt like a distress signal into deep space.", act2: "He found his docking sequence. A stubborn, almost religious belief in João Pedro provided the gravitational pull needed to avoid entirely crashing.", act3: "Contact was finally made in Episode 23. A 58-point victory secured his first major payout, proving that patience in the void eventually yields results." },
-        'Shashank': { act1: "A conscientious objector to the Erling Haaland industrial complex. Refused to play the template, suffering the financial consequences of his rebellion.", act2: "Vindication arrived spectacularly. A Triple Captain chip on Phil Foden shattered the established order, resulting in an 86-point windfall.", act3: "Proved he didn't need high scores to win. Mastered the low-scoring slugfest of Episode 22, taking gold with a mere 57 points. The Anarchist survived." },
-        'Rounak': { act1: "Spent the autumn in a state of suspended animation. Solid but unspectacular, waiting for the code of the matrix to reveal itself.", act2: "Plugged in and went supernova. Dropped an historic 104-point Bench Boost in Episode 16, establishing himself as the terrifying ceiling of the league.", act3: "A volatile final act. Crashed to dead last in Episode 18, only to resurrect and win Episode 20. The Chosen One remained unpredictable until the end." },
-        'Raghu': { act1: "The Architect quietly laid the foundations. While others chased flashy differentials, he built a robust squad designed to weather the winter storms.", act2: "The cinematic peak. Dominated the middle episodes, tying for a monumental 103-point win and immediately following it with a solo victory in Episode 18.", act3: "Maintained a terrifying baseline of competence. Never strayed too far from the podium, directing the flow of prize money from the elite tables." },
-        'Neeraj': { act1: "Treated the game like an algorithm to be solved. Highly efficient captaincy choices kept him in the green while others bled cash.", act2: "Experienced a rare systems failure during the chip season, misfiring on key differentials and suffering temporary cash flow issues.", act3: "Rebooted and automated his returns. Finished the season on an absolute tear, cashing in Episodes 23, 24, and 25 consecutively. The tech billionaire of the league." },
-        'Venky': { act1: "Threw open the doors to his mansion and handed out points to everyone else. A disastrous start left him as the league's primary benefactor.", act2: "The mansion remained empty. Wild differential swings failed to connect, leaving him financially depleted as the winter dragged on.", act3: "The green light at the end of the dock finally glowed. Back-to-back podiums late in the season restored his pride, proving the old money still had some fight." },
-        'Sukhpal': { act1: "Operated completely in the shadows. Barely registered on the radar during the opening acts of the season, a dormant threat.", act2: "Executed a flawless hit in Episode 10. Dropped a massive 93-point haul out of nowhere, assassinating the hopes of the frontrunners.", act3: "Returned to the shadows, but remained lethal. Sneaked into minor prize money spots just often enough to keep his ledger healthy." },
-        'Gokul': { act1: "Introduced pure anarchy. Captained unexpected assets and thrived on the confusion of the template-followers. The early weeks belonged to chaos.", act2: "The joke stopped being funny. A long, barren mid-season saw his chaotic methods punished by relentless predictability.", act3: "The punchline delivered. A brilliant resurgence in Episode 21 secured gold, proving that in a league of templates, unpredictability is the ultimate weapon." },
-        'Sandesh': { act1: "Sailed his ship straight into a hurricane. A differential gamble in the early weeks left him shipwrecked at the bottom of the ocean.", act2: "Found a piece of driftwood and floated. Managed a benchmark 83-point haul to stay alive, but struggled for consistency.", act3: "Struck gold on a deserted island. A shock victory in Episode 19 provided the plunder needed to survive the season. A pirate's life indeed." },
-        'Bharath': { act1: "Took heavy blows in the early rounds. Hung on the ropes, bleeding points while the heavyweights dominated the prize pool.", act2: "Found his corner and rested. A quiet period of rebuilding his squad value and reassessing his tactical stance.", act3: "The ultimate underdog comeback. Fought his way to podium finishes in Episodes 20, 21, and 25. He didn't win the belt, but he went the distance." },
-        'Puneet': { act1: "The shield of reliability. Played the straightest bat in the league, relying on premium assets to deliver steady, unspectacular returns.", act2: "A disastrous Free Hit shattered the shield. Found himself uncharacteristically languishing at the bottom of the pack during the chaotic blank gameweeks.", act3: "Died a gladiator's death. Fought back valiantly to secure 2nd place in the final episode. He won the crowd, if not the ultimate prize." },
-        'Aniruddh': { act1: "Possessed an uncanny, magnetic ability to attract prize money with incredibly low scores. The cosmic luck of the trickster.", act2: "Peaked brilliantly in Episode 17, tying for first with a massive 103 points. Proved he could legitimately compete with the heavy hitters.", act3: "The magic flickered out. Spent the final act slowly sliding down the ranks, grabbing only minor scraps as his illusions faded." },
-        'Shubs': { act1: "Circled the waters patiently. Watched the early panic unfold without committing his resources, waiting for the scent of blood.", act2: "A feeding frenzy in Episode 12. Seized first place with clinical precision while the rest of the league overthought their strategies.", act3: "Retreated to the deep water. Nibbled on minor payouts in the late season, ensuring his ledger remained comfortably in the black." },
-        'Arindam': { act1: "Cursed from day one. Every transfer injured, every captain blanked. The universe seemed fundamentally aligned against him.", act2: "The tragedy deepened. Scored a massive 75 points in Episode 14—a score that wins most weeks—and walked away with absolutely zero prize money.", act3: "The Hulk never smashed. Missed out on the money again in the final acts despite respectable scores. A truly tragic cinematic figure." },
-        'Sagar': { act1: "Blazed across the sky like a comet. Scored heavily in the opening quarter of the season, looking like a genuine title contender.", act2: "Flew too close to the sun. The momentum evaporated entirely, leading to a brutal string of low scores and broken differentials.", act3: "Faded into the atmosphere. Burned out completely in the final stretch, desperately needing a supply drop that never arrived." }
-    };
-
-    // The Game Data Archive (GW2 - GW25)
-    // Same structure, holding the pure stats.
-    const gameData = {
-        2: { pool: 1100, prizes: [600, 400, 100], results: [{ name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 }, { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 }, { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 }, { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 }, { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 }, { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 }, { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 }, { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }] },
-        3: { pool: 1400, prizes: [700, 400, 200, 100], results: [{ name: 'Sandesh', score: 83, captain: 'Pedro', prize: 700 }, { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 }, { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 }, { name: 'Sarjan', score: 64, captain: 'Pedro', prize: 150 }, { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 53, captain: 'Pedro', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 }, { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 }, { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 }, { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }] },
-        4: { pool: 1500, prizes: [700, 450, 250, 100], results: [{ name: 'Venky', score: 77, captain: 'Salah', prize: 700 }, { name: 'Raghu', score: 73, captain: 'Haaland', prize: 450 }, { name: 'Sukhpal', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Puneet', score: 66, captain: 'Haaland', prize: 100 }, { name: 'Arindam', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 63, captain: 'Pedro', prize: 0 }, { name: 'Rounak', score: 63, captain: 'Pedro', prize: 0 }, { name: 'Aniruddh', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 62, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 60, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 58, captain: 'Salah', prize: 0 }, { name: 'Shubs', score: 55, captain: 'Salah', prize: 0 }, { name: 'Gokul', score: 53, captain: 'Kudus', prize: 0 }, { name: 'Mayank', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 41, captain: 'Ekitiké', prize: 0 }] },
-        5: { pool: 1500, prizes: [500, 400, 300, 200, 100], results: [{ name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 }, { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 }, { name: 'Venky', score: 51, captain: 'Salah', prize: 0 }, { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 47, captain: 'Pedro', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 44, captain: 'Pedro', prize: 0 }, { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 }, { name: 'Rounak', score: 38, captain: 'Pedro', prize: 0 }] },
-        6: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 68, captain: 'Haaland', prize: 600 }, { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 250 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 150 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 29, captain: 'Pedro', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 }, { name: 'Jalaj', score: 26, captain: 'Pedro', prize: 0 }, { name: 'Bharath', score: 24, captain: 'Pedro', prize: 0 }, { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }] },
-        7: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 }, { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 }, { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 48, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 47, captain: 'Pedro', prize: 0 }, { name: 'Sarjan', score: 41, captain: 'Pedro', prize: 0 }] },
-        8: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 }, { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 }, { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 }, { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 }, { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 68, captain: 'Pedro (FH)', prize: 0 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 }, { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'Pedro', prize: 0 }, { name: 'Jalaj', score: 37, captain: 'Pedro', prize: 0 }] },
-        9: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 }, { name: 'Bharath', score: 68, captain: 'Pedro', prize: 400 }, { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 }, { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 }, { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Jalaj', score: 57, captain: 'Pedro', prize: 50 }, { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 44, captain: 'Pedro', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 }, { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 37, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 }, { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 }, { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }] },
-        10: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 }, { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 }, { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 82, captain: 'Haaland (BB)', prize: 250 }, { name: 'Sagar', score: 81, captain: 'Haaland (FH)', prize: 150 }, { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 }, { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 64, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 62, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'Pedro', prize: 0 }] },
-        11: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 }, { name: 'Jalaj', score: 43, captain: 'Pedro', prize: 50 }, { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 }, { name: 'Sarjan', score: 43, captain: 'Pedro', prize: 50 }, { name: 'Sandesh', score: 42, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 }, { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 }, { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 }, { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }] },
-        12: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 }, { name: 'Rounak', score: 48, captain: 'Haaland (FH)', prize: 250 }, { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 }, { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Haaland (BB)', prize: 0 }, { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'Pedro', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 35, captain: 'Haaland (TC)', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 }, { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 32, captain: 'Haaland (TC)', prize: 0 }, { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 }, { name: 'Jalaj', score: 27, captain: 'Pedro', prize: 0 }] },
-        13: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 }, { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 }, { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 }, { name: 'Sarjan', score: 41, captain: 'Pedro', prize: 250 }, { name: 'Gokul', score: 40, captain: 'Haaland (BB)', prize: 150 }, { name: 'Rounak', score: 39, captain: 'Haaland (TC)', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 27, captain: 'Haaland (TC)', prize: 0 }, { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 17, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }] },
-        14: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Rounak', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Shubs', score: 78, captain: 'Haaland', prize: 300 }, { name: 'Raghu', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Neeraj', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Arindam', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Gakpo', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 25, captain: 'Pedro', prize: 0 }] },
-        15: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 86, captain: 'Foden (TC)', prize: 600 }, { name: 'Shubs', score: 74, captain: 'Haaland (FH)', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 59, captain: 'Haaland (WC)', prize: 200 }, { name: 'Mayank', score: 59, captain: 'Haaland (WC)', prize: 200 }, { name: 'Arindam', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 53, captain: 'Mateta', prize: 0 }, { name: 'Bharath', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 43, captain: 'Palmer', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 35, captain: 'Haaland', prize: 0 }] },
-        16: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Rounak', score: 104, captain: 'Haaland (BB)', prize: 600 }, { name: 'Neeraj', score: 92, captain: 'Saka (FH)', prize: 400 }, { name: 'Sukhpal', score: 80, captain: 'Haaland (WC)', prize: 275 }, { name: 'Mayank', score: 80, captain: 'Haaland (FH)', prize: 275 }, { name: 'Raghu', score: 75, captain: 'Haaland', prize: 150 }, { name: 'Shashank', score: 74, captain: 'B.Fernandes (BB)', prize: 0 }, { name: 'Aniruddh', score: 73, captain: 'Haaland (WC)', prize: 0 }, { name: 'Shubs', score: 71, captain: 'Saka', prize: 0 }, { name: 'Arindam', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 59, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 51, captain: 'Thiago (WC)', prize: 0 }, { name: 'Jalaj', score: 51, captain: 'Palmer', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Mateta', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'Pedro', prize: 0 }] },
-        17: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Raghu', score: 103, captain: 'Haaland (TC)', prize: 500 }, { name: 'Aniruddh', score: 103, captain: 'Haaland (TC)', prize: 500 }, { name: 'Bharath', score: 92, captain: 'Haaland (TC)', prize: 300 }, { name: 'Neeraj', score: 91, captain: 'Haaland (TC)', prize: 250 }, { name: 'Mayank', score: 88, captain: 'Haaland', prize: 150 }, { name: 'Jalaj', score: 83, captain: 'Haaland (BB)', prize: 0 }, { name: 'Sukhpal', score: 79, captain: 'Haaland (BB)', prize: 0 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 74, captain: 'Foden (FH)', prize: 0 }, { name: 'Sagar', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 52, captain: 'Thiago', prize: 0 }, { name: 'Sarjan', score: 47, captain: 'Pedro', prize: 0 }] },
-        18: { pool: 1700, prizes: [600, 400, 300, 200, 200], results: [{ name: 'Raghu', score: 71, captain: 'Haaland (BB)', prize: 600 }, { name: 'Neeraj', score: 65, captain: 'Haaland (BB)', prize: 400 }, { name: 'Shashank', score: 64, captain: 'Saka', prize: 300 }, { name: 'Sukhpal', score: 54, captain: 'Haaland (TC)', prize: 200 }, { name: 'Gokul', score: 54, captain: 'Thiago (FH)', prize: 200 }, { name: 'Aniruddh', score: 52, captain: 'Haaland (FH)', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland (WC)', prize: 0 }, { name: 'Venky', score: 44, captain: 'Haaland (FH)', prize: 0 }, { name: 'Bharath', score: 43, captain: 'Ekitiké', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 42, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 36, captain: 'Haaland (FH)', prize: 0 }] },
-        19: { pool: 1700, prizes: [500, 500, 300, 250, 150], results: [{ name: 'Sandesh', score: 58, captain: 'Haaland', prize: 500 }, { name: 'Jalaj', score: 58, captain: 'Haaland', prize: 500 }, { name: 'Venky', score: 57, captain: 'Haaland (BB)', prize: 300 }, { name: 'Bharath', score: 44, captain: 'Ekitiké', prize: 250 }, { name: 'Arindam', score: 43, captain: 'Haaland (TC)', prize: 150 }, { name: 'Puneet', score: 40, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sagar', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland (FH)', prize: 0 }, { name: 'Shashank', score: 37, captain: 'Wirtz', prize: 0 }, { name: 'Neeraj', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 33, captain: 'Thiago', prize: 0 }, { name: 'Aniruddh', score: 32, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 32, captain: 'Pedro', prize: 0 }, { name: 'Raghu', score: 31, captain: 'Haaland (FH)', prize: 0 }, { name: 'Mayank', score: 31, captain: 'Woltemade', prize: 0 }, { name: 'Shubs', score: 30, captain: 'Haaland (BB)', prize: 0 }, { name: 'Rounak', score: 24, captain: 'Haaland', prize: 0 }] },
-        20: { pool: 1700, prizes: [600, 400, 300, 250, 50, 50, 50], results: [{ name: 'Rounak', score: 75, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 59, captain: 'Haaland', prize: 400 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 300 }, { name: 'Puneet', score: 53, captain: 'Haaland', prize: 250 }, { name: 'Shubs', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Venky', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Aniruddh', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Sukhpal', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 50, captain: 'Foden', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 46, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 41, captain: 'Bowen', prize: 0 }, { name: 'Neeraj', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 27, captain: 'Haaland', prize: 0 }] },
-        21: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 71, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 69, captain: 'Ekitiké', prize: 400 }, { name: 'Puneet', score: 65, captain: 'Haaland', prize: 300 }, { name: 'Venky', score: 62, captain: 'Haaland', prize: 250 }, { name: 'Neeraj', score: 59, captain: 'Haaland', prize: 150 }, { name: 'Sukhpal', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 51, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 50, captain: 'Woltemade', prize: 0 }, { name: 'Sandesh', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 41, captain: 'Foden', prize: 0 }, { name: 'Arindam', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 15, captain: 'Pedro', prize: 0 }] },
-        22: { pool: 1700, prizes: [600, 400, 275, 275, 150], results: [{ name: 'Shashank', score: 57, captain: 'Fernandes', prize: 600 }, { name: 'Rounak', score: 54, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 53, captain: 'Haaland (BB)', prize: 275 }, { name: 'Sarjan', score: 53, captain: 'Pedro', prize: 275 }, { name: 'Jalaj', score: 45, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 30, captain: 'Ekitiké', prize: 0 }, { name: 'Arindam', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 28, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 26, captain: 'Haaland', prize: 0 }] },
-        23: { pool: 1700, prizes: [600, 400, 300, 250, 75, 75], results: [{ name: 'Sarjan', score: 58, captain: 'Pedro', prize: 600 }, { name: 'Venky', score: 56, captain: 'Haaland (TC)', prize: 400 }, { name: 'Aniruddh', score: 54, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 49, captain: 'Haaland (BB)', prize: 250 }, { name: 'Sukhpal', score: 48, captain: 'Haaland', prize: 75 }, { name: 'Neeraj', score: 48, captain: 'Haaland', prize: 75 }, { name: 'Raghu', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 47, captain: 'Fernandes', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 35, captain: 'Haaland (TC)', prize: 0 }, { name: 'Arindam', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 24, captain: 'Haaland', prize: 0 }] },
-        24: { pool: 1700, prizes: [600, 400, 300, 250, 50, 50, 50], results: [{ name: 'Mayank', score: 86, captain: 'Fernandes (BB)', prize: 600 }, { name: 'Rounak', score: 84, captain: 'Haaland (BB)', prize: 400 }, { name: 'Raghu', score: 79, captain: 'Haaland', prize: 300 }, { name: 'Jalaj', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 50 }, { name: 'Neeraj', score: 64, captain: 'Pedro', prize: 50 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 50 }, { name: 'Shashank', score: 63, captain: 'Fernandes', prize: 0 }, { name: 'Venky', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 62, captain: 'Pedro', prize: 0 }, { name: 'Sagar', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 38, captain: 'Haaland', prize: 0 }] },
-        25: { pool: 1700, prizes: [600, 400, 300, 200, 200], results: [{ name: 'Jalaj', score: 76, captain: 'Haaland', prize: 600 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 73, captain: 'Fernandes', prize: 300 }, { name: 'Bharath', score: 72, captain: 'Fernandes', prize: 200 }, { name: 'Neeraj', score: 72, captain: 'Fernandes', prize: 200 }, { name: 'Gokul', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 61, captain: 'Watkins', prize: 0 }, { name: 'Sagar', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 54, captain: 'Fernandes', prize: 0 }, { name: 'Mayank', score: 53, captain: 'Wilson', prize: 0 }, { name: 'Arindam', score: 36, captain: 'Haaland', prize: 0 }] }
-    };
-
-    // Rich Cinematic Cold Opens
-    const gwNarratives = {
-        25: { title: "The Sisyphus Summit", body: ["The air was thin at the peak. For twenty-four weeks, the league had battered and bruised the underdogs, establishing a brutal hierarchy of templates and premium assets. But the final episode refused to adhere to the script.", "Jalaj, a man who spent the entire autumn pushing a boulder up a mountain only to watch it roll back down over his rank, finally reached the summit. A masterclass 76-point haul, anchored by a traditional Haaland captaincy, secured his second victory of the year.", "Behind him, the Centurion returned. Puneet, bloodied but unbowed from a catastrophic mid-season, fought his way into the silver medal spot. The establishment heavyweights—Raghu, Shubs, Sukhpal—were left on the outside looking in, watching the underdogs cash the final checks of the season."] },
-        24: { title: "The Coin Flips Heads", body: ["There is a particular kind of silence that falls over a mini-league when someone drops an 86-point nuke on a standard weekend. It's the sound of ledgers tearing and hope evaporating.", "Mayank, the resident Gambler, played his Bench Boost perfectly. While others panicked over blanks and double gameweeks, he trusted the variance. The coin landed firmly on heads. His 86 points cleared the rest of the field effortlessly, rendering Rounak's massive 84-point haul merely a footnote in the history books.", "Down in the trenches, it was a bloodbath. Arindam and Puneet barely scraped past the 40-point mark, watching their seasonal profit margins vanish in a cloud of missed penalties and clean sheet wipeouts."] },
-        23: { title: "Contact", body: ["Deep space is cold, unforgiving, and profoundly lonely. For twenty-two weeks, Sarjan drifted through the lower echelily of the Scapia League, a forgotten astronaut stubbornly holding onto a single truth: João Pedro would deliver.", "In Episode 23, the transmission finally came through. A beautiful 58-point haul, powered by the very differential that had anchored him to the bottom, propelled him into the gold medal spot. It wasn't just a victory; it was a vindication of belief over template.", "The Philanthropist, Venky, followed closely behind, utilizing a Triple Captain chip to finally see a return on his massive early-season investments. The heavy hitters were quiet, conserving energy for the brutal final act approaching on the horizon."] },
-        22: { title: "The Trench War", body: ["Not every victory is painted in gold; some are carved out of the mud. Gameweek 22 was a low-scoring, suffocating affair where premium assets collectively downed tools and the template crumbled.", "Shashank, the league's resident Anarchist, thrives in this exact environment. Rejecting the Haaland armband, he captained Bruno Fernandes and watched the rest of the league burn. His 57 points would have barely registered in October, but in the freezing winter of GW22, it was enough for absolute supremacy.", "The margins were razor-thin. Rounak, Venky, and Sarjan clustered right behind him in the 50s. The rest of the league suffocated in the 30s and 40s. It was a week where simply surviving felt like a triumph."] },
-        21: { title: "The Joker's Resurgence", body: ["Template FPL is a delicate house of cards. Everyone buys the same players, captains the same Norwegian cyborg, and prays for a clean sheet. It’s an ordered, boring society. Gokul hates order.", "In Episode 21, the Chaos Agent struck again. A 71-point masterclass sliced through the predictability of the week, leaving the establishment scrambling. Bharath fought valiantly for silver, continuing his late-season resurgence, but the gold belonged to the madman.", "At the bottom of the table, Sarjan registered a catastrophic 15 points. In the cruel math of FPL, every explosive high requires a devastating low to balance the cosmic ledger."] },
-        20: { title: "The Resurrection of Neo", body: ["Just two episodes prior, Rounak had crashed to dead last. The Chosen One looked broken, his code glitching under the pressure of the winter schedule. But the Oracle never lies.", "Gameweek 20 was a violent correction. Rounak scored 75 points, bending the matrix to his will and leaving the rest of the field in the dust. Gokul followed in second, a rare moment of consistency for the Chaos Agent.", "The narrative of the season was shifting. The early dominators were looking tired, and the volatile mid-table elements were beginning to seize control of the prize pool."] },
-        // Fallback for older GWs to save space but maintain the aesthetic
-        19: { title: "The Rebellion", body: ["A shock to the system. The underdogs, Sandesh and Jalaj, rose up to split the gold with 58 points apiece. The establishment was caught completely off guard."] },
-        18: { title: "The Director's Solo", body: ["Raghu didn't just win; he directed the entire episode. A 71-point victory on a Bench Boost cemented his status as the tactical apex predator of the winter."] },
-        17: { title: "The Tie at the Top", body: ["Aniruddh and Raghu matched each other blow for blow, both landing on a monumental 103 points. The rest of the league just sat back and watched the fireworks."] },
-        16: { title: "The Century Club", body: ["Rounak broke the 100-point barrier. 104 points via a Bench Boost. It was a violent, beautiful display of fantasy football dominance."] }
-    };
-
-    // Default generator for missing GW narratives
-    function getFallbackNarrative(gw, data) {
-        const winner = data.results[0];
-        const last = data.results[data.results.length - 1];
-        return {
-            title: `Episode ${gw}: The ${winner.name} Supremacy`,
-            body: [
-                `Gameweek ${gw} arrived with the usual mix of hope and dread. When the dust settled, ${winner.name} stood alone at the top of the mountain with a commanding ${winner.score} points, heavily relying on the ${winner.captain} armband.`,
-                `While the top half of the table celebrated their financial returns, it was a dark week for ${last.name}, whose ${last.score}-point finish served as a grim reminder of the fine margins in the Scapia League.`
-            ]
-        };
+const managerMeta = {
+    'Gokul':    { role: 'CHAOS AGENT',      char: 'The Joker',         quote: 'Introduce a little anarchy.',                   initials: 'GK' },
+    'Jalaj':    { role: 'THE STRUGGLER',     char: 'Sisyphus',          quote: 'The rock rolls down, but I push back.',          initials: 'JL' },
+    'Rounak':   { role: 'THE ORACLE',        char: 'Doctor Strange',    quote: "I've seen 14 million gameweeks. We win in one.", initials: 'RK' },
+    'Shashank': { role: 'THE ANARCHIST',     char: 'Tyler Durden',      quote: 'Reject the template. Become the differential.',  initials: 'SS' },
+    'Raghu':    { role: 'THE DIRECTOR',      char: 'Christopher Nolan', quote: 'Inception-level planning.',                      initials: 'RG' },
+    'Neeraj':   { role: 'THE ALGORITHM',     char: 'The Architect',     quote: 'The equation always balances.',                  initials: 'NJ' },
+    'Sukhpal':  { role: 'THE ASSASSIN',      char: 'John Wick',         quote: "Yeah, I'm thinking I'm back.",                   initials: 'SP' },
+    'Venky':    { role: 'THE PATRON',        char: 'Jay Gatsby',        quote: 'Old sport, the green light awaits.',             initials: 'VK' },
+    'Mayank':   { role: 'THE GAMBLER',       char: 'Harvey Dent',       quote: 'Heads I win, tails you lose.',                   initials: 'MY' },
+    'Bharath':  { role: 'THE GLADIATOR',     char: 'Maximus',           quote: 'Are you not entertained?',                       initials: 'BH' },
+    'Sarjan':   { role: 'THE ASTRONAUT',     char: 'Cooper',            quote: 'Drifting through the void, waiting for contact.', initials: 'SJ' },
+    'Sandesh':  { role: 'THE PIRATE',        char: 'Jack Sparrow',      quote: 'Not all treasure is silver and gold.',           initials: 'SD' },
+    'Puneet':   { role: 'THE CENTURION',     char: 'Marcus Aurelius',   quote: 'What we do in life echoes in eternity.',         initials: 'PT' },
+    'Aniruddh': { role: 'THE TRICKSTER',     char: 'Loki',              quote: 'Burdened with glorious purpose.',                initials: 'AN' },
+    'Arindam':  { role: 'THE CURSED',        char: 'Bruce Banner',      quote: "That's my secret. I'm always angry.",            initials: 'AR' },
+    'Sagar':    { role: 'THE COMET',         char: 'Icarus',            quote: 'Flew too close to the sun.',                     initials: 'SG' },
+    'Shubs':    { role: 'THE BROKER',        char: 'Littlefinger',      quote: 'Chaos is a ladder.',                             initials: 'SB' }
+};
+const seasonJourneys = {
+    'Jalaj': {
+        act1: "The early weeks were a masterclass in suffering. Jalaj watched his rank plummet as Pedro blanked, captaincy choices backfired, and every marginal call went against him. The boulder kept rolling down.",
+        act2: "A brief flicker of hope arrived in GW19 when he and Sandesh shared the crown. But it was a false dawn — the Struggler slipped back into the middle of the pack, his knuckles white against the stone.",
+        act3: "Then came Episode 25. A 76-point masterclass. The summit. The boulder finally sat still. Jalaj proved that persistence isn’t futile — it’s just slow."
+    },
+    'Mayank': {
+        act1: "The Gambler’s early season was defined by coin flips that kept landing on tails. Mid-table mediocrity, punctuated by a GW5 win that proved the instinct was there, buried under variance.",
+        act2: "GW8 brought the Triple Captain Haaland play. It worked, sort of — 80 points and a shared bronze. But the true testament to Mayank’s risk appetite was yet to come.",
+        act3: "GW24. The Bench Boost. The Fernandes captaincy. An 86-point nuclear detonation that rendered the field irrelevant. The house always wins — if you wait long enough."
+    },
+    'Sarjan': {
+        act1: "Lost in deep space. Sarjan’s devotion to João Pedro as a differential captain kept him pinned to the lower reaches, week after week. The signal was out there, somewhere.",
+        act2: "Mid-season was an exercise in stubborn isolation. While the rest of the league converged on Haaland, Sarjan kept his hand on the Pedro dial, scanning for a frequency nobody else was listening to.",
+        act3: "GW23: Contact. A stunning 58-point haul, anchored by the very differential that had condemned him all season, delivered the first gold medal. The astronaut came home."
+    },
+    'Raghu': {
+        act1: "The Director spent the early episodes in quiet pre-production. Consistent but unremarkable returns — a GW3 bronze here, a GW5 bronze there. The foundation was being laid.",
+        act2: "Then came the double feature: GW17 (103 points, Triple Captain Haaland) followed by GW18 (71 points, Bench Boost). Back-to-back blockbusters that announced the Director had arrived.",
+        act3: "The late season brought the expected sequel — GW24’s 79-point haul secured another bronze. Consistent box office returns from start to credits."
+    },
+    'Shashank': {
+        act1: "The Anarchist opened by refusing the script. Semenyo captaincy. Mbeumo captaincy. While the league templated to safety, Shashank lit the match and watched conventional wisdom burn.",
+        act2: "GW15: The pivot. Triple Captain Foden. 86 points. A reminder that chaos and calculation are dance partners, not opposites.",
+        act3: "The winter trench warfare of GW22 was his masterpiece. Bruno Fernandes captaincy. 57 points of pure, gritty realism."
+    },
+    'Rounak': {
+        act1: "The Oracle spent the opening act asleep in the pod. GW3 yielded 27 points. GW5, a limp 38. The simulations were running, but the outputs made no sense.",
+        act2: "GW16: The awakening. 104 points. Bench Boost Haaland. The single highest score of the entire season. The Oracle had seen the future, and the future was devastating.",
+        act3: "The endgame was a controlled descent. GW20 and GW24 delivered strong scores, proving that one transcendent week can rewrite an entire narrative."
+    },
+    'Gokul': {
+        act1: "Pure anarchy from the first whistle. GW6 and GW7 delivered consecutive golds — the Joker’s opening monologue. Chaos wasn’t just a strategy; it was the only language he spoke.",
+        act2: "The joke ran long in the middle act. A losing streak that would have broken lesser men only seemed to fuel the conviction that the next punchline was around the corner.",
+        act3: "GW21 delivered the callback: another gold. The Joker reminded the league that chaos is sustainable, so long as you don’t blink."
+    },
+    'Neeraj': {
+        act1: "The Algorithm opened with a gold medal in GW2. Pure efficiency. The model was printing money, each captain pick calibrated to the decimal.",
+        act2: "Mid-season brought system errors. Chips misfired. The Richarlison captaincy in GW6 was a glitch that cost real money. The Algorithm was learning that variance can’t be controlled.",
+        act3: "GW16 and GW17 brought the reboot: consecutive high scores with Saka and Haaland Triple Captain. The equation rebalanced."
+    },
+    'Sukhpal': {
+        act1: "The Assassin’s opening was clinical. GW4 bronze, GW6 bronze — the Continental Hotel was open for business. Every entry felt like a contract executed with precision.",
+        act2: "GW10: The magnum opus. 93 points. First place. The highest weekly score until Rounak’s GW16 explosion. John Wick had sent his message.",
+        act3: "The late season saw the Assassin shift into maintenance mode. Smaller payouts, but the reputation was cemented. The league’s most consistent earner."
+    },
+    'Venky': {
+        act1: "The Patron opened with a GW4 gold — a glittering Gatsby-esque party. Salah captaincy, 77 points, ₹700. The green light was burning bright.",
+        act2: "The middle act saw the party thin out. Scores dipped, the template underperformed, and the Patron found himself donating entry fees more often than collecting prizes.",
+        act3: "GW22 and GW23 brought the renaissance. The Patron was throwing parties again, and the guests were finally showing up."
+    },
+    'Bharath': {
+        act1: "The Gladiator entered the arena in GW7 and immediately drew blood. An 83-point silver, followed by GW8’s gold (90 points). The Colosseum was awake.",
+        act2: "The Ekitiké differential was his signature weapon — a trident nobody else dared wield. Unpredictable, dangerous, and occasionally devastating.",
+        act3: "The late season brought steady returns without the fireworks. But the Gladiator had earned enough scars — and prize money — to walk out with his head held high."
+    },
+    'Sandesh': {
+        act1: "The Pirate struck gold early — a GW3 victory worth ₹700, powered by a João Pedro captaincy nobody saw coming. First treasure chest opened.",
+        act2: "The middle episodes saw the Pirate adrift. The Pedro captaincy kept him chained to a sinking mast while Haaland ships sailed past.",
+        act3: "GW19 delivered one final haul — a shared gold with Jalaj. Enough treasure to survive, if not to retire."
+    },
+    'Puneet': {
+        act1: "The Centurion was a fortress in the opening weeks. GW2 silver, GW4 bronze, GW5 silver — a disciplined Roman legion marching steadily through the schedule.",
+        act2: "The middle act brought attrition. The shield wall held, but barely. Scores dipped below the prize line more often than not.",
+        act3: "GW25’s silver was the final salute. The Centurion survived the entire campaign, bloodied but unbowed."
+    },
+    'Aniruddh': {
+        act1: "The Trickster’s early season was quietly brilliant. GW5 bronze, GW6 bronze, GW7 shared silver — Loki was collecting Infinity Stones while nobody watched.",
+        act2: "GW11’s gold was the master illusion. Winning with 49 points proved that trickery beats brute force in the right conditions.",
+        act3: "GW17’s shared gold (103 points, Triple Captain Haaland) showed the Trickster could play the power game too."
+    },
+    'Arindam': {
+        act1: "The Curse manifested early. GW6 delivered 18 points — the lowest individual score of the entire season. A punishment, not a game.",
+        act2: "The middle act was a study in variance. A GW5 near-miss (65 points, no prize), followed by GW13’s bronze. Scattered clarity before the Hulk took over.",
+        act3: "The late season was quiet. The Cursed had accepted his fate — with the weary resignation of a man who knows the transformation is never truly under control."
+    },
+    'Sagar': {
+        act1: "The Comet burned bright in GW10 — 81 points and fifth place. Wings intact, altitude climbing.",
+        act2: "The middle episodes saw the altitude get dangerous. Scores fluctuated wildly, the wax began to soften, and the descent accelerated.",
+        act3: "Icarus never found a second peak. The Comet that burned so bright in October faded to a dim trail across the winter sky."
+    },
+    'Shubs': {
+        act1: "The Broker opened his portfolio cautiously. Small positions, calculated bets. GW10’s bronze was the first real payday.",
+        act2: "GW12 was the power play. A gold medal earned through steady, unspectacular point accumulation that would bore a gambler but delight an accountant.",
+        act3: "The late season was a study in diminishing returns. But the early investments had built enough capital to survive."
     }
+};
+const vocabBanks = {
+    'CHAOS AGENT': {
+        win: ["It's not about the money, it's about sending a message.", "Chaos is sustainable. Gold medal. Statement made.", "The Joker takes the crown. Gotham is burning."],
+        diffCap: ["Captained {cap} just to watch the world burn.", "Rejected the consensus. Chose {cap}. Pure anarchy.", "{cap} armband — a deliberate provocation."],
+        highNoPrize: ["Scored {score} points and walked away with nothing. Even chaos has its limits.", "High score, empty pockets. The joke is on the structure itself."],
+        low: ["Why so serious? A quiet {score} points.", "The punchline fell flat. {score} points, no laughs.", "Even the Joker takes a day off. {score}."],
+        mid: ["Mild disorder. {score} points of controlled turbulence.", "Not every act of chaos is a masterpiece. {score} points of filler."]
+    },
+    'THE STRUGGLER': {
+        win: ["The boulder sits at the peak. Sisyphus finally rests.", "Summit reached. The rock stays. {score} points of redemption.", "Against gravity, against physics, against the odds. Gold."],
+        podium: ["Almost at the summit. A silver lining in the eternal climb.", "The rock trembles at the peak. So close."],
+        last: ["Gravity is cruel. The rock rolled all the way back down.", "Rock bottom. Again. The Struggler grits his teeth and starts climbing."],
+        mid: ["Shoulder to the wheel. {score} points of incremental progress.", "The incline doesn't get easier. It just gets familiar. {score} points."]
+    },
+    'THE ORACLE': {
+        win: ["He sees the code. {score} points of pure prophecy.", "The Oracle predicted this. The simulation was correct.", "One in fourteen million. This was the winning timeline."],
+        high: ["A strong signal from the multiverse. {score} points.", "The simulations are converging on something remarkable."],
+        low: ["A glitch in the matrix. {score} points. Recalibrating.", "The Oracle is offline. {score} points of static.", "The wrong timeline. Reconnecting."],
+        mid: ["Standard simulation output. {score} points within parameters.", "The probability field is stable. {score} points."]
+    },
+    'THE ANARCHIST': {
+        winDiff: ["Revolution. {cap} captaincy delivers gold. The template is dead.", "Burned the playbook. {cap} armband. {score} points of defiance.", "Total anarchy. The differential paid off."],
+        diffNoPrize: ["Captained {cap}. Brave. Stupid. The rebellion was crushed.", "The revolution stalled. {cap} blanked, but the message was sent."],
+        conforming: ["Sold out to the establishment. Captained Haaland for {score} points.", "Even anarchists pay rent. Conformed this week."],
+        winConform: ["Won with the template. Tyler Durden would be disappointed.", "A paradox: winning by following the rules. {score} points of cognitive dissonance."]
+    },
+    'THE DIRECTOR': {
+        win: ["A cinematic masterpiece. {score} points. Award-winning.", "The Director's Cut. Critics are raving. Box office gold.", "Standing ovation. {score} points of pure auteur filmmaking."],
+        highNoPrize: ["A cult classic. {score} points of artistic merit, but no commercial success.", "The critics loved it. The accountants didn't. {score} points."],
+        low: ["Production delays. {score} points. The script needs a rewrite.", "A box office bomb. {score} points. Back to the editing room."],
+        mid: ["A filler episode. {score} points to advance the plot.", "Solid workmanship. {score} points. Not every frame needs to be iconic."]
+    },
+    'THE ALGORITHM': {
+        win: ["The equation balances perfectly. {score} points. QED.", "Optimal output achieved. {score} points of pure calculation.", "The Algorithm is flawless. Gold medal. Efficiency maximized."],
+        high: ["Strong throughput. {score} points. Operating within target range.", "The model predicted this outcome with 94% confidence. {score} points."],
+        low: ["System error. {score} points. Debugging in progress.", "The model failed to predict this variance. {score} points of noise."],
+        mid: ["Calibrating. {score} points. Efficiency is within acceptable parameters.", "Standard operating procedure. {score} points of steady-state performance."]
+    },
+    'THE ASSASSIN': {
+        win: ["Contract executed. {score} points. Clean kill.", "The Continental sends its regards. Gold medal.", "Yeah, I'm thinking I'm back. {score} points."],
+        podium: ["The target is down. Silver bullet through the leaderboard.", "Close-range precision. {score} points. Podium finish."],
+        low: ["The gun jammed. {score} points. Even Wick misses occasionally.", "Off-target. {score} points. Reloading."],
+        mid: ["Suppressed fire. {score} points. Maintaining position.", "Quiet week at the Continental. {score} points."]
+    },
+    'THE PATRON': {
+        win: ["Old money wins. The Patron hosted the party and kept the profits.", "The green light is burning bright. {score} points and gold.", "Gatsby raised his glass. {score} points."],
+        low: ["Generously donated his entry fee to the rest of the league.", "The party thinned out. {score} points. The champagne went flat."],
+        mid: ["The green light blinks. {score} points. A respectable showing.", "Another evening at West Egg. {score} points of quiet elegance."]
+    },
+    'THE GAMBLER': {
+        winChip: ["Went all in with the chip and cleared the table. {score} points.", "High stakes, maximum reward. The house didn't stand a chance."],
+        win: ["The coin landed on heads. Absolute jackpot. {score} points.", "Beat the house. A perfect hand.", "All in. {score} points. The table erupts."],
+        low: ["The house wins. {score} points. A bust hand.", "Bad beat. The river card didn't come. {score} points of variance."],
+        mid: ["Broke even. {score} points. The chips stay on the table.", "Playing the odds. {score} points. Waiting for the right hand."]
+    },
+    'THE GLADIATOR': {
+        win: ["Are you not entertained? {score} points of bloodsport.", "The Gladiator raises his sword. Gold medal. The crowd roars.", "Maximus triumphs. {score} points."],
+        podium: ["Fought like a warrior. Denied the crown, but not the respect.", "The arena respects a fighter. Podium secured."],
+        low: ["The shield broke. {score} points. Overwhelmed by the barbarian hordes.", "Blood in the sand. {score} points. A painful defeat."],
+        mid: ["Hold the line. {score} points. Steady, disciplined, unbroken.", "The Gladiator keeps his guard up. {score} points. Surviving."]
+    },
+    'THE ASTRONAUT': {
+        win: ["Contact made. {score} points. The transmission came through.", "The astronaut found home. Gold medal. The signal was real.", "Houston, we have a winner. {score} points."],
+        low: ["Lost in space. {score} points. The signal fades to static.", "Drifting. {score} points. No transmission received."],
+        mid: ["Orbiting. {score} points. Scanning for a frequency.", "The void is patient. {score} points. Waiting for contact."]
+    },
+    'THE PIRATE': {
+        win: ["X marks the spot. {score} points. The treasure chest opens.", "The Pirate strikes gold. {score} points of plunder.", "Captain Sparrow grins. {score} points. Savvy."],
+        low: ["The map led nowhere. {score} points. Adrift on open water.", "The treasure was cursed. {score} points of misfortune."],
+        mid: ["Sailing steady. {score} points. The horizon holds promise.", "Another island, another empty chest. {score} points."]
+    },
+    'THE CENTURION': {
+        win: ["The legion marches to victory. {score} points. Roma invicta.", "The Centurion's discipline is rewarded. Gold medal."],
+        podium: ["The shield wall holds. {score} points. A warrior's payout.", "Second in command, but never second in courage."],
+        low: ["The shield broke. {score} points. Overwhelmed.", "The barbarians overran the position. {score} points."],
+        mid: ["Holding the line. {score} points. Discipline over talent.", "Steady march. {score} points. The legion endures."]
+    },
+    'THE TRICKSTER': {
+        win: ["Absolute robbery. Gold with {score} points. Loki laughs.", "Another illusion. Another crown. {score} points of deception.", "The trick worked. {score} points. Nobody saw it coming."],
+        podium: ["Slipped into the prizes while nobody was looking. {score} points.", "Illusion executed. Podium finish."],
+        low: ["Ran out of tricks. {score} points. The magic faded.", "The illusion broke. {score} points. Even gods have bad weeks."],
+        mid: ["A minor enchantment. {score} points. The real trick is patience.", "Scheming. {score} points. The masterplan continues."]
+    },
+    'THE CURSED': {
+        win: ["The sun is getting low. The Hulk stays calm and collects. {score} points.", "The Curse breaks. {score} points. A moment of peace."],
+        highNoPrize: ["Classic tragedy. {score} points and STILL no prize. Unbelievable.", "The universe conspires. {score} points of cosmic injustice."],
+        last: ["The transformation took over. Smashed the furniture, not the rankings.", "Green with rage. Last place. The Curse holds."],
+        mid: ["Managing the condition. {score} points. Pulse elevated but stable.", "Another week of bad variance. {score} points. The Curse whispers."]
+    },
+    'THE COMET': {
+        win: ["The wings hold. {score} points. Icarus defies the sun.", "Altitude: maximum. {score} points. Burning bright."],
+        high: ["The wax is softening. But {score} points is a hell of a view.", "Flying high. {score} points. Don't look down."],
+        low: ["The wax melted. {score} points. The descent continues.", "Too close to the sun. {score} points of freefall."],
+        mid: ["Cruising altitude. {score} points. The wings are steady.", "Neither rising nor falling. {score} points. A holding pattern."]
+    },
+    'THE BROKER': {
+        win: ["The position paid off. {score} points. Portfolio in the green.", "A masterful trade. Gold medal. The Broker collects.", "Chaos IS a ladder. {score} points. Climbed it perfectly."],
+        podium: ["A solid return on investment. {score} points. Podium finish.", "The portfolio performed. {score} points. Dividends paid."],
+        low: ["The position expired worthless. {score} points of realized loss.", "Bad trade. {score} points. The market doesn't care."],
+        mid: ["Market-neutral week. {score} points. Holding steady.", "The portfolio treads water. {score} points. Patience is a position."]
+    }
+};
+const gameData = {
+    2: { pool: 1100, prizes: [600, 400, 100], results: [{ name: 'Neeraj', score: 61, captain: 'Salah', prize: 600 }, { name: 'Puneet', score: 56, captain: 'Ekitiké', prize: 400 }, { name: 'Gokul', score: 53, captain: 'Haaland', prize: 100 }, { name: 'Sukhpal', score: 49, captain: 'Saka', prize: 0 }, { name: 'Shubs', score: 48, captain: 'Salah', prize: 0 }, { name: 'Mayank', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Semenyo', prize: 0 }, { name: 'Raghu', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 38, captain: 'Salah', prize: 0 }, { name: 'Venky', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 29, captain: 'Ødegaard', prize: 0 }] },
+    3: { pool: 1400, prizes: [700, 400, 200, 100], results: [{ name: 'Sandesh', score: 83, captain: 'Pedro', prize: 700 }, { name: 'Shashank', score: 67, captain: 'Mbeumo', prize: 400 }, { name: 'Raghu', score: 64, captain: 'Haaland', prize: 150 }, { name: 'Sarjan', score: 64, captain: 'Pedro', prize: 150 }, { name: 'Gokul', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 53, captain: 'Pedro', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 44, captain: 'Wood', prize: 0 }, { name: 'Aniruddh', score: 43, captain: 'Wood', prize: 0 }, { name: 'Puneet', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Wood', prize: 0 }, { name: 'Rounak', score: 27, captain: 'Wood', prize: 0 }] },
+    4: { pool: 1500, prizes: [700, 450, 250, 100], results: [{ name: 'Venky', score: 77, captain: 'Salah', prize: 700 }, { name: 'Raghu', score: 73, captain: 'Haaland', prize: 450 }, { name: 'Sukhpal', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Puneet', score: 66, captain: 'Haaland', prize: 100 }, { name: 'Arindam', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 63, captain: 'Pedro', prize: 0 }, { name: 'Rounak', score: 63, captain: 'Pedro', prize: 0 }, { name: 'Aniruddh', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 62, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 60, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 58, captain: 'Salah', prize: 0 }, { name: 'Shubs', score: 55, captain: 'Salah', prize: 0 }, { name: 'Gokul', score: 53, captain: 'Kudus', prize: 0 }, { name: 'Mayank', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 41, captain: 'Ekitiké', prize: 0 }] },
+    5: { pool: 1500, prizes: [500, 400, 300, 200, 100], results: [{ name: 'Mayank', score: 63, captain: 'Haaland', prize: 500 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 60, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 200 }, { name: 'Aniruddh', score: 55, captain: 'Haaland', prize: 100 }, { name: 'Venky', score: 51, captain: 'Salah', prize: 0 }, { name: 'Sukhpal', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 47, captain: 'Pedro', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 44, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 44, captain: 'Pedro', prize: 0 }, { name: 'Gokul', score: 43, captain: 'Kudus', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Salah', prize: 0 }, { name: 'Rounak', score: 38, captain: 'Pedro', prize: 0 }] },
+    6: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 68, captain: 'Haaland', prize: 600 }, { name: 'Mayank', score: 65, captain: 'Haaland', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Aniruddh', score: 59, captain: 'Haaland', prize: 250 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 150 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 39, captain: 'Salah', prize: 0 }, { name: 'Sarjan', score: 29, captain: 'Pedro', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Richarlison', prize: 0 }, { name: 'Jalaj', score: 26, captain: 'Pedro', prize: 0 }, { name: 'Bharath', score: 24, captain: 'Pedro', prize: 0 }, { name: 'Arindam', score: 18, captain: 'Haaland', prize: 0 }] },
+    7: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 95, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 83, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 300 }, { name: 'Neeraj', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Aniruddh', score: 74, captain: 'Haaland', prize: 200 }, { name: 'Puneet', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 68, captain: 'Mbeumo', prize: 0 }, { name: 'Mayank', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 48, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 47, captain: 'Pedro', prize: 0 }, { name: 'Sarjan', score: 41, captain: 'Pedro', prize: 0 }] },
+    8: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Bharath', score: 90, captain: 'Haaland', prize: 600 }, { name: 'Sukhpal', score: 81, captain: 'Haaland', prize: 400 }, { name: 'Mayank', score: 80, captain: 'Haaland (TC)', prize: 275 }, { name: 'Gokul', score: 80, captain: 'Haaland', prize: 275 }, { name: 'Aniruddh', score: 72, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 68, captain: 'Pedro (FH)', prize: 0 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 63, captain: 'Haaland (WC)', prize: 0 }, { name: 'Puneet', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 46, captain: 'Semenyo', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'Pedro', prize: 0 }, { name: 'Jalaj', score: 37, captain: 'Pedro', prize: 0 }] },
+    9: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 69, captain: 'Mbeumo', prize: 600 }, { name: 'Bharath', score: 68, captain: 'Pedro', prize: 400 }, { name: 'Raghu', score: 67, captain: 'Haaland (WC)', prize: 300 }, { name: 'Sukhpal', score: 61, captain: 'Haaland', prize: 250 }, { name: 'Venky', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Sagar', score: 57, captain: 'Haaland', prize: 50 }, { name: 'Jalaj', score: 57, captain: 'Pedro', prize: 50 }, { name: 'Arindam', score: 48, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 44, captain: 'Pedro', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Semenyo', prize: 0 }, { name: 'Neeraj', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 37, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 36, captain: 'Haaland (WC)', prize: 0 }, { name: 'Aniruddh', score: 36, captain: 'Semenyo', prize: 0 }, { name: 'Gokul', score: 31, captain: 'Haaland', prize: 0 }] },
+    10: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Sukhpal', score: 93, captain: 'Haaland', prize: 600 }, { name: 'Neeraj', score: 89, captain: 'Haaland', prize: 400 }, { name: 'Shubs', score: 83, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 82, captain: 'Haaland (BB)', prize: 250 }, { name: 'Sagar', score: 81, captain: 'Haaland (FH)', prize: 150 }, { name: 'Rounak', score: 78, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 73, captain: 'Gabriel', prize: 0 }, { name: 'Gokul', score: 73, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 72, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 67, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 66, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 64, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 62, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'Pedro', prize: 0 }] },
+    11: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 48, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 46, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 45, captain: 'Haaland', prize: 250 }, { name: 'Jalaj', score: 43, captain: 'Pedro', prize: 50 }, { name: 'Arindam', score: 43, captain: 'Haaland', prize: 50 }, { name: 'Sarjan', score: 43, captain: 'Pedro', prize: 50 }, { name: 'Sandesh', score: 42, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 42, captain: 'Gabriel', prize: 0 }, { name: 'Raghu', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Semenyo', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 36, captain: 'Caicedo', prize: 0 }, { name: 'Bharath', score: 35, captain: 'Enzo', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Caicedo', prize: 0 }, { name: 'Rounak', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 29, captain: 'Haaland', prize: 0 }] },
+    12: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shubs', score: 61, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 60, captain: 'Haaland', prize: 400 }, { name: 'Raghu', score: 50, captain: 'Haaland', prize: 300 }, { name: 'Rounak', score: 48, captain: 'Haaland (FH)', prize: 250 }, { name: 'Neeraj', score: 47, captain: 'Haaland', prize: 150 }, { name: 'Gokul', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 46, captain: 'Haaland (BB)', prize: 0 }, { name: 'Sukhpal', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'Pedro', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 35, captain: 'Haaland (TC)', prize: 0 }, { name: 'Shashank', score: 34, captain: 'Salah', prize: 0 }, { name: 'Arindam', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 32, captain: 'Haaland (TC)', prize: 0 }, { name: 'Mayank', score: 30, captain: 'Mateta', prize: 0 }, { name: 'Jalaj', score: 27, captain: 'Pedro', prize: 0 }] },
+    13: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Mayank', score: 47, captain: 'Haaland', prize: 600 }, { name: 'Raghu', score: 46, captain: 'Haaland', prize: 400 }, { name: 'Arindam', score: 44, captain: 'Haaland', prize: 300 }, { name: 'Sarjan', score: 41, captain: 'Pedro', prize: 250 }, { name: 'Gokul', score: 40, captain: 'Haaland (BB)', prize: 150 }, { name: 'Rounak', score: 39, captain: 'Haaland (TC)', prize: 0 }, { name: 'Shubs', score: 37, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sukhpal', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 35, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Neeraj', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 27, captain: 'Haaland (TC)', prize: 0 }, { name: 'Aniruddh', score: 23, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 21, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 20, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 17, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 14, captain: 'Mbeumo', prize: 0 }] },
+    14: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Rounak', score: 82, captain: 'Haaland', prize: 500 }, { name: 'Shubs', score: 78, captain: 'Haaland', prize: 300 }, { name: 'Raghu', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Neeraj', score: 76, captain: 'Haaland', prize: 200 }, { name: 'Arindam', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 68, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 52, captain: 'Gakpo', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 43, captain: 'Pedro', prize: 0 }, { name: 'Shashank', score: 42, captain: 'Mbeumo', prize: 0 }, { name: 'Jalaj', score: 25, captain: 'Pedro', prize: 0 }] },
+    15: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Shashank', score: 86, captain: 'Foden (TC)', prize: 600 }, { name: 'Shubs', score: 74, captain: 'Haaland (FH)', prize: 400 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 300 }, { name: 'Puneet', score: 59, captain: 'Haaland (WC)', prize: 200 }, { name: 'Mayank', score: 59, captain: 'Haaland (WC)', prize: 200 }, { name: 'Arindam', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 53, captain: 'Mateta', prize: 0 }, { name: 'Bharath', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 43, captain: 'Palmer', prize: 0 }, { name: 'Neeraj', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 35, captain: 'Haaland', prize: 0 }] },
+    16: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Rounak', score: 104, captain: 'Haaland (BB)', prize: 600 }, { name: 'Neeraj', score: 92, captain: 'Saka (FH)', prize: 400 }, { name: 'Sukhpal', score: 80, captain: 'Haaland (WC)', prize: 275 }, { name: 'Mayank', score: 80, captain: 'Haaland (FH)', prize: 275 }, { name: 'Raghu', score: 75, captain: 'Haaland', prize: 150 }, { name: 'Shashank', score: 74, captain: 'B.Fernandes (BB)', prize: 0 }, { name: 'Aniruddh', score: 73, captain: 'Haaland (WC)', prize: 0 }, { name: 'Shubs', score: 71, captain: 'Saka', prize: 0 }, { name: 'Arindam', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 59, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 58, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 52, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 51, captain: 'Thiago (WC)', prize: 0 }, { name: 'Jalaj', score: 51, captain: 'Palmer', prize: 0 }, { name: 'Sandesh', score: 50, captain: 'Mateta', prize: 0 }, { name: 'Sarjan', score: 39, captain: 'Pedro', prize: 0 }] },
+    17: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Raghu', score: 103, captain: 'Haaland (TC)', prize: 500 }, { name: 'Aniruddh', score: 103, captain: 'Haaland (TC)', prize: 500 }, { name: 'Bharath', score: 92, captain: 'Haaland (TC)', prize: 300 }, { name: 'Neeraj', score: 91, captain: 'Haaland (TC)', prize: 250 }, { name: 'Mayank', score: 88, captain: 'Haaland', prize: 150 }, { name: 'Jalaj', score: 83, captain: 'Haaland (BB)', prize: 0 }, { name: 'Sukhpal', score: 79, captain: 'Haaland (BB)', prize: 0 }, { name: 'Rounak', score: 77, captain: 'Haaland', prize: 0 }, { name: 'Venky', score: 75, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 74, captain: 'Foden (FH)', prize: 0 }, { name: 'Sagar', score: 74, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 71, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 69, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 56, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 52, captain: 'Thiago', prize: 0 }, { name: 'Sarjan', score: 47, captain: 'Pedro', prize: 0 }] },
+    18: { pool: 1700, prizes: [600, 400, 300, 200, 200], results: [{ name: 'Raghu', score: 71, captain: 'Haaland (BB)', prize: 600 }, { name: 'Neeraj', score: 65, captain: 'Haaland (BB)', prize: 400 }, { name: 'Shashank', score: 64, captain: 'Saka', prize: 300 }, { name: 'Sukhpal', score: 54, captain: 'Haaland (TC)', prize: 200 }, { name: 'Gokul', score: 54, captain: 'Thiago (FH)', prize: 200 }, { name: 'Aniruddh', score: 52, captain: 'Haaland (FH)', prize: 0 }, { name: 'Arindam', score: 47, captain: 'Haaland (WC)', prize: 0 }, { name: 'Venky', score: 44, captain: 'Haaland (FH)', prize: 0 }, { name: 'Bharath', score: 43, captain: 'Ekitiké', prize: 0 }, { name: 'Mayank', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 42, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sarjan', score: 42, captain: 'Pedro', prize: 0 }, { name: 'Shubs', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 36, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 36, captain: 'Haaland (FH)', prize: 0 }] },
+    19: { pool: 1700, prizes: [500, 500, 300, 250, 150], results: [{ name: 'Sandesh', score: 58, captain: 'Haaland', prize: 500 }, { name: 'Jalaj', score: 58, captain: 'Haaland', prize: 500 }, { name: 'Venky', score: 57, captain: 'Haaland (BB)', prize: 300 }, { name: 'Bharath', score: 44, captain: 'Ekitiké', prize: 250 }, { name: 'Arindam', score: 43, captain: 'Haaland (TC)', prize: 150 }, { name: 'Puneet', score: 40, captain: 'Haaland (TC)', prize: 0 }, { name: 'Sagar', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 38, captain: 'Haaland (FH)', prize: 0 }, { name: 'Shashank', score: 37, captain: 'Wirtz', prize: 0 }, { name: 'Neeraj', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 33, captain: 'Thiago', prize: 0 }, { name: 'Aniruddh', score: 32, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 32, captain: 'Pedro', prize: 0 }, { name: 'Raghu', score: 31, captain: 'Haaland (FH)', prize: 0 }, { name: 'Mayank', score: 31, captain: 'Woltemade', prize: 0 }, { name: 'Shubs', score: 30, captain: 'Haaland (BB)', prize: 0 }, { name: 'Rounak', score: 24, captain: 'Haaland', prize: 0 }] },
+    20: { pool: 1700, prizes: [600, 400, 300, 250, 50, 50, 50], results: [{ name: 'Rounak', score: 75, captain: 'Haaland', prize: 600 }, { name: 'Gokul', score: 59, captain: 'Haaland', prize: 400 }, { name: 'Bharath', score: 57, captain: 'Ekitiké', prize: 300 }, { name: 'Puneet', score: 53, captain: 'Haaland', prize: 250 }, { name: 'Shubs', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Venky', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Aniruddh', score: 52, captain: 'Haaland', prize: 50 }, { name: 'Sukhpal', score: 50, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 50, captain: 'Foden', prize: 0 }, { name: 'Sagar', score: 46, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 46, captain: 'Pedro', prize: 0 }, { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 41, captain: 'Bowen', prize: 0 }, { name: 'Neeraj', score: 33, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 27, captain: 'Haaland', prize: 0 }] },
+    21: { pool: 1700, prizes: [600, 400, 300, 250, 150], results: [{ name: 'Gokul', score: 71, captain: 'Haaland', prize: 600 }, { name: 'Bharath', score: 69, captain: 'Ekitiké', prize: 400 }, { name: 'Puneet', score: 65, captain: 'Haaland', prize: 300 }, { name: 'Venky', score: 62, captain: 'Haaland', prize: 250 }, { name: 'Neeraj', score: 59, captain: 'Haaland', prize: 150 }, { name: 'Sukhpal', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 57, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 51, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 50, captain: 'Woltemade', prize: 0 }, { name: 'Sandesh', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 45, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 41, captain: 'Foden', prize: 0 }, { name: 'Arindam', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 15, captain: 'Pedro', prize: 0 }] },
+    22: { pool: 1700, prizes: [600, 400, 275, 275, 150], results: [{ name: 'Shashank', score: 57, captain: 'Fernandes', prize: 600 }, { name: 'Rounak', score: 54, captain: 'Haaland', prize: 400 }, { name: 'Venky', score: 53, captain: 'Haaland (BB)', prize: 275 }, { name: 'Sarjan', score: 53, captain: 'Pedro', prize: 275 }, { name: 'Jalaj', score: 45, captain: 'Haaland', prize: 150 }, { name: 'Neeraj', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Sagar', score: 40, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 39, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 30, captain: 'Ekitiké', prize: 0 }, { name: 'Arindam', score: 30, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 28, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 26, captain: 'Haaland', prize: 0 }] },
+    23: { pool: 1700, prizes: [600, 400, 300, 250, 75, 75], results: [{ name: 'Sarjan', score: 58, captain: 'Pedro', prize: 600 }, { name: 'Venky', score: 56, captain: 'Haaland (TC)', prize: 400 }, { name: 'Aniruddh', score: 54, captain: 'Haaland', prize: 300 }, { name: 'Bharath', score: 49, captain: 'Haaland (BB)', prize: 250 }, { name: 'Sukhpal', score: 48, captain: 'Haaland', prize: 75 }, { name: 'Neeraj', score: 48, captain: 'Haaland', prize: 75 }, { name: 'Raghu', score: 47, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 47, captain: 'Fernandes', prize: 0 }, { name: 'Sagar', score: 44, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 38, captain: 'Haaland', prize: 0 }, { name: 'Rounak', score: 37, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 27, captain: 'Haaland', prize: 0 }, { name: 'Mayank', score: 35, captain: 'Haaland (TC)', prize: 0 }, { name: 'Arindam', score: 34, captain: 'Haaland', prize: 0 }, { name: 'Jalaj', score: 24, captain: 'Haaland', prize: 0 }] },
+    24: { pool: 1700, prizes: [600, 400, 300, 250, 50, 50, 50], results: [{ name: 'Mayank', score: 86, captain: 'Fernandes (BB)', prize: 600 }, { name: 'Rounak', score: 84, captain: 'Haaland (BB)', prize: 400 }, { name: 'Raghu', score: 79, captain: 'Haaland', prize: 300 }, { name: 'Jalaj', score: 69, captain: 'Haaland', prize: 250 }, { name: 'Sukhpal', score: 64, captain: 'Haaland', prize: 50 }, { name: 'Neeraj', score: 64, captain: 'Pedro', prize: 50 }, { name: 'Shubs', score: 64, captain: 'Haaland', prize: 50 }, { name: 'Shashank', score: 63, captain: 'Fernandes', prize: 0 }, { name: 'Venky', score: 62, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 62, captain: 'Pedro', prize: 0 }, { name: 'Sagar', score: 60, captain: 'Haaland', prize: 0 }, { name: 'Bharath', score: 54, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 49, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 43, captain: 'Haaland', prize: 0 }, { name: 'Gokul', score: 42, captain: 'Haaland', prize: 0 }, { name: 'Puneet', score: 41, captain: 'Haaland', prize: 0 }, { name: 'Arindam', score: 38, captain: 'Haaland', prize: 0 }] },
+    25: { pool: 1700, prizes: [600, 400, 300, 200, 200], results: [{ name: 'Jalaj', score: 76, captain: 'Haaland', prize: 600 }, { name: 'Puneet', score: 74, captain: 'Haaland', prize: 400 }, { name: 'Rounak', score: 73, captain: 'Fernandes', prize: 300 }, { name: 'Bharath', score: 72, captain: 'Fernandes', prize: 200 }, { name: 'Neeraj', score: 72, captain: 'Fernandes', prize: 200 }, { name: 'Gokul', score: 70, captain: 'Haaland', prize: 0 }, { name: 'Sukhpal', score: 66, captain: 'Haaland', prize: 0 }, { name: 'Aniruddh', score: 65, captain: 'Haaland', prize: 0 }, { name: 'Shubs', score: 63, captain: 'Haaland', prize: 0 }, { name: 'Raghu', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Sandesh', score: 61, captain: 'Watkins', prize: 0 }, { name: 'Sagar', score: 61, captain: 'Haaland', prize: 0 }, { name: 'Sarjan', score: 56, captain: 'Pedro', prize: 0 }, { name: 'Venky', score: 55, captain: 'Haaland', prize: 0 }, { name: 'Shashank', score: 54, captain: 'Fernandes', prize: 0 }, { name: 'Mayank', score: 53, captain: 'Wilson', prize: 0 }, { name: 'Arindam', score: 36, captain: 'Haaland', prize: 0 }] }
+};
+const gwNarratives = {
+    2: { title: "The Opening Gambit", body: ["The curtain rose on the Scapia FPL league with eleven managers submitting their opening gambit. The Algorithm struck first — Neeraj's Salah captaincy delivered a clean 61-point opening salvo that established an early thesis: calculation beats intuition.", "Behind him, the Centurion Puneet made his presence felt with a 56-point silver, powered by the audacious Ekitiké pick that would become a recurring motif. The Joker Gokul rounded out the podium, scraping a bronze that felt more like a warning shot than a reward.", "The early signs were there for those paying attention. The spread between first and last was 32 points — a canyon that would only widen as the season deepened."] },
+    3: { title: "The Pirate's First Haul", body: ["Fourteen managers sat down for Episode 3, and it was the Pirate who drew first blood. Sandesh's 83-point explosion, powered by a João Pedro captaincy nobody else trusted, was the season's first genuine spectacle.", "The Anarchist Shashank claimed silver with an Mbeumo armband, establishing his reputation as the league's premier contrarian. The Director Raghu and the Astronaut Sarjan split the bronze at 64 points each — a statistical coincidence that felt like narrative foreshadowing.", "At the bottom, the Oracle Rounak posted a catastrophic 27 points. The pod was still initializing."] },
+    4: { title: "The Gatsby Party", body: ["Fifteen managers assembled for the grandest episode yet, and it was the Patron who played host. Venky's 77-point masterclass, anchored by a Salah captaincy that cut against the Haaland consensus, was the first real demonstration of conviction.", "The Director Raghu collected a handsome silver, while the Assassin Sukhpal began what would become a season-long pattern of quiet, clinical prize collection. Below the waterline, the Cursed Arindam posted 65 points and walked away with nothing. The Curse had announced itself."] },
+    5: { title: "The Gambler Calls", body: ["The full complement of fifteen managers returned for a week that crowned the season's first unlikely hero. Mayank, the Gambler, had been playing conservative poker through the opening hands. In GW5, he called.", "A straightforward Haaland captaincy — nothing revolutionary — but squad construction that squeezed every marginal point. 63 points. Gold. The coin had landed on heads for the first time.", "Nine points separated first from fifth. The margins in this league were blade-thin."] },
+    6: { title: "The Joker's Monologue", body: ["Seventeen managers packed the theatre — the league's largest field to date — and it was the Chaos Agent who commandeered the stage. Gokul's 68-point haul was unremarkable on paper. What made it devastating was context.", "This was Haaland's week. Everyone captained the Norwegian. Everyone ran the same play. And yet, in a sea of identical templates, the Joker extracted more chaos than anyone else.", "At the bottom, the Cursed Arindam posted 18 points — the lowest individual score of the entire season. Jalaj and Bharath posted 26 and 24 respectively. The Struggler's boulder was picking up speed in the wrong direction."] },
+    7: { title: "The Heist", body: ["If Episode 6 was the Joker's monologue, Episode 7 was the heist. Gokul didn't just win — he demolished. 95 points. The highest score any manager had posted. A performance so dominant it felt scripted.", "The Gladiator Bharath roared into second with 83, while the Oracle Rounak showed the first flickers of consciousness at 77. Haaland captaincy was universal, but scores still spread from 95 to 41.", "Raghu posted a quiet 50. A filler episode in what would become a season of blockbusters."] },
+    8: { title: "The Gladiator Enters", body: ["The arena was full. Seventeen managers. ₹1,700 on the line. And it was the Gladiator who drew first blood. Bharath's 90-point haul was thunderous squad optimization that silenced the crowd.", "The Assassin collected another clinical silver (81 points), while Mayank played his Triple Captain for a shared bronze. The Gambler's timing was impeccable — but the Gladiator's raw power was simply overwhelming.", "This was the week the league learned to fear Bharath. Not differential picks or clever chips, but pure brute-force FPL excellence."] },
+    9: { title: "The Rebellion", body: ["In a season dominated by Haaland captaincy, Episode 9 delivered the first genuine act of rebellion. Shashank strapped the armband on Mbeumo and watched the world burn. 69 points. Gold.", "Bharath followed with a Pedro captaincy of his own — 68 points and silver. The Director Raghu rounded out the podium with 67.", "The template was cracking. The managers who dared to deviate were being rewarded. The rest of the league took note — and promptly ignored the lesson."] },
+    10: { title: "The Assassination", body: ["There are performances that win gameweeks, and then there are performances that end conversations. Sukhpal's 93-point eruption was the latter. The Assassin didn't just top the table — he executed it.", "This was clinical FPL at its zenith. 93 points left the Algorithm (89), the Broker (83), and the Gladiator (82) scrambling for consolation prizes.", "Sagar's 81-point Free Hit announced the Comet's arrival — a brief, brilliant flash. The Astronaut Sarjan, meanwhile, continued to drift at 43 points."] },
+    11: { title: "The Quiet Week", body: ["Not every episode is a blockbuster. GW11 was the season's intermission — a low-scoring affair where the highest score was a paltry 49 points. Premiums blanked. Templates crumbled.", "The Trickster Aniruddh won with 49 points — the lowest winning score of the entire season. Pure Loki: winning not through power but through the sheer trick of being less terrible than everyone else.", "The Joker slipped into silver with 48, while the Patron claimed bronze with 46. These were not scores anyone would frame. But in the zero-sum arithmetic of FPL, they were enough."] },
+    12: { title: "The Broker's Payday", body: ["The Broker had been accumulating positions quietly all season. In Episode 12, the portfolio paid its first real dividend. Shubs's 61-point gold was steady, unspectacular profit.", "The Gladiator ran him close with 60, while the Director continued his production schedule with a 50-point bronze. Below the prize line, Venky's TC Haaland (35 pts) and Sagar's TC Haaland (32 pts) represented the season's most painful chip burns.", "The Struggler Jalaj posted 27 points. The boulder was at rock bottom."] },
+    13: { title: "The Low Point", body: ["Episode 13 was the season's nadir — so low-scoring that winning felt less like triumph and more like surviving a natural disaster. Mayank took gold with just 47 points. Raghu claimed silver with 46.", "The Anarchist Shashank hit rock bottom: 14 points. An Mbeumo captaincy on a week where the differential collapsed completely. The price of revolution.", "At the very bottom, Jalaj posted 17 points. The boulder had not only rolled back down — it had crushed him."] },
+    14: { title: "The Mirror", body: ["Episode 14 produced a statistical anomaly that felt like a narrative device: Gokul and Rounak both posted 82 points. Identical scores. Shared gold. The Chaos Agent and the Oracle reflecting each other perfectly.", "Behind the mirror, Shubs secured third, while the Director and the Algorithm shared fourth at 76 each. The Cursed Arindam posted 75 points — his best of the season — and won nothing. The universe's cruelest joke.", "Five managers above 74 points, all within 8 points. The margins had never been thinner."] },
+    15: { title: "The Foden Gambit", body: ["There are chip plays, and then there is GW15. Shashank played his Triple Captain on Phil Foden — a pick so audacious the rest of the league assumed it was a misclick. It wasn't.", "86 points. Gold. The highest score by a manager using a chip. The Anarchist hadn't just won — he had rewritten the rulebook.", "Somewhere in the lower reaches, the Oracle Rounak posted 47 points. The simulations were still running. The awakening was one week away."] },
+    16: { title: "The Awakening", body: ["One hundred and four points. In a league where 70 is excellent and 80 is exceptional, the Oracle Rounak posted 104 points with a Bench Boost Haaland captaincy that broke the scoreboard and, arguably, the season.", "This was the highest individual score of the entire campaign — so absurd it recontextualised everything before and after it.", "The Algorithm recovered with a 92-point Free Hit Saka play — a masterclass rendered a footnote by Rounak's nuclear performance. The Astronaut Sarjan, stubbornly captaining Pedro, posted 39. The void continued to expand."] },
+    17: { title: "The Double Feature", body: ["The Director had been patient. Where others burned chips early, Raghu waited for the perfect convergence. GW17 was the premiere.", "103 points. Triple Captain Haaland. An identical score to the Trickster Aniruddh, creating a shared gold. The Gladiator completed the podium with 92 points.", "This was the week the league went nuclear on chips. Triple Captains and Bench Boosts detonated across the field, producing the highest-scoring week by average points. The Director's blockbuster had premiered."] },
+    18: { title: "The Sequel", body: ["Back-to-back wins are rare. The Director achieved them. GW18's 71-point Bench Boost victory was less spectacular than GW17's fireworks, but arguably more impressive — proof that the first performance wasn't a fluke.", "The Algorithm claimed silver with 65, while the Anarchist took bronze with 64. The mid-table was a graveyard — six managers between 42 and 47 points, separated by fractions.", "The economics of this league were becoming clear: most weeks, most managers lose money."] },
+    19: { title: "The Shared Crown", body: ["Episode 19 delivered the season's most unlikely co-champions. The Pirate and the Struggler — Sandesh and Jalaj — both posted 58 points and shared ₹500 gold.", "For Sandesh, it was a return to GW3 glory. For Jalaj, it was a lifeline thrown to a drowning man. The Patron Venky claimed bronze with 57.", "The Director Raghu posted 31 points — his lowest of the season. Even auteurs have off weeks."] },
+    20: { title: "The Oracle Returns", body: ["After the 104-point supernova of GW16, the Oracle had been oddly quiet. Then came Episode 20. 75 points. Gold. A reminder that the Oracle's power wasn't a one-week anomaly.", "The Joker Gokul grabbed silver with 59, proving chaos remained viable long-term. At the bottom, the Director and the Cursed both posted 27 points."] },
+    21: { title: "The Joker's Encore", body: ["The Joker returned with a characteristic 71-point performance. In a league where Haaland captaincy had become religion, Gokul demonstrated that conviction matters more than congregation.", "The Gladiator used the Ekitiké differential to power into silver with 69, while the Centurion marched into bronze with 65.", "The Astronaut Sarjan hit his lowest: 15 points with Pedro captaincy. The void had never been darker."] },
+    22: { title: "The Trench War", body: ["Not every victory is painted in gold; some are carved from mud. GW22 was a low-scoring, suffocating affair where premiums collectively downed tools.", "The Anarchist Shashank captained Bruno Fernandes and watched the rest of the league burn. 57 points. In the frozen winter of GW22, it was absolute supremacy.", "The Patron and the Astronaut shared bronze at 53. Sarjan's Pedro captaincy — the same play bleeding him dry all season — finally delivered. The Director posted 26 points. Rock bottom."] },
+    23: { title: "Contact", body: ["Deep space is cold, unforgiving, and profoundly lonely. For twenty-two weeks, the Astronaut drifted through the lower reaches, stubbornly holding onto a single truth: João Pedro would deliver.", "In Episode 23, the transmission came through. A beautiful 58-point haul propelled Sarjan into gold. Contact had been made.", "The Patron claimed silver with 56, while the Trickster slipped into bronze with 54. The Struggler Jalaj posted 24 points. Two episodes left, and Sisyphus was far from finished."] },
+    24: { title: "The Coin Flips Heads", body: ["There is a particular kind of silence that falls over a mini-league when someone drops an 86-point bomb on a standard weekend. It is the sound of ledgers tearing.", "The Gambler Mayank played his Bench Boost with Fernandes captaincy — a combination so precisely calibrated it felt less like gambling and more like insider trading. 86 points cleared the field.", "The Oracle posted 84 with his own Bench Boost — a score that would have won gold in 22 of the season's 24 gameweeks. Instead, silver. The Struggler Jalaj posted 69. The summit was in sight."] },
+    25: { title: "The Sisyphus Summit", body: ["The air was thin at the peak. For twenty-four weeks, the league had battered and bruised the underdogs. But the final episode refused to adhere to the script.", "Jalaj — a man who spent the entire autumn pushing a boulder up a mountain only to watch it roll back down — finally reached the summit. A masterclass 76-point haul. The Struggler had become the Champion.", "The Centurion returned. Puneet fought his way to a 74-point silver. The Oracle claimed bronze with 73, while the Gladiator and the Algorithm shared fourth.", "The Director posted a solid 61 — a quiet final scene in a season of blockbusters. The credits rolled. The ledgers were tallied. Season one was complete."] }
+};
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function fillTemplate(str, vars) { return str.replace(/\{(\w+)\}/g, (_, k) => vars[k] || _); }
+function generateMicroStory(name, res, rank, data) {
+    const meta = managerMeta[name];
+    if (!meta) return 'Scored ' + res.score + ' points.';
+    const bank = vocabBanks[meta.role];
+    if (!bank) return res.score + ' points this week.';
+    const isWinner = rank === 1;
+    const isPodium = rank <= 3 && res.prize > 0;
+    const isMoney = res.prize > 0;
+    const isLast = rank === data.results.length;
+    const score = res.score;
+    const capClean = res.captain.replace(/\s*\(.*\)/, '');
+    const diffCap = !res.captain.includes('Haaland');
+    const usedChip = res.captain.includes('(');
+    const vars = { score: score, cap: capClean };
+    if (meta.role === 'THE ANARCHIST') {
+        if (isWinner && diffCap) return fillTemplate(pick(bank.winDiff), vars);
+        if (isWinner) return fillTemplate(pick(bank.winConform), vars);
+        if (diffCap && !isMoney) return fillTemplate(pick(bank.diffNoPrize), vars);
+        if (!diffCap) return fillTemplate(pick(bank.conforming), vars);
+    }
+    if (meta.role === 'CHAOS AGENT') {
+        if (isWinner) return fillTemplate(pick(bank.win), vars);
+        if (diffCap) return fillTemplate(pick(bank.diffCap), vars);
+        if (score > 70 && !isMoney && bank.highNoPrize) return fillTemplate(pick(bank.highNoPrize), vars);
+        if (score < 40) return fillTemplate(pick(bank.low), vars);
+        return fillTemplate(pick(bank.mid), vars);
+    }
+    if (meta.role === 'THE GAMBLER' && usedChip && isMoney && bank.winChip) return fillTemplate(pick(bank.winChip), vars);
+    if (isWinner && bank.win) return fillTemplate(pick(bank.win), vars);
+    if (isPodium && bank.podium) return fillTemplate(pick(bank.podium), vars);
+    if (isLast && bank.last) return fillTemplate(pick(bank.last), vars);
+    if (isMoney && bank.podium) return fillTemplate(pick(bank.podium), vars);
+    if (score > 65 && !isMoney && bank.highNoPrize) return fillTemplate(pick(bank.highNoPrize), vars);
+    if (score > 60 && bank.high) return fillTemplate(pick(bank.high), vars);
+    if (score < 35 && bank.low) return fillTemplate(pick(bank.low), vars);
+    return fillTemplate(pick(bank.mid), vars);
+}
+let currentGW = 25;
+function init() {
+    initSelector();
+    loadBattle(25);
+    renderCast();
+    renderLore();
+    renderLedger();
+}
+function triggerFlash() {
+    const f = document.getElementById('flashFx');
+    f.classList.remove('flash-active');
+    void f.offsetWidth;
+    f.classList.add('flash-active');
+}
+function initSelector() {
+    const el = document.getElementById('gwSelector');
+    let html = '';
+    for (let i = 2; i <= 25; i++) {
+        html += '<button class="gw-btn ' + (i === currentGW ? 'active' : '') + '" data-gw="' + i + '" onclick="showGW(' + i + ')">Ep ' + i + '</button>';
+    }
+    el.innerHTML = html;
+    el.scrollLeft = el.scrollWidth;
+}
+function showGW(gw) {
+    triggerFlash();
+    currentGW = gw;
+    document.querySelectorAll('.gw-btn').forEach(function(b) { b.classList.toggle('active', +b.dataset.gw === gw); });
+    loadBattle(gw);
+}
+function switchTab(id, btn) {
+    triggerFlash();
+    // Update bottom nav
+    document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.content').forEach(function(c) { c.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    // Show/hide GW selector based on tab
+    var sel = document.getElementById('gwSelector');
+    sel.style.display = (id === 'battle') ? 'flex' : 'none';
+    window.scrollTo(0, 0);
+}
+function toggleRow(el) { el.closest('.player-row').classList.toggle('expanded'); }
+function loadBattle(gw) {
+    var data = gameData[gw];
+    if (!data) return;
+    var narr = gwNarratives[gw] || {
+        title: 'Episode ' + gw + ': The ' + data.results[0].name + ' Supremacy',
+        body: ['Gameweek ' + gw + ' arrived with ₹' + data.pool + ' on the line. ' + data.results[0].name + ' stood tall with ' + data.results[0].score + ' points.']
+    };
+    var chips = 0, haalandCaps = 0, diffCaps = [];
+    var scores = data.results.map(function(r) { return r.score; });
+    const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+    data.results.forEach(r => {
+        if (r.captain.includes('(')) chips++;
+        if (r.captain.includes('Haaland')) haalandCaps++;
+        else diffCaps.push({name: r.name, cap: r.captain.replace(/\s*\(.*\)/,'')});
+    });
+    const topMover = data.results[0];
+    const bottomMover = data.results[data.results.length - 1];
 
-    // ==========================================
-    // 2. PROCEDURAL MICRO-STORY GENERATOR
-    // ==========================================
-    function generateMicroStory(name, res, rank, data) {
+    let subplotsHTML = '';
+    // Captain split
+    subplotsHTML += `<div class="subplot-item">
+        <div class="subplot-title">Captain Split</div>
+        <div class="subplot-content"><span class="highlight">${haalandCaps}</span> Haaland · <span class="highlight">${data.results.length - haalandCaps}</span> Differentials</div>
+    </div>`;
+    // Chips played
+    subplotsHTML += `<div class="subplot-item">
+        <div class="subplot-title">Chips Deployed</div>
+        <div class="subplot-content"><span class="highlight">${chips}</span> chip${chips!==1?'s':''} played this week</div>
+    </div>`;
+    // Best differential
+    if (diffCaps.length > 0) {
+        const bestDiff = diffCaps.reduce((best, d) => {
+            const r = data.results.find(x => x.name === d.name);
+            return r && r.score > (best.score || 0) ? {name: d.name, cap: d.cap, score: r.score} : best;
+        }, {score: 0});
+        if (bestDiff.name) {
+            subplotsHTML += `<div class="subplot-item">
+                <div class="subplot-title">Top Differential</div>
+                <div class="subplot-content"><span class="highlight">${bestDiff.name}</span> · ${bestDiff.cap} · ${bestDiff.score} pts</div>
+            </div>`;
+        }
+    }
+    // Spread
+    subplotsHTML += `<div class="subplot-item">
+        <div class="subplot-title">Spread</div>
+        <div class="subplot-content"><span class="highlight">${scores[0] - scores[scores.length-1]}</span> points (${scores[0]} → ${scores[scores.length-1]})</div>
+    </div>`;
+
+    // Leaderboard
+    let lbHTML = '';
+    data.results.forEach((r, i) => {
+        const meta = managerMeta[r.name];
+        const story = generateMicroStory(r.name, r, i+1, data);
+        const roleTag = meta ? meta.role : '';
+        lbHTML += `<div class="player-row ${r.prize > 0 ? 'winner' : ''}">
+            <div class="row-main" onclick="toggleRow(this)">
+                <div class="rank">${i+1}</div>
+                <div class="p-info">
+                    <div class="p-name">${r.name}</div>
+                    <div class="p-role">${roleTag}</div>
+                    <div class="p-cap">© ${r.captain}</div>
+                </div>
+                <div class="p-right">
+                    <div class="p-score">${r.score}</div>
+                    ${r.prize > 0 ? `<div class="p-prize">+₹${r.prize}</div>` : ''}
+                </div>
+            </div>
+            <div class="micro-story">${story}</div>
+        </div>`;
+    });
+
+    document.getElementById('battle').innerHTML = `
+        <div class="cold-open">
+            <div class="cold-open-slug">Episode ${gw} · ₹${data.pool} Pool · ${data.results.length} Managers</div>
+            <div class="cold-open-title">${narr.title}</div>
+            <div class="cold-open-body">${narr.body.map(p => '<p>' + p + '</p>').join('')}</div>
+        </div>
+
+        <div class="prize-card">
+            <div class="prize-cell">
+                <div class="prize-cell-label">Box Office</div>
+                <div class="prize-cell-val gold">₹${data.pool}</div>
+            </div>
+            <div class="prize-cell">
+                <div class="prize-cell-label">Winning Score</div>
+                <div class="prize-cell-val">${data.results[0].score} pts</div>
+            </div>
+            <div class="prize-cell">
+                <div class="prize-cell-label">Average</div>
+                <div class="prize-cell-val">${avg} pts</div>
+            </div>
+        </div>
+
+        <div class="subplot-bar">${subplotsHTML}</div>
+
+        <div class="section-title">The Cast</div>
+        ${lbHTML}
+    `;
+}
+
+function renderCast() {
+    let html = '';
+    Object.keys(managerMeta).forEach(name => {
         const meta = managerMeta[name];
-        const isWinner = rank === 1;
-        const isMoney = res.prize > 0;
-        const isLast = rank === data.results.length;
-        const diffCap = res.captain !== 'Haaland' && !res.captain.includes('Haaland');
-        const usedChip = res.captain.includes('(');
+        const arc = seasonJourneys[name] || {act1:'Season data pending.',act2:'...',act3:'...'};
 
-        let story = "";
+        // Form: last 5 GWs
+        let formDots = '';
+        [21,22,23,24,25].forEach(gw => {
+            if (!gameData[gw]) { formDots += '<div class="form-dot l"></div>'; return; }
+            const r = gameData[gw].results.find(x => x.name === name);
+            formDots += `<div class="form-dot ${r && r.prize > 0 ? 'w' : 'l'}"></div>`;
+        });
 
-        // Archetype specific procedural generation
-        switch(meta.role) {
-            case 'THE ANARCHIST':
-                if (diffCap && isMoney) story = `Refused the template, captained ${res.captain}, and walked away with cash. Tyler Durden would be proud.`;
-                else if (diffCap && !isMoney) story = `The rebellion failed this week. ${res.captain} blanked, but the Anarchist never compromises.`;
-                else story = `Even Anarchists have to pay the rent. Conformed with the Haaland armband for ${res.score} points.`;
-                break;
-            case 'THE GAMBLER':
-                if (usedChip && isMoney) story = `Pushed the chips to the center of the table and hit blackjack. ${res.score} points.`;
-                else if (isWinner) story = `The coin landed on heads. Absolute jackpot week.`;
-                else story = `The house always wins. A ${res.score}-point hand wasn't enough to beat the dealer.`;
-                break;
-            case 'THE STRUGGLER':
-                if (isWinner) story = `The boulder finally reached the top of the mountain. Sisyphus rests tonight.`;
-                else if (isLast) story = `The boulder rolled all the way back down. Crushing ${res.score} point finish.`;
-                else story = `Still pushing the rock. ${res.score} points keeps him alive in the grind.`;
-                break;
-            case 'CHAOS AGENT':
-                if (diffCap) story = `Introduced a little anarchy with the ${res.captain} captaincy. It’s not about the points, it’s about sending a message.`;
-                else if (isWinner) story = `Proved that chaos is a ladder. Sliced through the template for ${res.score} points.`;
-                else story = `The joke didn't land this week. Just ${res.score} points.`;
-                break;
-            case 'THE DIRECTOR':
-                if (isWinner) story = `A cinematic masterpiece. Directed the squad perfectly for a ${res.score}-point box office hit.`;
-                else story = `A minor plot hole in the script this week, but the overarching narrative remains intact.`;
-                break;
-            case 'THE CURSED':
-                if (res.score > 60 && !isMoney) story = `Classic tragedy. Scored ${res.score} massive points and won absolutely nothing. The curse is real.`;
-                else if (isLast) story = `Just another week of getting smashed by the universe.`;
-                else story = `Survived the week with ${res.score} points. The Hulk is staying quiet... for now.`;
-                break;
-            case 'THE TRICKSTER':
-                if (res.score < 55 && isMoney) story = `Absolute robbery. Somehow snuck into the prize pool with just ${res.score} points. An illusionist at work.`;
-                else story = `The magic faded briefly. Scored ${res.score} points and vanished from the podium.`;
-                break;
-            case 'THE PHILANTHROPIST':
-                if (!isMoney) story = `Hosted a massive party but didn't collect the cover charge. Donated his buy-in to the rest of the league.`;
-                else story = `Old money strikes back. Secured a payout with a classy ${res.score}-point display.`;
-                break;
-            case 'THE CENTURION':
-                if (rank === 2) story = `Fought like a gladiator, but denied the emperor's crown. A brutal, brilliant silver medal.`;
-                else story = `Hold the line. Steady, reliable, ${res.score} points for the shield wall.`;
-                break;
-            default:
-                // Generic fallback for the rest
-                if (isWinner) story = `Dominated the field with ${res.score} points. An absolute masterclass in FPL management.`;
-                else if (isMoney) story = `Secured a bag. ${res.score} points was enough to keep the ledger healthy.`;
-                else if (isLast) story = `A total system failure. The ${res.captain} armband provided no salvation.`;
-                else if (usedChip) story = `Burned a chip for ${res.score} points. The data analysts will need to review this one.`;
-                else story = `Lost in the mid-table churn. ${res.score} points, waiting for the next big break.`;
-        }
-        return story;
-    }
+        let wins = 0;
+        [21,22,23,24,25].forEach(gw => {
+            if(gameData[gw] && gameData[gw].results.find(r=>r.name===name && r.prize>0)) wins++;
+        });
+        const formClass = wins >= 2 ? 'hot' : '';
 
-    // ==========================================
-    // 3. APPLICATION LOGIC
-    // ==========================================
-    let currentGW = 25;
+        html += `<div class="poster">
+            <div class="poster-head">
+                <div class="monogram ${formClass}"><span>${meta.initials}</span></div>
+                <div class="poster-meta">
+                    <div class="role-tag">${meta.role}</div>
+                    <h3>${name}</h3>
+                    <div class="char-tag">as ${meta.char}</div>
+                </div>
+            </div>
+            <div class="poster-quote">“${meta.quote}”</div>
+            <div class="form-strip">
+                <div class="form-label">Form (GW21–25)</div>
+                ${formDots}
+            </div>
+            <div class="poster-arc">
+                <div class="arc-step">
+                    <div class="arc-head">Act I — The Setup</div>
+                    <div class="arc-txt">${arc.act1}</div>
+                </div>
+                <div class="arc-step">
+                    <div class="arc-head">Act II — The Confrontation</div>
+                    <div class="arc-txt">${arc.act2}</div>
+                </div>
+                <div class="arc-step">
+                    <div class="arc-head final">Act III — The Resolution</div>
+                    <div class="arc-txt active">${arc.act3}</div>
+                </div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('cast').innerHTML = `<div class="section-title">Dramatis Personae</div><div class="poster-grid">${html}</div>`;
+}
 
-    function init() {
-        initSelector();
-        loadEpisode(25);
-        renderPosters();
-        calculateLedger();
-        calculateAwards();
-    }
-
-    function triggerFilmBurn() {
-        const burn = document.getElementById('filmBurn');
-        burn.classList.remove('burn-active');
-        void burn.offsetWidth; // trigger reflow
-        burn.classList.add('burn-active');
-    }
-
-    function initSelector() {
-        const selector = document.getElementById('gwSelector');
-        let html = '';
-        for (let i = 2; i <= 25; i++) {
-            html += `<button class="gw-btn ${i === currentGW ? 'active' : ''}" data-gw="${i}" onclick="showGW(${i})">Ep ${i}</button>`;
-        }
-        selector.innerHTML = html;
-        setTimeout(() => selector.scrollLeft = selector.scrollWidth, 100);
-    }
-
-    function showGW(gw) {
-        triggerFilmBurn();
-        setTimeout(() => {
-            currentGW = gw;
-            document.querySelectorAll('.gw-btn').forEach(btn => {
-                btn.classList.toggle('active', parseInt(btn.dataset.gw) === gw);
-            });
-            loadEpisode(gw);
-        }, 150); // wait for burn peak
-    }
-
-    function switchTab(tabId, btn) {
-        triggerFilmBurn();
-        setTimeout(() => {
-            document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.content').forEach(c => {
-                c.classList.remove('active');
-                c.style.animation = 'none'; // reset animation
-                void c.offsetWidth;
-            });
-            const activeContent = document.getElementById(tabId);
-            activeContent.classList.add('active');
-            activeContent.style.animation = 'slowReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards';
-        }, 150);
-    }
-
-    function loadEpisode(gw) {
+function renderLore() {
+    let html = '<div class="section-title">The Complete Season</div>';
+    const gws = Object.keys(gwNarratives).sort((a,b) => +b - +a);
+    gws.forEach(gw => {
+        const narr = gwNarratives[gw];
         const data = gameData[gw];
         if (!data) return;
+        const scores = data.results.map(r=>r.score);
+        const avg = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+        let chips = 0;
+        data.results.forEach(r => { if(r.captain.includes('(')) chips++; });
 
-        // LAYER 1: Narrative
-        const narrative = gwNarratives[gw] || getFallbackNarrative(gw, data);
-        document.getElementById('hdrGw').innerText = gw;
-        document.getElementById('hdrTitle').innerText = `"${narrative.title}"`;
-        
-        let bodyHtml = '';
-        narrative.body.forEach(p => bodyHtml += `<p>${p}</p>`);
-        document.getElementById('scriptBody').innerHTML = bodyHtml;
+        html += `<div class="lore-episode">
+            <div class="lore-ep-num">Episode ${gw}</div>
+            <div class="lore-ep-title">${narr.title}</div>
+            <div class="lore-ep-winner">${data.results[0].name} · ${data.results[0].score} pts · ₹${data.results[0].prize}</div>
+            <div class="lore-ep-body">${narr.body.map(p=>'<p>'+p+'</p>').join('')}</div>
+            <div class="lore-ep-stats">
+                <div class="lore-stat">Pool: <strong>₹${data.pool}</strong></div>
+                <div class="lore-stat">Field: <strong>${data.results.length}</strong></div>
+                <div class="lore-stat">Avg: <strong>${avg} pts</strong></div>
+                <div class="lore-stat">Chips: <strong>${chips}</strong></div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('lore').innerHTML = html;
+}
 
-        // LAYER 3: Subplot Stats
-        let capCounts = {};
-        let chipsUsed = 0;
-        data.results.forEach(r => {
-            const capBase = r.captain.split(' (')[0];
-            capCounts[capBase] = (capCounts[capBase] || 0) + 1;
-            if (r.captain.includes('(')) chipsUsed++;
+function renderLedger() {
+    const ledger = {};
+    Object.keys(managerMeta).forEach(m => ledger[m] = {name:m, played:0, won:0, wins:0, podiums:0, maxScore:0, maxZero:0, totalScore:0});
+
+    Object.values(gameData).forEach(gw => {
+        gw.results.forEach((r, i) => {
+            if(!ledger[r.name]) return;
+            ledger[r.name].played++;
+            ledger[r.name].won += (r.prize || 0);
+            ledger[r.name].totalScore += r.score;
+            if(i===0) ledger[r.name].wins++;
+            if(i<3) ledger[r.name].podiums++;
+            if(r.score > ledger[r.name].maxScore) ledger[r.name].maxScore = r.score;
+            if(r.prize===0 && r.score > ledger[r.name].maxZero) ledger[r.name].maxZero = r.score;
         });
-        const topCap = Object.entries(capCounts).sort((a,b)=>b[1]-a[1])[0];
-        
-        let prizesHtml = '';
-        data.prizes.forEach(p => prizesHtml += `<div class="prize-pill">₹${p}</div>`);
+    });
 
-        document.getElementById('subplotGrid').innerHTML = `
-            <div class="stat-box prize-pool-box">
-                <div class="stat-label">Total Box Office</div>
-                <div class="stat-value">₹${data.pool}</div>
-                <div class="prizes-row">${prizesHtml}</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Armband Consensus</div>
-                <div class="stat-value">${topCap[0]} (${Math.round((topCap[1]/data.results.length)*100)}%)</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Active Power-ups</div>
-                <div class="stat-value">${chipsUsed} Chips Deployed</div>
-            </div>
-        `;
+    const sorted = Object.values(ledger).sort((a,b) => (b.won - b.played*100) - (a.won - a.played*100));
 
-        // LAYER 2: Leaderboard
-        let lbHtml = '';
-        data.results.forEach((r, index) => {
-            const isWinner = r.prize > 0;
-            const microStory = generateMicroStory(r.name, r, index + 1, data);
-            
-            lbHtml += `
-            <div class="player-row ${isWinner ? 'winner' : ''}">
-                <div class="player-main">
-                    <div class="rank">${index + 1}</div>
-                    <div class="p-info">
-                        <div class="p-name">${r.name}</div>
-                        <div class="p-meta">
-                            <span class="p-cap">© ${r.captain}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="p-score">${r.score}</div>
-                        ${r.prize > 0 ? `<span class="p-prize">+₹${r.prize}</span>` : ''}
-                    </div>
-                </div>
-                <div class="micro-story">${microStory}</div>
-            </div>`;
-        });
-        document.getElementById('leaderboard').innerHTML = lbHtml;
-    }
+    let tableHTML = `<div class="section-title">The Ledger</div><div class="ledger-wrap">
+        <table><thead><tr>
+            <th>Manager</th><th style="text-align:right">Played</th>
+            <th style="text-align:right">Wins</th><th style="text-align:right">Gross</th>
+            <th style="text-align:right">Net</th>
+        </tr></thead><tbody>`;
 
-    // Helper for Monogram Forms
-    function getFormClass(name) {
-        const recentGWs = [25, 24, 23, 22]; // Sample recent form
-        let wins = 0;
-        recentGWs.forEach(gw => {
-            if(gameData[gw]) {
-                const res = gameData[gw].results.find(r => r.name === name);
-                if(res && res.prize > 0) wins++;
+    sorted.forEach(p => {
+        const net = p.won - (p.played * 100);
+        const cls = net >= 0 ? 'net-pos' : 'net-neg';
+        tableHTML += `<tr>
+            <td style="font-family:'Playfair Display',serif;font-weight:700">${p.name}</td>
+            <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#666">${p.played}</td>
+            <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:var(--gold)">${p.wins}</td>
+            <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#999">₹${p.won}</td>
+            <td style="text-align:right" class="${cls}">${net>=0?'+':''}₹${net}</td>
+        </tr>`;
+    });
+    tableHTML += '</tbody></table>';
+
+    // Awards
+    let leo={val:0,name:'-'}, critic={val:0,name:'-'}, bay={val:0,name:'-'}, ironman={val:0,name:'-'}, diff={val:0,name:'-'};
+    Object.values(ledger).forEach(p => {
+        if((p.podiums - p.wins) > leo.val) leo = {val:p.podiums-p.wins, name:p.name};
+        if(p.maxZero > critic.val) critic = {val:p.maxZero, name:p.name};
+        if(p.totalScore > bay.val) bay = {val:p.totalScore, name:p.name};
+        if(p.played > ironman.val) ironman = {val:p.played, name:p.name};
+    });
+    // Most differential captaincies
+    const diffCounts = {};
+    Object.values(gameData).forEach(gw => {
+        gw.results.forEach(r => {
+            if(!r.captain.includes('Haaland')) {
+                diffCounts[r.name] = (diffCounts[r.name]||0) + 1;
             }
         });
-        if(wins >= 2) return 'form-hot';
-        if(wins === 0) return 'form-cold';
-        return '';
-    }
+    });
+    const topDiff = Object.entries(diffCounts).sort((a,b)=>b[1]-a[1])[0];
+    if(topDiff) diff = {name:topDiff[0], val:topDiff[1]};
 
-    function renderPosters() {
-        const container = document.getElementById('playerStories');
-        let html = '';
-        
-        Object.keys(managerMeta).forEach(name => {
-            const meta = managerMeta[name];
-            const arc = seasonJourneys[name] || { act1: "...", act2: "...", act3: "..." };
-            const formClass = getFormClass(name);
-            const initial = name.charAt(0);
+    const awardsHTML = `
+        </div><div class="section-title" style="margin-top:20px">Season Awards</div>
+        <div class="award-card">
+            <div class="aw-L"><h4>The DiCaprio</h4><p>Always the bridesmaid, never the bride.</p></div>
+            <div class="aw-R"><div class="aw-name">${leo.name}</div><div class="aw-stat">${leo.val} podiums without gold</div></div>
+        </div>
+        <div class="award-card">
+            <div class="aw-L"><h4>The Sisyphus</h4><p>Highest score for ₹0 return.</p></div>
+            <div class="aw-R"><div class="aw-name">${critic.name}</div><div class="aw-stat">${critic.val} pts, ₹0</div></div>
+        </div>
+        <div class="award-card">
+            <div class="aw-L"><h4>The Michael Bay</h4><p>Maximum total explosions.</p></div>
+            <div class="aw-R"><div class="aw-name">${bay.name}</div><div class="aw-stat">${bay.val} total pts</div></div>
+        </div>
+        <div class="award-card">
+            <div class="aw-L"><h4>The Iron Man</h4><p>Most gameweeks entered.</p></div>
+            <div class="aw-R"><div class="aw-name">${ironman.name}</div><div class="aw-stat">${ironman.val} entries</div></div>
+        </div>
+        <div class="award-card">
+            <div class="aw-L"><h4>The Maverick</h4><p>Most non-Haaland captaincies.</p></div>
+            <div class="aw-R"><div class="aw-name">${diff.name}</div><div class="aw-stat">${diff.val} differentials</div></div>
+        </div>
+    `;
 
-            html += `
-            <div class="character-poster">
-                <div class="poster-header ${formClass}">
-                    <div class="monogram-container">
-                        <div class="monogram-ring"></div>
-                        <div class="monogram">${initial}</div>
-                    </div>
-                    <div class="char-titles">
-                        <div class="char-role">${meta.role}</div>
-                        <div class="char-name">${name}</div>
-                        <div class="char-actor">played by ${meta.char}</div>
-                    </div>
-                </div>
-                <div class="char-quote">"${meta.quote}"</div>
-                <div class="arc-container">
-                    <div class="arc-act">
-                        <span class="act-label">Act I: The Setup</span>
-                        <div class="act-text">${arc.act1}</div>
-                    </div>
-                    <div class="arc-act">
-                        <span class="act-label">Act II: The Confrontation</span>
-                        <div class="act-text">${arc.act2}</div>
-                    </div>
-                    <div class="arc-act">
-                        <span class="act-label" style="color:var(--gold)">Act III: The Resolution</span>
-                        <div class="act-text current">${arc.act3}</div>
-                    </div>
-                </div>
-            </div>`;
-        });
-        container.innerHTML = html;
-    }
+    document.getElementById('ledger').innerHTML = tableHTML + awardsHTML;
+}
 
-    function calculateLedger() {
-        const ledger = {};
-        Object.keys(managerMeta).forEach(p => ledger[p] = { name: p, played: 0, won: 0 });
-
-        Object.values(gameData).forEach(gw => {
-            gw.results.forEach(res => {
-                if (ledger[res.name]) {
-                    ledger[res.name].played++;
-                    ledger[res.name].won += (res.prize || 0);
-                }
-            });
-        });
-
-        const sortedLedger = Object.values(ledger).sort((a, b) => (b.won - b.played * 100) - (a.won - a.played * 100));
-        let html = '';
-        sortedLedger.forEach(p => {
-            const net = p.won - (p.played * 100);
-            const netClass = net >= 0 ? 'net-pos' : 'net-neg';
-            html += `<tr>
-                <td class="ledger-name">${p.name}</td>
-                <td style="text-align:right; color:#777; font-family:monospace;">${p.played}</td>
-                <td style="text-align:right; color:var(--gold); font-family:monospace;">₹${p.won}</td>
-                <td style="text-align:right" class="${netClass}">${net >= 0 ? '+' : ''}₹${net}</td>
-            </tr>`;
-        });
-        document.getElementById('ledgerList').innerHTML = html;
-    }
-
-    function calculateAwards() {
-        const playerStats = {};
-        Object.keys(managerMeta).forEach(p => playerStats[p] = {
-            name: p, podiums: 0, wins: 0, maxScoreNoPrize: 0,
-            ranks: [], totalScore: 0, games: 0, minWinScore: 999
-        });
-
-        Object.values(gameData).forEach(gw => {
-            gw.results.forEach((res, index) => {
-                const s = playerStats[res.name];
-                if (s) {
-                    s.games++;
-                    s.totalScore += res.score;
-                    s.ranks.push(index + 1);
-                    if (index === 0) s.wins++;
-                    if (index < 3) s.podiums++; // Note: Podiums in money contexts usually mean top 3
-                    if (res.prize === 0 && res.score > s.maxScoreNoPrize) s.maxScoreNoPrize = res.score;
-                    if (res.prize > 0 && res.score < s.minWinScore) s.minWinScore = res.score;
-                }
-            });
-        });
-
-        let leo = { name: '-', val: 0 };
-        let critic = { name: '-', val: 0 };
-        let bay = { name: '-', val: 0 };
-        let bmovie = { name: '-', val: 999 };
-
-        Object.values(playerStats).forEach(p => {
-            const bridesmaid = p.podiums - p.wins;
-            if (bridesmaid > leo.val) leo = { name: p.name, val: bridesmaid };
-            if (p.maxScoreNoPrize > critic.val) critic = { name: p.name, val: p.maxScoreNoPrize };
-            if (p.totalScore > bay.val) bay = { name: p.name, val: p.totalScore };
-            if (p.minWinScore < 999 && p.minWinScore < bmovie.val) bmovie = { name: p.name, val: p.minWinScore };
-        });
-
-        document.getElementById('awardsList').innerHTML = `
-            <div class="award-card">
-                <div class="award-title">The Leonardo DiCaprio</div>
-                <div class="award-desc">Always the bridesmaid. Most Top 3 finishes without taking Gold.</div>
-                <div class="award-winner-name">${leo.name}</div>
-                <div class="award-stat">${leo.val} Silver/Bronzes</div>
-            </div>
-            <div class="award-card">
-                <div class="award-title">The Critics' Choice</div>
-                <div class="award-desc">Highest single-week score that completely missed the profit margins. A tragic masterpiece.</div>
-                <div class="award-winner-name">${critic.name}</div>
-                <div class="award-stat">${critic.val} Points (₹0)</div>
-            </div>
-            <div class="award-card">
-                <div class="award-title">The Michael Bay</div>
-                <div class="award-desc">Maximum explosions. The highest cumulative point total across all episodes.</div>
-                <div class="award-winner-name">${bay.name}</div>
-                <div class="award-stat">${bay.val} Total Pts</div>
-            </div>
-            <div class="award-card">
-                <div class="award-title">The B-Movie Hit</div>
-                <div class="award-desc">Low budget, big return. The lowest score that somehow still won a prize.</div>
-                <div class="award-winner-name">${bmovie.name}</div>
-                <div class="award-stat">Won with ${bmovie.val} Pts</div>
-            </div>
-        `;
-    }
-
-    // Initialize the application
-    document.addEventListener("DOMContentLoaded", init);
-
+document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
